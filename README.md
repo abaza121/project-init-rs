@@ -2,6 +2,18 @@
 
 This project wraps a staged Codex documentation workflow so a short project brief can be turned into a structured `Docs` package. The intent is to give later agents a stronger starting point by generating requirements, brand, research, architecture artifacts in a consistent order.
 
+## Codex Skill
+
+The repository root is also an installable Codex skill named `project-initiation-pipeline`. Its `SKILL.md` teaches Codex to run the workflow natively in the active project, while the existing scripts remain available for reproducible command-line runs.
+
+Install it globally by copying or cloning this repository to:
+
+```text
+%CODEX_HOME%\skills\project-initiation-pipeline
+```
+
+When `CODEX_HOME` is unset, use `%USERPROFILE%\.codex\skills\project-initiation-pipeline`. The skill is available on the next Codex turn and can be invoked with `$project-initiation-pipeline`.
+
 ## Flow
 
 1. `run-codex-docs-pipeline.bat` starts in the repository root and resolves the PowerShell runner at `scripts\run-codex-docs-pipeline.ps1`.
