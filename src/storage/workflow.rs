@@ -188,6 +188,18 @@ impl SqliteStore {
             TraceRelationship::Answers,
             now,
         )?;
+        let open_questions = transaction.query_row(
+            "SELECT COUNT(*) FROM questions WHERE project_id = ?1 AND status = 'open'",
+            [question.project_id.as_str()],
+            |row| row.get::<_, i64>(0),
+        )?;
+        if open_questions == 0 {
+            transaction.execute(
+                "UPDATE projects SET status = 'planning', updated_at = ?2, revision = revision + 1 \
+                 WHERE id = ?1 AND status = 'awaiting_clarification'",
+                params![question.project_id.as_str(), now.to_rfc3339()],
+            )?;
+        }
         transaction.commit()?;
         Ok(answer)
     }

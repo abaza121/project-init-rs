@@ -14,12 +14,11 @@ pub fn run(snapshot: &ProjectSnapshot) -> io::Result<()> {
     ratatui::run(|terminal| {
         loop {
             terminal.draw(|frame| render(frame, snapshot))?;
-            if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press
-                    && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
-                {
-                    return Ok(());
-                }
+            if let Event::Key(key) = event::read()?
+                && key.kind == KeyEventKind::Press
+                && matches!(key.code, KeyCode::Char('q') | KeyCode::Esc)
+            {
+                return Ok(());
             }
         }
     })

@@ -118,3 +118,32 @@ fn structured_analysis_validates_non_empty_statements() {
 
     assert!(invalid.is_err());
 }
+
+/// Advances the lifecycle when the final blocking clarification is answered.
+#[test]
+fn final_answer_advances_the_project_to_planning() {
+    let store = SqliteStore::open_in_memory().expect("the database should open");
+    let mut service = ProjectService::new(store);
+    let project = service
+        .initialize_project("Calm Fishing VR", "I want a calm VR fishing game.")
+        .expect("the project should initialize");
+    let questions = service
+        .inspect_project(project.id())
+        .expect("questions should load")
+        .questions;
+
+    for question in questions {
+        service
+            .answer_question(&question.id, "Confirmed choice", None)
+            .expect("each answer should reconcile");
+    }
+
+    assert_eq!(
+        service
+            .inspect_project(project.id())
+            .expect("the final state should load")
+            .project
+            .status(),
+        ProjectStatus::Planning
+    );
+}

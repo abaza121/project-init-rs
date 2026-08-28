@@ -14,7 +14,7 @@ cargo test --all-features
 cargo clippy --all-targets --all-features -- -D warnings
 ```
 
-Rust 1.85 or newer is supported; the repository lockfile records the tested dependency graph.
+Rust 1.88 or newer is supported; the repository lockfile records the tested dependency graph.
 
 ## Quick start
 
