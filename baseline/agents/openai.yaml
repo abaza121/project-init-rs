@@ -1,0 +1,5 @@
+interface:
+  display_name: "Project Initiation Pipeline"
+  short_description: "Turn a project brief into a complete Docs foundation"
+  default_prompt: "Use $project-initiation-pipeline to turn my project brief into a staged Docs package."
+
