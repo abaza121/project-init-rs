@@ -26,6 +26,11 @@ impl ProjectId {
         Self(value)
     }
 
+    /// Wraps a CLI identity for an authoritative database lookup.
+    pub fn from_cli(value: &str) -> Self {
+        Self(value.to_owned())
+    }
+
     /// Exposes the stable database and export representation.
     pub fn as_str(&self) -> &str {
         &self.0

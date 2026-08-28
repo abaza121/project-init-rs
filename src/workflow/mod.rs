@@ -1,6 +1,8 @@
 //! Project use cases that coordinate validated domain and persistence operations.
 
 use serde::Deserialize;
+use serde::Serialize;
+use std::path::Path;
 use thiserror::Error;
 
 use crate::domain::{
@@ -254,4 +256,71 @@ fn clarification_copy(statement: &str) -> (String, String) {
         format!("Please clarify: {statement}"),
         "This unresolved choice can materially affect later project decisions.".to_owned(),
     )
+}
+
+/// Represents one deterministic package or traceability validation failure.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct ValidationFinding {
+    pub code: String,
+    pub severity: String,
+    pub message: String,
+}
+
+/// Summarizes whether a project package can safely be considered complete.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct ValidationReport {
+    pub passed: bool,
+    pub findings: Vec<ValidationFinding>,
+}
+
+/// Validates high-impact uncertainty, requirement support, and required artifacts.
+pub fn validate_snapshot(snapshot: &ProjectSnapshot, output: &Path) -> ValidationReport {
+    let mut findings = Vec::new();
+    for question in &snapshot.questions {
+        if question.status == crate::domain::QuestionStatus::Open
+            && question.priority.requires_attention(75)
+        {
+            findings.push(ValidationFinding {
+                code: "UNRESOLVED_HIGH_QUESTION".to_owned(),
+                severity: "high".to_owned(),
+                message: format!("{} remains unresolved", question.display_id),
+            });
+        }
+    }
+    for requirement in &snapshot.requirements {
+        let traced = snapshot
+            .traces
+            .iter()
+            .any(|trace| trace.source_id == requirement.id);
+        if requirement.acceptance_criteria.trim().is_empty() || !traced {
+            findings.push(ValidationFinding {
+                code: "UNSUPPORTED_REQUIREMENT".to_owned(),
+                severity: "high".to_owned(),
+                message: format!(
+                    "{} lacks acceptance criteria or provenance",
+                    requirement.display_id
+                ),
+            });
+        }
+    }
+    for required in [
+        "README.md",
+        "Requirements.md",
+        "Assumptions.md",
+        "OpenQuestions.md",
+        "Traceability.md",
+        "ValidationReport.md",
+    ] {
+        if !output.join(required).is_file() {
+            findings.push(ValidationFinding {
+                code: "MISSING_ARTIFACT".to_owned(),
+                severity: "high".to_owned(),
+                message: format!("required artifact is missing: {required}"),
+            });
+        }
+    }
+    ValidationReport {
+        passed: findings.is_empty(),
+        findings,
+    }
 }

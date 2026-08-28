@@ -92,6 +92,20 @@ impl SqliteStore {
         row.map(StoredProjectRow::into_domain).transpose()
     }
 
+    /// Lists projects in creation order for CLI discovery and resume selection.
+    pub fn list_projects(&self) -> Result<Vec<Project>, StorageError> {
+        let mut statement = self.connection.prepare(
+            "SELECT id, name, brief, status, retrieval_mode, created_at, updated_at \
+             FROM projects ORDER BY created_at, id",
+        )?;
+        let rows = statement.query_map([], StoredProjectRow::read)?;
+        rows.map(|row| {
+            row.map_err(StorageError::from)
+                .and_then(StoredProjectRow::into_domain)
+        })
+        .collect()
+    }
+
     /// Inserts distinct project knowledge and allocates its stable display ID atomically.
     pub fn add_finding(&mut self, input: NewFinding) -> Result<Finding, StorageError> {
         let transaction = self.connection.transaction()?;
