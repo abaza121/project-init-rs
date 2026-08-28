@@ -23,6 +23,12 @@ pub enum StorageError {
     /// Indicates that a mutation referenced a project that does not exist.
     #[error("project does not exist: {0}")]
     ProjectNotFound(String),
+    /// Indicates that a clarification answer referenced no persisted question.
+    #[error("question does not exist: {0}")]
+    QuestionNotFound(String),
+    /// Prevents a closed clarification from being reconciled twice by accident.
+    #[error("question is not open: {0}")]
+    QuestionNotOpen(String),
     /// Prevents stable display identifiers from wrapping or becoming negative.
     #[error("display identifier sequence is exhausted for prefix {0}")]
     SequenceExhausted(String),

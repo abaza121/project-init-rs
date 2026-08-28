@@ -228,6 +228,11 @@ pub enum FindingStatus {
 }
 
 impl FindingStatus {
+    /// Returns whether a finding participates in current project reasoning.
+    pub const fn is_active(self) -> bool {
+        matches!(self, Self::Active | Self::Confirmed)
+    }
+
     /// Returns the checked database representation.
     pub(crate) const fn as_db_str(self) -> &'static str {
         match self {
@@ -281,6 +286,30 @@ impl NewFinding {
             confidence: Confidence::High,
             impact: Impact::Medium,
             requires_confirmation: false,
+        })
+    }
+
+    /// Creates a validated finding with explicit application-assigned provenance.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new(
+        project_id: ProjectId,
+        kind: FindingKind,
+        statement: &str,
+        source_type: SourceType,
+        source_reference: &str,
+        confidence: Confidence,
+        impact: Impact,
+        requires_confirmation: bool,
+    ) -> Result<Self, DomainError> {
+        Ok(Self {
+            project_id,
+            kind,
+            statement: normalize_required_text(statement, "finding statement", MAX_FINDING_CHARS)?,
+            source_type,
+            source_reference: normalize_required_text(source_reference, "source reference", 1_024)?,
+            confidence,
+            impact,
+            requires_confirmation,
         })
     }
 

@@ -15,7 +15,7 @@ const INITIAL_MIGRATION: &str = include_str!("../../migrations/001_initial.sql")
 
 /// Owns one SQLite connection and exposes transactional authoritative operations.
 pub struct SqliteStore {
-    connection: Connection,
+    pub(super) connection: Connection,
 }
 
 impl SqliteStore {
@@ -270,7 +270,7 @@ fn ensure_project_exists(
 }
 
 /// Reserves the next project-local display identifier inside the caller's transaction.
-fn allocate_display_id(
+pub(super) fn allocate_display_id(
     transaction: &Transaction<'_>,
     project_id: &ProjectId,
     prefix: &str,
@@ -339,7 +339,10 @@ fn parse_checked<T>(
 }
 
 /// Parses an RFC 3339 timestamp while preserving its UTC audit meaning.
-fn parse_timestamp(value: String, field: &'static str) -> Result<DateTime<Utc>, StorageError> {
+pub(super) fn parse_timestamp(
+    value: String,
+    field: &'static str,
+) -> Result<DateTime<Utc>, StorageError> {
     value
         .parse::<DateTime<Utc>>()
         .map_err(|_| StorageError::InvalidTimestamp { field, value })

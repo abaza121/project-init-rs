@@ -2,6 +2,7 @@
 
 mod error;
 mod sqlite;
+mod workflow;
 
 pub use error::StorageError;
 pub use sqlite::SqliteStore;
