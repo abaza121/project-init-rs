@@ -1,0 +1,41 @@
+[package]
+name = "project-init"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "A traceable, resumable project-initiation terminal application"
+license = "MIT"
+
+[lib]
+name = "project_init"
+path = "src/lib.rs"
+
+[[bin]]
+name = "project-init"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.6", features = ["derive"] }
+crossterm = "0.29"
+ratatui = "0.30.2"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "process", "rt-multi-thread", "time"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+uuid = { version = "1", features = ["serde", "v4"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "deny"
