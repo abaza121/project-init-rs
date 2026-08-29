@@ -62,6 +62,10 @@ Stores validation code, severity, message, relevant entity/document locator, sta
 
 Stores operation, provider/model configuration where available, start/completion time, status, response hash, token counts when reported, and sanitized trajectory path. Raw credentials and private environment values are never stored.
 
+### `agent_activity_events`
+
+Stores the bounded, sanitized operational timeline for a successful agent run using a run-local sequence, provider-neutral category, message, and timestamp. Activity inserts share the initial project transaction; failed and cancelled runs therefore leave no project or activity rows.
+
 ### `semantic_index_state`
 
 Stores project/entity locator, authoritative content hash, indexed hash, embedding model/version, dimension, state (`Current`, `Stale`, `Missing`, `Disabled`), last attempt, last success, and sanitized error summary.
@@ -70,6 +74,18 @@ Stores project/entity locator, authoritative content hash, indexed hash, embeddi
 
 Stores operation, purpose, filters, requested `top_k`, candidate/selected counts, selected IDs, discarded-stale count, duration, and timestamp for evaluation.
 
+### `workflow_runs`
+
+Stores one run's project, effective approval policy, running/paused/complete/failed state, stable pause reason, and timestamps. A partial unique index permits at most one active or paused run per project.
+
+### `decision_approvals`
+
+Stores immutable approval or rejection authority, its reason, decision identity, and timestamp separately from the mutable decision status.
+
+### `document_revisions`
+
+Stores immutable generated and manual-override hashes. The latest revision source determines whether ordinary generation must protect a file, while older revisions retain its ownership history.
+
 ## Constraints and indexes
 
 - Foreign keys are enabled and cascading deletes are limited to explicit project deletion.
@@ -77,7 +93,8 @@ Stores operation, purpose, filters, requested `top_k`, candidate/selected counts
 - Questions and findings index `(project_id, status, priority/impact)` for active workflow queries.
 - Trace links index both source and target locators.
 - Semantic state is unique by `(project_id, entity_type, entity_id)`.
-- Retrieval and agent event timestamps are indexed per project for evaluation exports.
+- Retrieval and agent event timestamps and sequences are indexed per project for inspection and evaluation exports.
+- Active workflow runs are unique per project, and document revisions are indexed by project, path, and time.
 - Enum values use checked text columns so exports remain readable while invalid magic strings are rejected.
 
 ## Migration policy

@@ -1,18 +1,101 @@
 use chrono::Utc;
 use rusqlite::{OptionalExtension, params};
+use sha2::{Digest, Sha256};
 use uuid::Uuid;
 
+use crate::agents::{
+    ActivityEvent, ActivityKind, AgentExecution, JudgedResearchBatch, ResearchEvidence,
+};
 use crate::domain::error::normalize_required_text;
 use crate::domain::{
-    Answer, AnswerSource, Confidence, CostOfBeingWrong, FindingKind, Impact, NewFinding, ProjectId,
-    ProjectSnapshot, ProjectStatus, Question, QuestionPriority, QuestionStatus, Requirement,
-    RequirementStatus, SourceType, TraceLink, TraceRelationship, Uncertainty,
+    Answer, AnswerSource, Confidence, CostOfBeingWrong, Finding, FindingKind, Impact, NewFinding,
+    NewProject, Project, ProjectId, ProjectSnapshot, ProjectStatus, Question, QuestionPriority,
+    QuestionStatus, Requirement, RequirementStatus, SourceType, TraceLink, TraceRelationship,
+    Uncertainty,
 };
 
-use super::sqlite::{allocate_display_id, parse_timestamp};
+use super::sqlite::{
+    allocate_display_id, ensure_project_exists, insert_finding, insert_project, parse_timestamp,
+};
 use super::{SqliteStore, StorageError};
 
+/// Carries one validated analysis proposal into the atomic persistence boundary.
+pub(crate) struct AnalyzedFindingInput {
+    pub kind: FindingKind,
+    pub statement: String,
+    pub source_type: SourceType,
+    pub confidence: Confidence,
+    pub impact: Impact,
+    pub requires_confirmation: bool,
+    pub clarification: Option<ClarificationInput>,
+}
+
+/// Carries user-facing question copy associated with one proposed unknown.
+pub(crate) struct ClarificationInput {
+    pub prompt: String,
+    pub rationale: String,
+}
+
 impl SqliteStore {
+    /// Commits a validated analysis and optional successful agent history in one transaction.
+    pub(crate) fn create_analyzed_project(
+        &mut self,
+        input: NewProject,
+        findings: Vec<AnalyzedFindingInput>,
+        execution: Option<&AgentExecution>,
+    ) -> Result<Project, StorageError> {
+        let mut project = Project::from_new(input);
+        project.transition_to(ProjectStatus::Analyzing)?;
+        let next = if findings
+            .iter()
+            .any(|finding| finding.clarification.is_some())
+        {
+            ProjectStatus::AwaitingClarification
+        } else {
+            ProjectStatus::Planning
+        };
+        project.transition_to(next)?;
+        let token_counts = execution.map(agent_token_counts).transpose()?;
+        let transaction = self.connection.transaction()?;
+
+        // All stable IDs and operational history below are invisible until the final commit.
+        insert_project(&transaction, &project)?;
+        for input in findings {
+            let new_finding = NewFinding::new(
+                project.id().clone(),
+                input.kind,
+                &input.statement,
+                input.source_type,
+                "analysis",
+                input.confidence,
+                input.impact,
+                input.requires_confirmation,
+            )?;
+            let display_id =
+                allocate_display_id(&transaction, project.id(), input.kind.display_prefix())?;
+            let finding = Finding::from_new(new_finding, display_id);
+            insert_finding(&transaction, &finding)?;
+            if let Some(clarification) = input.clarification {
+                let question = build_question(
+                    project.id(),
+                    Some(finding.id().as_str()),
+                    &clarification.prompt,
+                    &clarification.rationale,
+                    input.impact,
+                    Uncertainty::High,
+                    CostOfBeingWrong::High,
+                    &transaction,
+                )?;
+                insert_question(&transaction, &question)?;
+            }
+        }
+        if let Some(execution) = execution {
+            insert_agent_execution(&transaction, project.id(), execution, token_counts)?;
+        }
+        transaction.commit()?;
+        Ok(project)
+    }
+
     /// Counts projects without loading their briefs into memory.
     pub fn project_count(&self) -> Result<u64, StorageError> {
         let count = self
@@ -39,6 +122,28 @@ impl SqliteStore {
         self.connection.execute(
             "UPDATE projects SET status = ?2, updated_at = ?3, revision = revision + 1 WHERE id = ?1",
             params![project_id.as_str(), next.as_db_str(), project.updated_at().to_rfc3339()],
+        )?;
+        Ok(())
+    }
+
+    /// Validates and persists the project-specific consequential-question threshold atomically.
+    pub fn set_clarification_threshold(
+        &mut self,
+        project_id: &ProjectId,
+        value: u16,
+    ) -> Result<(), StorageError> {
+        let mut project = self
+            .get_project(project_id)?
+            .ok_or_else(|| StorageError::ProjectNotFound(project_id.to_string()))?;
+        project.set_clarification_threshold(value)?;
+        self.connection.execute(
+            "UPDATE projects SET clarification_threshold = ?2, updated_at = ?3, \
+             revision = revision + 1 WHERE id = ?1",
+            params![
+                project_id.as_str(),
+                project.clarification_threshold(),
+                project.updated_at().to_rfc3339()
+            ],
         )?;
         Ok(())
     }
@@ -80,48 +185,58 @@ impl SqliteStore {
         uncertainty: Uncertainty,
         cost: CostOfBeingWrong,
     ) -> Result<Question, StorageError> {
-        let prompt = normalize_required_text(prompt, "question prompt", 8_192)?;
-        let rationale = normalize_required_text(rationale, "question rationale", 8_192)?;
         let transaction = self.connection.transaction()?;
-        let display_id = allocate_display_id(&transaction, project_id, "Q")?;
-        let now = Utc::now();
-        let question = Question {
-            id: Uuid::new_v4().to_string(),
-            display_id,
-            project_id: project_id.clone(),
-            finding_id: finding_id.map(str::to_owned),
+        ensure_project_exists(&transaction, project_id)?;
+        let question = build_question(
+            project_id,
+            finding_id,
             prompt,
             rationale,
             impact,
             uncertainty,
-            cost_of_being_wrong: cost,
-            priority: QuestionPriority::new(impact, uncertainty, cost),
-            status: QuestionStatus::Open,
-            created_at: now,
-            updated_at: now,
-        };
-        transaction.execute(
-            "INSERT INTO questions (id, display_id, project_id, finding_id, prompt, rationale, \
-             impact, uncertainty, cost_of_being_wrong, priority_score, status, created_at, updated_at) \
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-            params![
-                question.id,
-                question.display_id,
-                question.project_id.as_str(),
-                question.finding_id,
-                question.prompt,
-                question.rationale,
-                question.impact.as_db_str(),
-                question.uncertainty.as_db_str(),
-                question.cost_of_being_wrong.as_db_str(),
-                question.priority.score(),
-                question.status.as_db_str(),
-                question.created_at.to_rfc3339(),
-                question.updated_at.to_rfc3339(),
-            ],
+            cost,
+            &transaction,
         )?;
+        insert_question(&transaction, &question)?;
         transaction.commit()?;
         Ok(question)
+    }
+
+    /// Lists persisted successful-analysis activity in chronological run and sequence order.
+    pub fn list_agent_activity(
+        &self,
+        project_id: &ProjectId,
+    ) -> Result<Vec<ActivityEvent>, StorageError> {
+        let mut statement = self.connection.prepare(
+            "SELECT event.sequence, event.kind, event.message, event.created_at \
+             FROM agent_activity_events AS event \
+             JOIN agent_runs AS run ON run.id = event.agent_run_id \
+             WHERE event.project_id = ?1 \
+             ORDER BY run.started_at, run.id, event.sequence",
+        )?;
+        let rows = statement.query_map([project_id.as_str()], |row| {
+            Ok((
+                row.get::<_, u32>(0)?,
+                row.get::<_, String>(1)?,
+                row.get::<_, String>(2)?,
+                row.get::<_, String>(3)?,
+            ))
+        })?;
+        rows.map(|row| {
+            let (sequence, kind, message, created_at) = row?;
+            let kind =
+                ActivityKind::from_db_str(&kind).ok_or_else(|| StorageError::CorruptData {
+                    field: "agent activity kind",
+                    value: kind,
+                })?;
+            Ok(ActivityEvent {
+                sequence,
+                kind,
+                message,
+                created_at: parse_timestamp(created_at, "agent_activity_events.created_at")?,
+            })
+        })
+        .collect()
     }
 
     /// Stores a user answer and all deterministic reconciliation effects in one transaction.
@@ -131,11 +246,87 @@ impl SqliteStore {
         answer_text: &str,
         notes: Option<&str>,
     ) -> Result<Answer, StorageError> {
-        let answer_text = normalize_required_text(answer_text, "answer", 16_384)?;
-        let notes = notes
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .map(str::to_owned);
+        self.reconcile_answer_with_evidence(
+            question_id,
+            answer_text,
+            notes,
+            AnswerSource::User,
+            &[],
+        )
+    }
+
+    /// Stores one researched answer and all cited evidence in the same transaction.
+    pub fn reconcile_researched_answer(
+        &mut self,
+        question_id: &str,
+        answer_text: &str,
+        notes: Option<&str>,
+        evidence: &[ResearchEvidence],
+    ) -> Result<Answer, StorageError> {
+        self.reconcile_answer_with_evidence(
+            question_id,
+            answer_text,
+            notes,
+            AnswerSource::Imported,
+            evidence,
+        )
+    }
+
+    /// Stores every still-open judged answer in one transaction after validating batch identity.
+    pub fn reconcile_researched_answer_batch(
+        &mut self,
+        batch: &JudgedResearchBatch,
+    ) -> Result<Vec<Answer>, StorageError> {
+        let transaction = self.connection.transaction()?;
+        let mut applicable = Vec::new();
+        let mut project_id: Option<ProjectId> = None;
+        for judged in batch.answers() {
+            let question = load_question_by_id(&transaction, judged.question_id())?
+                .ok_or_else(|| StorageError::QuestionNotFound(judged.question_id().to_owned()))?;
+            if let Some(expected) = &project_id {
+                if expected != &question.project_id {
+                    return Err(StorageError::ProjectNotFound(format!(
+                        "judged batch spans projects {} and {}",
+                        expected, question.project_id
+                    )));
+                }
+            } else {
+                project_id = Some(question.project_id.clone());
+            }
+            if question.status == QuestionStatus::Open {
+                applicable.push((question, judged.answer()));
+            }
+        }
+
+        let now = Utc::now();
+        let mut accepted = Vec::with_capacity(applicable.len());
+        for (question, researched) in applicable {
+            accepted.push(reconcile_answer_in_transaction(
+                &transaction,
+                &question,
+                researched.answer_text(),
+                researched.notes(),
+                AnswerSource::Imported,
+                researched.evidence(),
+                now,
+            )?);
+        }
+        if let Some(project_id) = project_id {
+            update_project_after_answers(&transaction, &project_id, now)?;
+        }
+        transaction.commit()?;
+        Ok(accepted)
+    }
+
+    /// Applies common answer reconciliation while preserving source and evidence provenance.
+    fn reconcile_answer_with_evidence(
+        &mut self,
+        question_id: &str,
+        answer_text: &str,
+        notes: Option<&str>,
+        source: AnswerSource,
+        evidence: &[ResearchEvidence],
+    ) -> Result<Answer, StorageError> {
         let transaction = self.connection.transaction()?;
         let question = load_question_by_id(&transaction, question_id)?
             .ok_or_else(|| StorageError::QuestionNotFound(question_id.to_owned()))?;
@@ -143,63 +334,17 @@ impl SqliteStore {
             return Err(StorageError::QuestionNotOpen(question_id.to_owned()));
         }
 
-        // Every row and sequence below commits together, so history cannot observe a partial answer.
         let now = Utc::now();
-        let answer = Answer {
-            id: Uuid::new_v4().to_string(),
-            display_id: allocate_display_id(&transaction, &question.project_id, "ANS")?,
-            project_id: question.project_id.clone(),
-            question_id: question.id.clone(),
-            answer_text: answer_text.clone(),
-            source: AnswerSource::User,
-            resolves_question: true,
+        let answer = reconcile_answer_in_transaction(
+            &transaction,
+            &question,
+            answer_text,
             notes,
-            created_at: now,
-        };
-        insert_answer(&transaction, &answer)?;
-        transaction.execute(
-            "UPDATE questions SET status = 'answered', updated_at = ?2 WHERE id = ?1",
-            params![question.id, now.to_rfc3339()],
-        )?;
-        if let Some(finding_id) = &question.finding_id {
-            transaction.execute(
-                "UPDATE findings SET status = 'resolved', updated_at = ?2 WHERE id = ?1",
-                params![finding_id, now.to_rfc3339()],
-            )?;
-        }
-        let requirement = reconciled_requirement(&transaction, &question, &answer, now)?;
-        insert_trace(
-            &transaction,
-            &question.project_id,
-            "requirement",
-            &requirement.id,
-            "question",
-            &question.id,
-            TraceRelationship::DerivedFrom,
+            source,
+            evidence,
             now,
         )?;
-        insert_trace(
-            &transaction,
-            &question.project_id,
-            "answer",
-            &answer.id,
-            "question",
-            &question.id,
-            TraceRelationship::Answers,
-            now,
-        )?;
-        let open_questions = transaction.query_row(
-            "SELECT COUNT(*) FROM questions WHERE project_id = ?1 AND status = 'open'",
-            [question.project_id.as_str()],
-            |row| row.get::<_, i64>(0),
-        )?;
-        if open_questions == 0 {
-            transaction.execute(
-                "UPDATE projects SET status = 'planning', updated_at = ?2, revision = revision + 1 \
-                 WHERE id = ?1 AND status = 'awaiting_clarification'",
-                params![question.project_id.as_str(), now.to_rfc3339()],
-            )?;
-        }
+        update_project_after_answers(&transaction, &question.project_id, now)?;
         transaction.commit()?;
         Ok(answer)
     }
@@ -218,6 +363,8 @@ impl SqliteStore {
             questions: self.list_questions(project_id)?,
             answers: self.list_answers(project_id)?,
             requirements: self.list_requirements(project_id)?,
+            evidence: self.list_evidence(project_id)?,
+            decisions: self.list_decisions(project_id)?,
             traces: self.list_traces(project_id)?,
         })
     }
@@ -456,6 +603,132 @@ fn question_from_raw(raw: RawQuestion) -> Result<Question, StorageError> {
     })
 }
 
+/// Builds one validated clarification record while sharing the caller's display-ID transaction.
+#[allow(clippy::too_many_arguments)]
+fn build_question(
+    project_id: &ProjectId,
+    finding_id: Option<&str>,
+    prompt: &str,
+    rationale: &str,
+    impact: Impact,
+    uncertainty: Uncertainty,
+    cost: CostOfBeingWrong,
+    transaction: &rusqlite::Transaction<'_>,
+) -> Result<Question, StorageError> {
+    let now = Utc::now();
+    Ok(Question {
+        id: Uuid::new_v4().to_string(),
+        display_id: allocate_display_id(transaction, project_id, "Q")?,
+        project_id: project_id.clone(),
+        finding_id: finding_id.map(str::to_owned),
+        prompt: normalize_required_text(prompt, "question prompt", 8_192)?,
+        rationale: normalize_required_text(rationale, "question rationale", 8_192)?,
+        impact,
+        uncertainty,
+        cost_of_being_wrong: cost,
+        priority: QuestionPriority::new(impact, uncertainty, cost),
+        status: QuestionStatus::Open,
+        created_at: now,
+        updated_at: now,
+    })
+}
+
+/// Inserts one fully identified clarification inside an existing transaction.
+fn insert_question(
+    transaction: &rusqlite::Transaction<'_>,
+    question: &Question,
+) -> Result<(), StorageError> {
+    transaction.execute(
+        "INSERT INTO questions (id, display_id, project_id, finding_id, prompt, rationale, \
+         impact, uncertainty, cost_of_being_wrong, priority_score, status, created_at, updated_at) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+        params![
+            question.id,
+            question.display_id,
+            question.project_id.as_str(),
+            question.finding_id,
+            question.prompt,
+            question.rationale,
+            question.impact.as_db_str(),
+            question.uncertainty.as_db_str(),
+            question.cost_of_being_wrong.as_db_str(),
+            question.priority.score(),
+            question.status.as_db_str(),
+            question.created_at.to_rfc3339(),
+            question.updated_at.to_rfc3339(),
+        ],
+    )?;
+    Ok(())
+}
+
+/// Converts optional provider token counts before any transaction can mutate state.
+fn agent_token_counts(
+    execution: &AgentExecution,
+) -> Result<(Option<i64>, Option<i64>), StorageError> {
+    Ok((
+        checked_token_count(execution.input_tokens, "agent input token count")?,
+        checked_token_count(execution.output_tokens, "agent output token count")?,
+    ))
+}
+
+/// Converts one optional token count without lossy integer narrowing.
+fn checked_token_count(
+    value: Option<u64>,
+    field: &'static str,
+) -> Result<Option<i64>, StorageError> {
+    value
+        .map(|count| {
+            i64::try_from(count).map_err(|_| StorageError::ValueOutOfRange {
+                field,
+                value: count,
+            })
+        })
+        .transpose()
+}
+
+/// Inserts one successful run and its sanitized activity entries atomically with the project.
+fn insert_agent_execution(
+    transaction: &rusqlite::Transaction<'_>,
+    project_id: &ProjectId,
+    execution: &AgentExecution,
+    token_counts: Option<(Option<i64>, Option<i64>)>,
+) -> Result<(), StorageError> {
+    let (input_tokens, output_tokens) = token_counts.unwrap_or((None, None));
+    let response_hash = format!("{:x}", Sha256::digest(execution.response.as_bytes()));
+    transaction.execute(
+        "INSERT INTO agent_runs (id, project_id, operation, provider, model, status, \
+         response_hash, input_tokens, output_tokens, started_at, completed_at) \
+         VALUES (?1, ?2, 'initial_brief_analysis', ?3, ?4, 'succeeded', ?5, ?6, ?7, ?8, ?9)",
+        params![
+            execution.id,
+            project_id.as_str(),
+            execution.provider,
+            execution.model,
+            response_hash,
+            input_tokens,
+            output_tokens,
+            execution.started_at.to_rfc3339(),
+            execution.completed_at.to_rfc3339(),
+        ],
+    )?;
+    for event in &execution.activity {
+        transaction.execute(
+            "INSERT INTO agent_activity_events \
+             (agent_run_id, project_id, sequence, kind, message, created_at) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![
+                execution.id,
+                project_id.as_str(),
+                event.sequence,
+                event.kind.as_db_str(),
+                event.message,
+                event.created_at.to_rfc3339(),
+            ],
+        )?;
+    }
+    Ok(())
+}
+
 /// Loads one question inside an existing reconciliation transaction.
 fn load_question_by_id(
     transaction: &rusqlite::Transaction<'_>,
@@ -471,6 +744,101 @@ fn load_question_by_id(
         .optional()?
         .map(question_from_raw)
         .transpose()
+}
+
+/// Applies one validated answer inside a caller-owned transaction without committing it.
+fn reconcile_answer_in_transaction(
+    transaction: &rusqlite::Transaction<'_>,
+    question: &Question,
+    answer_text: &str,
+    notes: Option<&str>,
+    source: AnswerSource,
+    evidence: &[ResearchEvidence],
+    now: chrono::DateTime<Utc>,
+) -> Result<Answer, StorageError> {
+    let answer_text = normalize_required_text(answer_text, "answer", 16_384)?;
+    let notes = notes
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_owned);
+    let answer = Answer {
+        id: Uuid::new_v4().to_string(),
+        display_id: allocate_display_id(transaction, &question.project_id, "ANS")?,
+        project_id: question.project_id.clone(),
+        question_id: question.id.clone(),
+        answer_text,
+        source,
+        resolves_question: true,
+        notes,
+        created_at: now,
+    };
+    insert_answer(transaction, &answer)?;
+    for research_evidence in evidence {
+        let evidence = insert_researched_evidence(transaction, question, research_evidence, now)?;
+        insert_trace(
+            transaction,
+            &question.project_id,
+            "evidence",
+            &evidence.id,
+            "answer",
+            &answer.id,
+            TraceRelationship::Supports,
+            now,
+        )?;
+    }
+    transaction.execute(
+        "UPDATE questions SET status = 'answered', updated_at = ?2 WHERE id = ?1",
+        params![question.id, now.to_rfc3339()],
+    )?;
+    if let Some(finding_id) = &question.finding_id {
+        transaction.execute(
+            "UPDATE findings SET status = 'resolved', updated_at = ?2 WHERE id = ?1",
+            params![finding_id, now.to_rfc3339()],
+        )?;
+    }
+    let requirement = reconciled_requirement(transaction, question, &answer, now)?;
+    insert_trace(
+        transaction,
+        &question.project_id,
+        "requirement",
+        &requirement.id,
+        "question",
+        &question.id,
+        TraceRelationship::DerivedFrom,
+        now,
+    )?;
+    insert_trace(
+        transaction,
+        &question.project_id,
+        "answer",
+        &answer.id,
+        "question",
+        &question.id,
+        TraceRelationship::Answers,
+        now,
+    )?;
+    Ok(answer)
+}
+
+/// Advances a clarified project only after its transaction contains no remaining open questions.
+fn update_project_after_answers(
+    transaction: &rusqlite::Transaction<'_>,
+    project_id: &ProjectId,
+    now: chrono::DateTime<Utc>,
+) -> Result<(), StorageError> {
+    let open_questions = transaction.query_row(
+        "SELECT COUNT(*) FROM questions WHERE project_id = ?1 AND status = 'open'",
+        [project_id.as_str()],
+        |row| row.get::<_, i64>(0),
+    )?;
+    if open_questions == 0 {
+        transaction.execute(
+            "UPDATE projects SET status = 'planning', updated_at = ?2, revision = revision + 1 \
+             WHERE id = ?1 AND status = 'awaiting_clarification'",
+            params![project_id.as_str(), now.to_rfc3339()],
+        )?;
+    }
+    Ok(())
 }
 
 /// Inserts the immutable answer portion of a reconciliation transaction.
@@ -513,7 +881,11 @@ fn reconciled_requirement(
         display_id: allocate_display_id(transaction, &question.project_id, "REQ")?,
         project_id: question.project_id.clone(),
         statement: format!("The {subject} must be {}.", answer.answer_text),
-        source_type: SourceType::UserAnswer,
+        source_type: match answer.source {
+            AnswerSource::User => SourceType::UserAnswer,
+            AnswerSource::Imported => SourceType::Research,
+            AnswerSource::System => SourceType::System,
+        },
         source_reference: answer.display_id.clone(),
         priority: question.impact.as_db_str().to_owned(),
         status: RequirementStatus::Active,
@@ -545,6 +917,44 @@ fn reconciled_requirement(
         ],
     )?;
     Ok(requirement)
+}
+
+/// Inserts one cited research record tied to its originating unknown and answer.
+fn insert_researched_evidence(
+    transaction: &rusqlite::Transaction<'_>,
+    question: &Question,
+    input: &ResearchEvidence,
+    now: chrono::DateTime<Utc>,
+) -> Result<crate::domain::Evidence, StorageError> {
+    let evidence = crate::domain::Evidence {
+        id: Uuid::new_v4().to_string(),
+        display_id: allocate_display_id(transaction, &question.project_id, "EVD")?,
+        project_id: question.project_id.clone(),
+        claim: input.claim().to_owned(),
+        source: input.source().to_owned(),
+        source_title: input.source_title().to_owned(),
+        reliability: input.reliability(),
+        notes: input.notes().map(ToOwned::to_owned),
+        retrieved_at: now,
+    };
+    transaction.execute(
+        "INSERT INTO evidence \
+         (id, display_id, project_id, research_question_id, claim, source, source_title, retrieved_at, reliability, notes, status, created_at, updated_at) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, 'active', ?8, ?8)",
+        params![
+            evidence.id,
+            evidence.display_id,
+            evidence.project_id.as_str(),
+            question.finding_id,
+            evidence.claim,
+            evidence.source,
+            evidence.source_title,
+            evidence.retrieved_at.to_rfc3339(),
+            evidence.reliability.as_db_str(),
+            evidence.notes,
+        ],
+    )?;
+    Ok(evidence)
 }
 
 /// Inserts one explicit graph edge inside the caller's transaction.

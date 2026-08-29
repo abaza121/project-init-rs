@@ -38,7 +38,7 @@ and this project adheres to Semantic Versioning.
 
 - Prevent the application from crashing when the configuration file is missing.
 
-## [1.2.0] - 2026-08-28
+## [1.2.0] - 2026-08-28T14:30:00+01:00
 
 ### Added
 
@@ -53,7 +53,7 @@ All changes that have not yet been released MUST be placed under:
 ## [Unreleased]
 ```
 
-Do not create a new version number or release date unless explicitly performing a release.
+Do not create a new version number or release timestamp unless explicitly performing a release.
 
 When adding entries:
 
@@ -335,7 +335,7 @@ Do not invent:
 - Fixes.
 - Breaking changes.
 - Version numbers.
-- Release dates.
+- Release timestamps.
 - Issue numbers.
 - Pull request numbers.
 
@@ -421,16 +421,16 @@ Example:
 Released versions use the following format:
 
 ```markdown
-## [VERSION] - YYYY-MM-DD
+## [VERSION] - YYYY-MM-DDTHH:MM:SS+HH:MM
 ```
 
 For example:
 
 ```markdown
-## [2.1.0] - 2026-08-28
+## [2.1.0] - 2026-08-28T15:30:00+01:00
 ```
 
-Dates MUST use ISO `YYYY-MM-DD` format.
+Release timestamps MUST use ISO 8601 `YYYY-MM-DDTHH:MM:SS+HH:MM` format, including seconds and the numeric UTC offset in effect at the release location. For negative offsets, replace `+` with `-`.
 
 Released versions MUST appear in reverse chronological order, with the newest release first.
 
@@ -439,11 +439,11 @@ Example:
 ```markdown
 ## [Unreleased]
 
-## [2.1.0] - 2026-08-28
+## [2.1.0] - 2026-08-28T15:30:00+01:00
 
-## [2.0.1] - 2026-08-14
+## [2.0.1] - 2026-08-14T10:15:00+01:00
 
-## [2.0.0] - 2026-08-01
+## [2.0.0] - 2026-08-01T09:00:00+01:00
 ```
 
 ## Preparing a Release
@@ -451,7 +451,7 @@ Example:
 When explicitly asked to prepare a release:
 
 1. Determine the intended version.
-2. Determine the release date.
+2. Determine the release date, time, and numeric UTC offset.
 3. Move all relevant entries from `Unreleased` into the new version.
 4. Preserve their category headings.
 5. Remove empty headings.
@@ -473,7 +473,7 @@ Before:
 
 - Prevent invalid templates from crashing initialization.
 
-## [1.4.0] - 2026-08-01
+## [1.4.0] - 2026-08-01T09:00:00+01:00
 ```
 
 After releasing `1.5.0`:
@@ -481,7 +481,7 @@ After releasing `1.5.0`:
 ```markdown
 ## [Unreleased]
 
-## [1.5.0] - 2026-08-28
+## [1.5.0] - 2026-08-28T15:30:00+01:00
 
 ### Added
 
@@ -491,7 +491,7 @@ After releasing `1.5.0`:
 
 - Prevent invalid templates from crashing initialization.
 
-## [1.4.0] - 2026-08-01
+## [1.4.0] - 2026-08-01T09:00:00+01:00
 ```
 
 Never assign a release version based solely on assumptions.
@@ -523,7 +523,7 @@ Do not delete a released version from the changelog if it is withdrawn.
 Mark it as:
 
 ```markdown
-## [1.4.1] - 2026-08-20 [YANKED]
+## [1.4.1] - 2026-08-20T11:45:00+01:00 [YANKED]
 ```
 
 When useful, briefly explain why the release was withdrawn.
@@ -597,7 +597,7 @@ Before completing any task containing notable changes, verify:
 - [ ] I avoided copying commit messages blindly.
 - [ ] I combined multiple commits representing one logical change.
 - [ ] I called out breaking changes explicitly.
-- [ ] I did not invent a version or release date.
+- [ ] I did not invent a version or release timestamp.
 - [ ] I did not add empty sections.
 - [ ] I avoided duplicate changelog entries.
 - [ ] I preserved existing changelog conventions.

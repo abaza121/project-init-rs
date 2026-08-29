@@ -10,8 +10,10 @@ use crate::domain::{
 
 use super::StorageError;
 
-const CURRENT_SCHEMA_VERSION: u32 = 1;
+const CURRENT_SCHEMA_VERSION: u32 = 3;
 const INITIAL_MIGRATION: &str = include_str!("../../migrations/001_initial.sql");
+const AGENT_ACTIVITY_MIGRATION: &str = include_str!("../../migrations/002_agent_activity.sql");
+const COMPLETE_LOOP_MIGRATION: &str = include_str!("../../migrations/003_complete_loop.sql");
 
 /// Owns one SQLite connection and exposes transactional authoritative operations.
 pub struct SqliteStore {
@@ -43,6 +45,12 @@ impl SqliteStore {
         if found == 0 {
             connection.execute_batch(INITIAL_MIGRATION)?;
         }
+        if found <= 1 {
+            connection.execute_batch(AGENT_ACTIVITY_MIGRATION)?;
+        }
+        if found <= 2 {
+            connection.execute_batch(COMPLETE_LOOP_MIGRATION)?;
+        }
         Ok(Self { connection })
     }
 
@@ -60,20 +68,7 @@ impl SqliteStore {
     pub fn create_project(&mut self, input: NewProject) -> Result<Project, StorageError> {
         let project = Project::from_new(input);
         let transaction = self.connection.transaction()?;
-        transaction.execute(
-            "INSERT INTO projects \
-             (id, name, brief, status, retrieval_mode, created_at, updated_at) \
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-            params![
-                project.id().as_str(),
-                project.name(),
-                project.brief(),
-                project.status().as_db_str(),
-                project.retrieval_mode().as_db_str(),
-                project.created_at().to_rfc3339(),
-                project.updated_at().to_rfc3339(),
-            ],
-        )?;
+        insert_project(&transaction, &project)?;
         transaction.commit()?;
         Ok(project)
     }
@@ -83,8 +78,8 @@ impl SqliteStore {
         let row = self
             .connection
             .query_row(
-                "SELECT id, name, brief, status, retrieval_mode, created_at, updated_at \
-                 FROM projects WHERE id = ?1",
+                "SELECT id, name, brief, status, retrieval_mode, clarification_threshold, created_at, updated_at \
+                  FROM projects WHERE id = ?1",
                 [id.as_str()],
                 StoredProjectRow::read,
             )
@@ -95,8 +90,8 @@ impl SqliteStore {
     /// Lists projects in creation order for CLI discovery and resume selection.
     pub fn list_projects(&self) -> Result<Vec<Project>, StorageError> {
         let mut statement = self.connection.prepare(
-            "SELECT id, name, brief, status, retrieval_mode, created_at, updated_at \
-             FROM projects ORDER BY created_at, id",
+            "SELECT id, name, brief, status, retrieval_mode, clarification_threshold, created_at, updated_at \
+              FROM projects ORDER BY created_at, id",
         )?;
         let rows = statement.query_map([], StoredProjectRow::read)?;
         rows.map(|row| {
@@ -154,6 +149,29 @@ impl SqliteStore {
     }
 }
 
+/// Inserts a fully validated project inside the caller's transaction.
+pub(super) fn insert_project(
+    transaction: &Transaction<'_>,
+    project: &Project,
+) -> Result<(), StorageError> {
+    transaction.execute(
+        "INSERT INTO projects \
+         (id, name, brief, status, retrieval_mode, clarification_threshold, created_at, updated_at) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+        params![
+            project.id().as_str(),
+            project.name(),
+            project.brief(),
+            project.status().as_db_str(),
+            project.retrieval_mode().as_db_str(),
+            project.clarification_threshold(),
+            project.created_at().to_rfc3339(),
+            project.updated_at().to_rfc3339(),
+        ],
+    )?;
+    Ok(())
+}
+
 /// Holds raw project columns until checked text and timestamps are validated.
 struct StoredProjectRow {
     id: String,
@@ -161,6 +179,7 @@ struct StoredProjectRow {
     brief: String,
     status: String,
     retrieval_mode: String,
+    clarification_threshold: u16,
     created_at: String,
     updated_at: String,
 }
@@ -174,8 +193,9 @@ impl StoredProjectRow {
             brief: row.get(2)?,
             status: row.get(3)?,
             retrieval_mode: row.get(4)?,
-            created_at: row.get(5)?,
-            updated_at: row.get(6)?,
+            clarification_threshold: row.get(5)?,
+            created_at: row.get(6)?,
+            updated_at: row.get(7)?,
         })
     }
 
@@ -198,6 +218,7 @@ impl StoredProjectRow {
             self.brief,
             status,
             retrieval_mode,
+            self.clarification_threshold,
             parse_timestamp(self.created_at, "projects.created_at")?,
             parse_timestamp(self.updated_at, "projects.updated_at")?,
         ))
@@ -267,7 +288,7 @@ impl StoredFindingRow {
 }
 
 /// Verifies a finding partition before any sequence or knowledge mutation occurs.
-fn ensure_project_exists(
+pub(super) fn ensure_project_exists(
     transaction: &Transaction<'_>,
     project_id: &ProjectId,
 ) -> Result<(), StorageError> {
@@ -315,7 +336,10 @@ pub(super) fn allocate_display_id(
 }
 
 /// Inserts a fully identified finding inside the caller's atomic transaction.
-fn insert_finding(transaction: &Transaction<'_>, finding: &Finding) -> Result<(), StorageError> {
+pub(super) fn insert_finding(
+    transaction: &Transaction<'_>,
+    finding: &Finding,
+) -> Result<(), StorageError> {
     transaction.execute(
         "INSERT INTO findings \
          (id, display_id, project_id, kind, statement, source_type, source_reference, \

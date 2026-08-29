@@ -35,4 +35,22 @@ pub enum StorageError {
     /// Prevents opening a database created by a newer, unsupported schema.
     #[error("database schema version {found} is newer than supported version {supported}")]
     UnsupportedSchema { found: u32, supported: u32 },
+    /// Rejects an external numeric value that SQLite cannot represent losslessly.
+    #[error("{field} is outside the supported range: {value}")]
+    ValueOutOfRange { field: &'static str, value: u64 },
+    /// Rejects changing policy while a project still has an active resumable run.
+    #[error("active workflow uses {active} approval, not requested {requested} approval")]
+    ActiveRunPolicyConflict { active: String, requested: String },
+    /// Indicates that no active run matches the requested durable identity.
+    #[error("workflow run does not exist or is already terminal: {0}")]
+    WorkflowRunNotFound(String),
+    /// Indicates that an artifact path has no registered generated document.
+    #[error("document is not registered: {0}")]
+    DocumentNotFound(String),
+    /// Indicates that no decision matches an approval or rejection command.
+    #[error("decision does not exist: {0}")]
+    DecisionNotFound(String),
+    /// Prevents repeated or conflicting authority records for a closed decision.
+    #[error("decision is not awaiting authority: {0}")]
+    DecisionNotPending(String),
 }

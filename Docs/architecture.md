@@ -43,11 +43,25 @@ Each use case prepares and validates a complete transition before committing it 
 
 Semantic synchronization runs after commit. A failed index update records a stale state and warning; it does not erase or roll back the accepted answer.
 
+## Interactive workbench boundary
+
+`project-init open` composes a `WorkspaceState` from one authoritative `ProjectSnapshot`, persisted workflow context, and analysis activity. Keyboard handling emits a closed `WorkspaceCommand` rather than mutating storage directly. `ProjectService` applies answers, user-authored questions, clarification-threshold changes, decision authority, and repair authorization; the workbench then reloads the complete snapshot, calculates an affected-entity diff, and advances the open clarification queue.
+
+`/resume` delegates to the same `WorkflowRunner` used by CLI `run`. A first workbench run persists only after the user selects an approval policy with no default. Long-running Codex work owns a separate `ProjectService` and SQLite connection on the Tokio runtime, streams bounded sanitized JSONL activity to a progress overlay, resets its inactivity deadline whenever stdout or stderr advances, and accepts cancellation through a shared token. Foreground mutations remain disabled until the worker returns, after which the workbench reloads SQLite and renders the next question, approval, repair, failure, or completion guidance.
+
+Selection, focus, composer text, structured question drafts, timeline rows, and mutation diffs are disposable presentation state. SQLite remains authoritative. The projected timeline uses record update timestamps for mutable status and a stable rendering-only tie-breaker; equal-time records remain visible and the tie-breaker does not claim causal order.
+
 ## Agent boundary
 
-`AgentClient` accepts an operation name, validated focused context, and a response schema identifier. The Codex CLI adapter makes the executable and arguments visible in logs, sends no credentials, bounds execution, and rejects non-conforming JSON. Tests use a deterministic fixture client.
+`AgentClient` accepts validated focused context, a bounded activity channel, and a cancellation token. The Codex CLI adapter invokes `codex exec` directly with JSONL events, a strict output schema, an ephemeral session, a read-only sandbox, and a five-minute deadline. Brief text travels through stdin rather than process arguments. Tests use deterministic fixtures and never require a live model.
 
-The analyzer response is a typed collection of proposed findings and contradictions. Provenance is assigned by the application from the operation context; the model cannot claim that its own inference came directly from the user.
+`ResearchClient` preserves the original single-question cited-research boundary. Parallel automatic clarification uses the additive `AutoAnswerClient`, whose coordinator selects the current blocker and at most two independent consequential questions, whose workers reuse the same focused research contract, and whose judge must return every provisional candidate exactly once. The runner shares the immutable client through `Arc`, uses a fixed three-task `JoinSet`, retries each failed worker and judge once, and streams separate actor-keyed progress without changing persisted activity records. Every Codex call remains ephemeral and read-only, fetched pages remain untrusted evidence, and malformed, uncited, missing, duplicate, or extra answers fail closed.
+
+Worker candidates and judge output remain provisional. After a final cancellation check, one workflow service call validates question identity and stores every still-open judged answer, its evidence, derived requirement, and provenance links in one SQLite transaction. A missing question or persistence error rolls back the complete batch; an answer already closed by another process is skipped.
+
+Codex JSONL is translated into provider-neutral, sanitized activity before reaching the TUI. Unknown events are ignored, malformed progress becomes a warning, and history is bounded. The analyzer response is a typed collection of proposed findings and contradictions. Provenance is assigned by the application from the brief context; the model cannot claim that its own inference came directly from the user.
+
+Successful project creation, findings, questions, agent-run metadata, and activity history commit in one SQLite transaction. Spawn failure, timeout, cancellation, non-zero exit, or invalid structured output leaves no authoritative state.
 
 ## Retrieval boundary
 
@@ -59,7 +73,11 @@ Relational mode uses deterministic queries only. Semantic mode adds candidates b
 
 Generation reads a consistent project snapshot and emits known artifacts section by section. Every important rendered claim carries or links a stable source ID. The validator checks both stored relationships and filesystem outputs, persists a validation run and findings, and transitions to `Complete` only with no unresolved high-severity failures.
 
-Safe repairs are mechanical: regenerate a missing index, refresh a stale generated file, or add a deterministically derivable traceability row. Product choices, evidence claims, and contradiction resolutions always return to the user.
+Deterministic repairs regenerate a missing index, refresh a stale generated file, or add a mechanically derivable traceability row. Bounded Codex repair may revise provisional documents, but product choices, unsupported evidence claims, and contradiction resolutions always return to the user.
+
+The complete-loop planner is observational: it derives exactly one next step from the project snapshot, active workflow run, approval policy, document hashes, and newest validation. The shared runner applies that step through workflow services for both CLI and TUI callers. Codex documentation generation and explicitly authorized repair occur in a temporary `workspace-write` staging directory; only a complete expected package is adopted, and registered or automatically detected manual overrides are never replaced. Repair authorization and validation pass counts are persisted and bounded by the project repair limit.
+
+By default, a question remains a stable user-input boundary. `--auto-answer` explicitly attaches an `AutoAnswerClient` to the runner, while `/auto-answer` activates the same path from the workbench after mandatory first-run policy selection. Attached CLI terminals open the actor-keyed auto-answer board; non-terminal automation remains headless. Planning, worker, judge, or adoption failure pauses the run with `research_failed`; cancellation commits no provisional batch state, and approval and repair boundaries retain their existing semantics.
 
 ## Operational behavior
 
@@ -69,6 +87,7 @@ Safe repairs are mechanical: regenerate a missing index, refresh a stale generat
 - Schema migrations are monotonic and transactional.
 - Logs are structured and avoid brief contents by default; `--trace-retrieval` exposes IDs, counts, scores, discard reasons, and duration, but never credentials.
 - Terminal ownership uses Ratatui's documented `run` helper so normal errors and panics restore terminal state.
+- Native Codex executable discovery bypasses Windows shell shims and can locate the binary bundled by npm; `CODEX_BIN` accepts a full native executable path, while `--offline` selects the deterministic analyzer without acting as an automatic fallback.
 
 ## Security and resource posture
 

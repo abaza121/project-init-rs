@@ -9,6 +9,9 @@ use super::error::normalize_required_text;
 
 const MAX_PROJECT_NAME_CHARS: usize = 160;
 const MAX_BRIEF_CHARS: usize = 65_536;
+const DEFAULT_CLARIFICATION_THRESHOLD: u16 = 27;
+const MIN_CLARIFICATION_THRESHOLD: u16 = 1;
+const MAX_CLARIFICATION_THRESHOLD: u16 = 125;
 
 /// Uniquely identifies a project independently of its human-readable name.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -125,7 +128,11 @@ impl ProjectStatus {
                     Self::Validating,
                     Self::Complete | Self::Generating | Self::NeedsUserInput
                 )
-                | (Self::NeedsUserInput, Self::AwaitingClarification)
+                | (
+                    Self::NeedsUserInput,
+                    Self::AwaitingClarification | Self::Generating
+                )
+                | (Self::Complete, Self::Generating | Self::NeedsUserInput)
         )
     }
 
@@ -214,6 +221,7 @@ pub struct Project {
     brief: String,
     status: ProjectStatus,
     retrieval_mode: RetrievalMode,
+    clarification_threshold: u16,
     created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,
 }
@@ -241,18 +249,21 @@ impl Project {
             brief: input.brief,
             status: ProjectStatus::Draft,
             retrieval_mode: input.retrieval_mode,
+            clarification_threshold: DEFAULT_CLARIFICATION_THRESHOLD,
             created_at: now,
             updated_at: now,
         }
     }
 
     /// Rehydrates a project row whose checked fields were validated by storage.
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn from_stored(
         id: ProjectId,
         name: String,
         brief: String,
         status: ProjectStatus,
         retrieval_mode: RetrievalMode,
+        clarification_threshold: u16,
         created_at: DateTime<Utc>,
         updated_at: DateTime<Utc>,
     ) -> Self {
@@ -262,6 +273,7 @@ impl Project {
             brief,
             status,
             retrieval_mode,
+            clarification_threshold,
             created_at,
             updated_at,
         }
@@ -292,6 +304,11 @@ impl Project {
         self.retrieval_mode
     }
 
+    /// Returns the inclusive priority score at which a question is consequential.
+    pub const fn clarification_threshold(&self) -> u16 {
+        self.clarification_threshold
+    }
+
     /// Returns when this project was first created.
     pub const fn created_at(&self) -> DateTime<Utc> {
         self.created_at
@@ -311,6 +328,20 @@ impl Project {
             });
         }
         self.status = next;
+        self.updated_at = Utc::now();
+        Ok(())
+    }
+
+    /// Applies a valid project-scoped clarification threshold without changing state on rejection.
+    pub fn set_clarification_threshold(&mut self, value: u16) -> Result<(), DomainError> {
+        if !(MIN_CLARIFICATION_THRESHOLD..=MAX_CLARIFICATION_THRESHOLD).contains(&value) {
+            return Err(DomainError::InvalidClarificationThreshold {
+                value,
+                min: MIN_CLARIFICATION_THRESHOLD,
+                max: MAX_CLARIFICATION_THRESHOLD,
+            });
+        }
+        self.clarification_threshold = value;
         self.updated_at = Utc::now();
         Ok(())
     }

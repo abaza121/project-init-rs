@@ -12,6 +12,9 @@ pub enum DomainError {
     /// Indicates that the requested project lifecycle edge is not legal.
     #[error("project cannot transition from {from} to {to}")]
     InvalidProjectTransition { from: String, to: String },
+    /// Rejects a clarification threshold outside the complete question-priority range.
+    #[error("clarification threshold must be between {min} and {max}, received {value}")]
+    InvalidClarificationThreshold { value: u16, min: u16, max: u16 },
 }
 
 /// Trims and validates text that becomes authoritative project state.

@@ -35,6 +35,7 @@ Implementation follows vertical, test-first slices. Each slice leaves a runnable
 
 - Structured analysis responses are schema-validated before persistence.
 - The deterministic analyzer creates explicit findings and conservative unknowns.
+- Codex CLI analysis streams bounded provider-neutral activity and commits only after validation; `--offline` explicitly selects deterministic analysis.
 - Priority boundaries order and filter questions predictably.
 
 **Verification:** fixture tests for normal, empty, contradictory, and malformed inputs.
@@ -71,6 +72,7 @@ Implementation follows vertical, test-first slices. Each slice leaves a runnable
 
 - All specified commands parse and dispatch with useful errors.
 - Overview, clarification, and finding panels render with intentional controls.
+- Initial analysis renders a spinner, rolling activity history, scrolling, immediate cancellation, and persisted activity replay.
 - Quit preserves state and terminal cleanup is reliable.
 
 **Verification:** Clap parse tests, Ratatui test-backend snapshots/assertions, and a manual terminal smoke test.
@@ -131,7 +133,7 @@ Inspect the staged diff, search it for credential-shaped content, update the cha
 
 Artifacts: baseline import, baseline assessment, product specification, architecture, schema, and ordered task plan.
 
-Decisions: single package with library/binary targets; SQLite authority; optional LanceDB; deterministic offline default; bounded repair; baseline preserved as history.
+Decisions: single package with library/binary targets; SQLite authority; optional LanceDB; Codex default with explicit deterministic `--offline`; bounded repair; baseline preserved as history.
 
 Evidence: inspected both upstream commits and every baseline file; verified current Ratatui, Clap, Rusqlite, and LanceDB APIs against official docs.
 

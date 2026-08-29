@@ -8,8 +8,8 @@ The primary user is a developer or product creator who has an idea but not yet a
 
 ## Acceptance criteria
 
-1. `project-init new --brief <file>` validates a non-empty brief, persists a project and structured findings, prioritizes consequential questions, and opens the TUI when attached to a terminal.
-2. `project-init open <project-id>` resumes persisted state without losing history.
+1. `project-init new --brief <file>` validates a non-empty brief, runs schema-constrained Codex analysis by default, shows bounded live activity in the TUI, atomically persists successful results, prioritizes consequential questions, and opens the durable overview when attached to a terminal. `--offline` explicitly selects deterministic analysis.
+2. `project-init open <project-id>` resumes a keyboard-first contextual workbench without losing history. It can answer open questions, capture structured user questions, adjust the consequential threshold, show affected-entity diffs, explicitly resume online generation, handle decision authority and bounded repair, and advance through the complete workflow without requiring a CLI round trip.
 3. `list`, `inspect`, `generate`, `validate`, `export`, `inspect-related`, and retrieval-management commands expose the stored model without requiring a live agent.
 4. SQLite is the authoritative source for projects, findings, requirements, questions, answers, evidence, decisions, trace links, documents, validation state, and semantic-index state.
 5. Every important statement records provenance; agent inference is never silently promoted to a user requirement.
@@ -22,10 +22,16 @@ The primary user is a developer or product creator who has an idea but not yet a
 12. Unit and integration tests use deterministic clients and embeddings and require no paid API.
 13. The fishing VR fixture demonstrates the end-to-end flow and both evaluation modes without fabricated results.
 14. The preserved baseline remains runnable independently.
+15. `new --run`, `run`, `step`, and `status` drive one persisted orchestration loop with a run-scoped approval policy, full fixed artifact graph, protected manual overrides, and machine-readable pause reasons.
+16. Evidence and decisions have explicit capture and authority commands; validation runs, document hashes, and immutable revisions are persisted rather than inferred from files.
+17. First workbench resume requires explicit approval-policy selection with no default. Codex generation and repair remain cancellable and provisional until a complete staging package is adopted.
+18. The global `--no-skills` option disables every discovered Codex skill for initial analysis, CLI-driven generation, and workbench resume without persisting configuration changes; incomplete discovery fails before provider work begins.
+19. `run --auto-answer`, `new --run --auto-answer`, and workbench `/auto-answer` use a fixed three-worker pool to research different dependency-safe consequential questions, require a separate schema-constrained Codex judge, atomically persist still-applicable cited recommendations as imported research rather than user authority, and continue until another workflow boundary or completion. Attached terminals show actor-keyed TUI progress while redirected automation remains headless.
 
 ## Explicit behavior
 
 - Users are authoritative over consequential product decisions.
+- Users may explicitly delegate clarification recommendations with `--auto-answer` or `/auto-answer`; delegated answers remain distinguishable from user-authored answers and retain their supporting evidence.
 - Findings distinguish confirmed facts, requirements, assumptions, unknowns, constraints, risks, and research questions.
 - Workflow state is explicit: `Draft`, `Analyzing`, `AwaitingClarification`, `Researching`, `Planning`, `Generating`, `Validating`, `NeedsUserInput`, or `Complete`.
 - Requirement, decision, evidence, answer, and validation identifiers are stable within a project.
@@ -35,11 +41,16 @@ The primary user is a developer or product creator who has an idea but not yet a
 
 ## Policy decisions
 
-- The first runnable analyzer is deterministic and conservative. It extracts explicit sentence-level signals and creates unknowns instead of inventing domain-specific facts. A Codex CLI adapter is optional and schema-validated.
+- Codex CLI is the default initial-brief analyzer. It runs ephemerally with a read-only sandbox, structured output, bounded activity, immediate cancellation, and a five-minute timeout. The conservative deterministic analyzer remains available through `--offline`; failures never trigger it automatically.
 - Low-priority questions remain visible but do not interrupt the user until they meet the configured threshold.
-- `new --brief` launches the TUI only when standard input/output are terminals; non-interactive use completes analysis and prints the project ID.
+- `new --brief` launches live analysis and the durable workbench only when standard input/output are terminals; non-interactive use completes the same Codex and persistence flow without terminal rendering.
+- Workbench plain text answers only the selected open question in the Questions section. `/answer` targets explicitly, `/ask` opens structured capture with visible conservative defaults, and `/threshold` persists a value from 1 through 125.
+- `/resume` is the only workbench execution trigger. A first run requires explicit policy selection; answers, approvals, rejections, and `/repair` authorization never continue automatically.
 - Relational retrieval is the default because it has fewer operational dependencies. Semantic mode is explicit per project.
-- Automatic validation repair is limited to two passes and may only repair mechanically derivable omissions. It cannot decide a high-impact user question.
+- Automatic repair is bounded. Deterministic regeneration handles missing or stale generated artifacts, Codex may assist with document repair inside the configured sandbox, and missing evidence or high-impact user authority always pauses explicitly.
+- Codex-assisted documentation runs with `workspace-write` in an isolated staging package and inherits configured tools without dangerous approval or sandbox bypass flags.
+- Automatic clarification research is opt-in, incompatible with `--offline`, read-only, citation-required, and fail-closed. It does not automatically approve decisions or authorize repairs.
+- Skill suppression is explicit and invocation-scoped. It disables exact discovered `SKILL.md` paths while preserving `AGENTS.md`, tools, sandboxing, approval behavior, and the default skill-enabled path.
 - The initial release uses one Cargo package with a library target and binary target. This keeps reusable boundaries without premature multi-crate coordination; a workspace split remains possible if compile ownership or release boundaries emerge.
 - LanceDB is an optional Cargo feature. This preserves a useful offline binary and makes unavailability behavior testable, while keeping the adapter production-real when enabled.
 
@@ -50,7 +61,7 @@ The primary user is a developer or product creator who has an idea but not yet a
 - Providing a hosted service, multi-user synchronization, authentication, or cloud storage.
 - Replacing explicit trace links with vector similarity.
 - Sending the entire project database to every agent call.
-- Building an unrestricted autonomous agent loop.
+- Building an unrestricted agent loop that bypasses configured sandbox, approval, provenance, or validation boundaries.
 - Supporting arbitrary legacy database schemas before a first stable release exists.
 
 ## Commands
@@ -147,7 +158,7 @@ For a C# programmer: the package is roughly one .NET project exposing both a cla
 - Unit tests cover typed parsing, lifecycle transitions, priority boundaries, structured-output validation, semantic text, hashing, and deterministic validation rules.
 - In-memory SQLite tests cover every migration and transactional invariant.
 - Temporary on-disk integration tests cover restart/resume, generation, export, and stale-index recovery.
-- Ratatui rendering uses its test backend; key handling is tested as pure state transitions.
+- Ratatui rendering uses its test backend; workbench key handling, command parsing, queue advancement, timeline projection, snapshot diffs, and recoverable input errors are tested as pure state transitions and deterministic workflow boundaries.
 - Semantic tests use deterministic embeddings. Feature-gated LanceDB tests cover local index creation and rebuild without paid APIs.
 - CLI tests exercise help, invalid input, the fishing fixture, and non-interactive output.
 - Each behavior change begins red and is made green before its commit.
@@ -179,7 +190,7 @@ Inline comments are reserved for non-obvious invariants in complex or long funct
 - `async-trait`: object-safe asynchronous agent and semantic interfaces.
 - `sha2`: stable content hashes for document and semantic synchronization.
 - optional `lancedb` plus compatible Arrow crates: derived local vector storage only.
-- development-only `tempfile`: isolated restart and database tests.
+- `tempfile`: isolated Codex schema/output exchange plus restart and database tests.
 
 No dependency is allowed to leak provider-specific types into the domain model.
 
@@ -187,7 +198,7 @@ No dependency is allowed to leak provider-specific types into the domain model.
 
 - Always: validate before mutation; run the milestone quality suite; update `CHANGELOG.md` for notable behavior; preserve user changes; keep credentials out of logs.
 - Ask first: incompatible persisted-schema changes after release, a live paid model call, publishing, deployment, or destructive removal of project data.
-- Never: fabricate evidence or evaluation, silently decide a consequential ambiguity, treat semantic similarity as truth, commit secrets, or weaken a valid test to ease implementation.
+- Never: fabricate evidence or evaluation, decide a consequential ambiguity without explicit user input or `--auto-answer` delegation, treat semantic similarity as truth, commit secrets, or weaken a valid test to ease implementation.
 
 ## Compatibility surfaces
 
@@ -198,7 +209,7 @@ No dependency is allowed to leak provider-specific types into the domain model.
 
 ## Open questions resolved for initialization
 
-No unresolved question prevents implementation. The optional-LanceDB decision is reversible, the deterministic analyzer provides a responsible offline default, and future model-provider configuration can be added behind the existing trait without changing authoritative data.
+No unresolved question prevents implementation. The optional-LanceDB decision is reversible, deterministic analysis remains an explicit offline mode, and future model-provider configuration can be added behind the existing trait without changing authoritative data.
 
 ## Authoritative API sources
 
@@ -207,5 +218,7 @@ No unresolved question prevents implementation. The optional-LanceDB decision is
 - Rusqlite 0.40.x exposes transactions, prepared statements, batch execution, and pragma helpers on `Connection`: <https://docs.rs/rusqlite/latest/rusqlite/struct.Connection.html>
 - Ratatui 0.30.x recommends `ratatui::run` for automatic setup and terminal restoration: <https://docs.rs/ratatui/latest/ratatui/fn.run.html>
 - Clap 4.6.x derive requires the `derive` feature and models subcommands with `#[command(subcommand)]`: <https://docs.rs/clap/latest/clap/_derive/>
+- Codex non-interactive mode provides JSONL activity, strict output schemas, ephemeral sessions, and read-only sandboxing: <https://learn.chatgpt.com/docs/non-interactive-mode>
+- Tokio child processes support explicit kill-and-wait cancellation plus kill-on-drop cleanup: <https://docs.rs/tokio/latest/tokio/process/struct.Child.html>
 
 `Cargo.lock` records the exact compatible dependency graph used by the implementation.

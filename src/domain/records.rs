@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use super::{Finding, Project, ProjectId, Question, SourceType};
+use super::{Decision, Evidence, Finding, Project, ProjectId, Question, SourceType};
 
 /// Records who supplied a first-class answer.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -182,5 +182,7 @@ pub struct ProjectSnapshot {
     pub questions: Vec<Question>,
     pub answers: Vec<Answer>,
     pub requirements: Vec<Requirement>,
+    pub evidence: Vec<Evidence>,
+    pub decisions: Vec<Decision>,
     pub traces: Vec<TraceLink>,
 }

@@ -1,5 +1,6 @@
 use project_init::domain::{FindingKind, NewFinding, NewProject, RetrievalMode};
 use project_init::storage::SqliteStore;
+use project_init::workflow::ProjectService;
 use tempfile::tempdir;
 
 /// Creates every authoritative table required by the product contract.
@@ -11,9 +12,12 @@ fn sqlite_migrations_create_all_authoritative_tables() {
         .expect("migration table names should be queryable");
 
     for expected in [
+        "agent_activity_events",
         "agent_runs",
         "answers",
         "decisions",
+        "decision_approvals",
+        "document_revisions",
         "documents",
         "entity_sequences",
         "evidence",
@@ -26,9 +30,34 @@ fn sqlite_migrations_create_all_authoritative_tables() {
         "trace_links",
         "validation_findings",
         "validation_runs",
+        "workflow_runs",
     ] {
         assert!(tables.contains(&expected.to_owned()), "missing {expected}");
     }
+}
+
+/// Upgrades a version-one database through activity and complete-loop migrations without loss.
+#[test]
+fn version_one_database_upgrades_to_complete_loop_schema() {
+    let directory = tempdir().expect("a temporary test directory should be available");
+    let database_path = directory.path().join("project-init.sqlite3");
+    {
+        let connection = rusqlite::Connection::open(&database_path)
+            .expect("the version-one database should open");
+        connection
+            .execute_batch(include_str!("../migrations/001_initial.sql"))
+            .expect("the version-one schema should install");
+    }
+
+    let store = SqliteStore::open(&database_path).expect("the database should upgrade");
+    let tables = store
+        .table_names()
+        .expect("the upgraded table names should be queryable");
+
+    assert!(tables.contains(&"projects".to_owned()));
+    assert!(tables.contains(&"agent_activity_events".to_owned()));
+    assert!(tables.contains(&"workflow_runs".to_owned()));
+    assert!(tables.contains(&"document_revisions".to_owned()));
 }
 
 /// Reloads authoritative project state after every database handle has been dropped.
@@ -63,6 +92,44 @@ fn project_round_trips_after_database_reopen() {
         restored.brief(),
         "A calm VR game with environmental fishing cues."
     );
+}
+
+/// Persists an adjusted clarification threshold and rejects neighboring out-of-range values atomically.
+#[test]
+fn clarification_threshold_round_trips_and_rejects_invalid_bounds() {
+    let directory = tempdir().expect("a temporary test directory should be available");
+    let database_path = directory.path().join("project-init.sqlite3");
+    let project_id = {
+        let store = SqliteStore::open(&database_path).expect("the database should open");
+        let mut service = ProjectService::new(store);
+        let project = service
+            .initialize_project("Threshold project", "A local project with a clear scope.")
+            .expect("the project should initialize");
+
+        assert_eq!(project.clarification_threshold(), 27);
+        service
+            .set_clarification_threshold(project.id(), 125)
+            .expect("the upper valid threshold should persist");
+        assert!(
+            service
+                .set_clarification_threshold(project.id(), 0)
+                .is_err()
+        );
+        assert!(
+            service
+                .set_clarification_threshold(project.id(), 126)
+                .is_err()
+        );
+        project.id().clone()
+    };
+
+    let store = SqliteStore::open(&database_path).expect("the database should reopen");
+    let service = ProjectService::new(store);
+    let restored = service
+        .inspect_project(&project_id)
+        .expect("the project snapshot should reload");
+
+    assert_eq!(restored.project.clarification_threshold(), 125);
 }
 
 /// Rejects duplicate knowledge before consuming the next stable display identifier.
