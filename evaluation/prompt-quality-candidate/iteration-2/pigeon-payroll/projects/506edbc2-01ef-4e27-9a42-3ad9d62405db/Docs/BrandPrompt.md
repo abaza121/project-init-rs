@@ -1,0 +1,9 @@
+# Creative Generation Brief
+
+Create a portrait mobile-game key visual and matching in-game character sheet for “Pigeon Payroll,” a comedic arcade game set at a compact outdoor cafe. Show one overworked but determined cafe worker protecting three clearly separated customer tables from a flock of bold, round, blue-grey pigeons. A single sweeping hand gesture sends golden breadcrumbs in an arc; some pigeons are herded away while more pigeons arrive, making the joke and the risk–reward tradeoff readable in one glance. Include one coral pastry being stolen, a comic combo beat, and a receipt-like wage panel with a visible cleanup deduction, without inventing numeric score values.
+
+Use chunky readable silhouettes, oversized expressions, thick espresso-navy outlines, receipt-cream negative space, breadcrumb gold, pigeon blue-grey with petrol accents, pastry coral, wage green, and deduction red. Favor clean 2D vector-like shapes, squash-and-stretch energy, and slapstick staging. Keep the mood playful rather than stressful: no injury, menace, dirty realism, horror lighting, punishment imagery, brand logos, ads, purchases, analytics, social features, or platform-specific device chrome.
+
+Compose for portrait gameplay with the cafe worker and swipe lane in the lower half, three tables readable above, safe interface margins, and no essential information under the imagined thumb path. Produce a key visual plus separate turnaround poses for the cafe worker, customer, calm pigeon, impatient pigeon concept, breadcrumb, pastry, and wage/cleanup icons. Treat all exact pigeon behaviour membership, audience-specific styling, failure feedback, platform chrome, and numeric scoring as unresolved; do not depict them as approved product choices.
+
+This prompt applies ASM-005 and the visual/audio direction in DEC-015 and DEC-016 while preserving OQ-001, OQ-002, OQ-004, OQ-005, and OQ-006.

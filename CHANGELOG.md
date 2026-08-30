@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add an explicit `--provider local` option for authoritative loopback HTTP analysis, DuckDuckGo-backed cited research, automatic clarification, and allowlisted staged documentation through a managed CPU or NVIDIA CUDA mistral.rs container.
+
 ### Changed
 
-- Improve project analysis and documentation prompts to preserve literal brief provenance, separate research from stakeholder authority, require semantic traceability and explicit acceptance criteria, and prevent generic platform unknowns from becoming VR-specific questions.
+- Improve project analysis and documentation prompts to preserve literal brief provenance, separate research from stakeholder authority, generate unique evaluator-legible requirement, acceptance, decision, assumption, and evidence records, require concrete implementation structure, and prevent generic platform unknowns from becoming VR-specific questions.
+
+### Security
+
+- Restrict managed local inference to loopback, pinned model and image identities, hardened model-scoped Docker mounts, bounded streaming/tool loops, and three exact document tools without shell, Python, repository, or home-directory access.
 
 ## [0.3.0] - 2026-08-30T00:43:51+01:00
 

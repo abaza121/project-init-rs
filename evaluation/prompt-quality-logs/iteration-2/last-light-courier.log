@@ -1,0 +1,23 @@
+d54a144f-0418-419e-b5ba-2ced2eb57cf7	Last Light Courier	AwaitingClarification
+Q-001	priority=125	Please clarify: difficulty
+Q-002	priority=125	Please clarify: accessibility options
+Q-003	priority=125	Please clarify: longer-term progression should work
+Q-004	priority=75	Please clarify: The intended audience is not specified.
+Q-005	priority=75	Please clarify: No success criteria are specified beyond the desired run duration, brief tutorial, and intended rewards for route planning and precision.
+{
+  "run": {
+    "id": "39a4d929-95bc-49d2-ba8b-90012018f746",
+    "project_id": "d54a144f-0418-419e-b5ba-2ced2eb57cf7",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T08:10:09.253883800Z",
+    "updated_at": "2026-08-30T08:28:23.321959700Z",
+    "completed_at": "2026-08-30T08:28:23.321959700Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

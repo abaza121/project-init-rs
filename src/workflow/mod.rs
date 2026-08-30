@@ -570,7 +570,7 @@ impl ProjectService {
             .collect()
     }
 
-    /// Adopts a complete provisional Codex package without overwriting protected overrides.
+    /// Adopts a complete provisional provider package without overwriting protected overrides.
     pub fn adopt_generated_package(
         &mut self,
         project_id: &ProjectId,
@@ -590,7 +590,7 @@ impl ProjectService {
             let staged = staging.join(&relative);
             if !staged.is_file() {
                 return Err(WorkflowError::Document(format!(
-                    "Codex package is missing required artifact: {relative}"
+                    "provider package is missing required artifact: {relative}"
                 )));
             }
             let _ = hash_file(&staged)?;

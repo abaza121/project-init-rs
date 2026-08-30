@@ -1,0 +1,1305 @@
+{
+  "drpfs": 58.9,
+  "dimensions": {
+    "brief_fidelity": {
+      "score": 20.0,
+      "max": 20,
+      "findings": []
+    },
+    "assumption_discipline": {
+      "score": 4.5,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Assumption Discipline.A",
+          "description": "A consequential inferred choice is presented as a settled decision without labeled provenance.",
+          "artifact": "TechnicalArchitecture.md",
+          "supporting_evidence": "Status: **logical prototype architecture, technology-neutral under A-002**. It does not select an engine, language, platform, backend, SDK, store, or production topology.",
+          "recommended_correction": "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+          "failure_mode": "AssumptionPromotion"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Assumption Discipline.A",
+          "description": "A consequential inferred choice is presented as a settled decision without labeled provenance.",
+          "artifact": "Assumptions.md",
+          "related_id": "DEC-023",
+          "supporting_evidence": "| A-001 | high | **ASSUMPTION:** The prototype is single-player and locally playable without accounts, networking, ads, analytics, or purchases. | The brief describes one player and no connected systems; silence is not approval. | DEC-023; ",
+          "recommended_correction": "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+          "failure_mode": "AssumptionPromotion"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Assumption Discipline.A",
+          "description": "A consequential inferred choice is presented as a settled decision without labeled provenance.",
+          "artifact": "Assumptions.md",
+          "related_id": "DEC-024",
+          "supporting_evidence": "| A-002 | high | **ASSUMPTION:** Technology and engine remain unselected; the architecture is logical and engine-agnostic. | No platform, engine, language, device floor, budget, or team capability was supplied. | DEC-024; OQ-005; Research-0",
+          "recommended_correction": "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+          "failure_mode": "AssumptionPromotion"
+        }
+      ]
+    },
+    "cross_document_consistency": {
+      "score": 15.0,
+      "max": 15,
+      "findings": []
+    },
+    "evidence_quality": {
+      "score": 6.4,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-019",
+          "supporting_evidence": "| DEC-019 | Exact pigeon-behaviour set | partially accepted and otherwise deferred | stakeholder brief plus imported failed clarification | BCL-003; BCL-004; BCL-006; ANS-003 | EVD-008; EVD-009; EVD-010 | Attraction and impatient steal/comb",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-019",
+          "supporting_evidence": "| DEC-019 | Exact pigeon-behaviour set | partially accepted and otherwise deferred | stakeholder brief plus imported failed clarification | BCL-003; BCL-004; BCL-006; ANS-003 | EVD-008; EVD-009; EVD-010 | Attraction and impatient steal/comb",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Assumptions.md",
+          "related_id": "DEC-024",
+          "supporting_evidence": "| A-002 | high | **ASSUMPTION:** Technology and engine remain unselected; the architecture is logical and engine-agnostic. | No platform, engine, language, device floor, budget, or team capability was supplied. | DEC-024; OQ-005; Research-0",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "supporting_evidence": "| Decision | One subject | Status | Provenance type | Exact source IDs | Relevant evidence IDs | Rationale |",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-020",
+          "supporting_evidence": "| DEC-020 | Intended audience | deferred to stakeholder | stakeholder brief plus imported failed clarification | BCL-007; ANS-001 | EVD-001; EVD-002; EVD-003; EVD-004 | Research establishes consequences, not product-positioning authority. |",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "| Source ID | Exact source wording | Generated requirement |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "|---|---|---|",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "The exact imported non-decision texts are canonical in [OpenQuestions.md](OpenQuestions.md).",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "| Source ID | Generated requirement |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "|---|---|",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "Research question: What external constraints matter if the stakeholder selects children, casual adults, or both?",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "Verification date: 2026-08-30.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "This file is the canonical location for audience evidence claims. Other documents reference the evidence IDs rather than restating these claims.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "Research questions: What evidence can inform failure feedback, challenge, and plausible pigeon behaviour?",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "Verification date: 2026-08-30.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "This file is the canonical location for the retained experience and behaviour evidence claims.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "The stakeholder should first supply:",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "the decision the research must inform, such as positioning, scope, price, or channel.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "After that approval, each retained claim must receive one evidence ID and an explicit trace to a requirement or consequential decision. Until then, this document makes no claims about market size, genre demand, competitors, monetization, re",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "deterministic testing and event inspection for VER-003, VER-004, and VER-005;",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "approved device performance budgets and team delivery constraints.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "No engine recommendation, ranking, benchmark, licensing claim, or platform-support claim is made here.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Research question: What general evidence constrains the definition of prototype success?",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Verification date: 2026-08-30.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "This file is the canonical location for delivery and evaluation evidence claims.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-011",
+          "supporting_evidence": "| EVD-011 | DEC-022 | constrains | Directly informs the usability-framework dimension of OQ-004 without supplying criteria. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-012",
+          "supporting_evidence": "| EVD-012 | DEC-022 | informs without authorizing | Directly informs possible measurement categories for OQ-004 without supplying thresholds. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-013",
+          "supporting_evidence": "| EVD-013 | DEC-022 | constrains | Directly informs stakeholder ownership and verifiability for OQ-004 without supplying targets. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "supporting_evidence": "Canonical claims exist only in `Research-01-Audience.md`, `Research-02-Experience.md`, and `Research-05-Delivery.md`. Each retained evidence ID has one explicit evidence-to-decision edge above. `Research-03-Market.md` and `Research-04-Techn",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        }
+      ]
+    },
+    "traceability": {
+      "score": 0.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-019",
+          "supporting_evidence": "| DEC-019 | Exact pigeon-behaviour set | partially accepted and otherwise deferred | stakeholder brief plus imported failed clarification | BCL-003; BCL-004; BCL-006; ANS-003 | EVD-008; EVD-009; EVD-010 | Attraction and impatient steal/comb",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-019",
+          "supporting_evidence": "| DEC-019 | Exact pigeon-behaviour set | partially accepted and otherwise deferred | stakeholder brief plus imported failed clarification | BCL-003; BCL-004; BCL-006; ANS-003 | EVD-008; EVD-009; EVD-010 | Attraction and impatient steal/comb",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "ValidationReport.md",
+          "related_id": "EVD-009",
+          "supporting_evidence": "| VAL-011 — Evidence availability | Opened all thirteen supplied direct source URLs read-only through the research tool. | Qualified: eleven pages were independently accessible; EVD-009 presented an automated-access challenge and EVD-010 re",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "log-2026-08-30-01-21-11.md",
+          "related_id": "EVD-009",
+          "supporting_evidence": "| Source links checked read-only | Eleven supplied source pages were independently opened. The EVD-009 page presented an automated-access challenge and the EVD-010 record returned a retrieval error; both limitations were labelled in their c",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| OQ-001 | stakeholder | high | Should the intended audience be children, casual adults, or both? | **Open.** ANS-001 says external evidence cannot choose. EVD-001, EVD-002, EVD-003, and EVD-004 constrain consequences only. | Select one aud",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| Audience-dependent platform and privacy risks are documented in the canonical evidence records. | Research-constrained risk | OQ-001; EVD-001; EVD-002; EVD-003; EVD-004 | Do not add ads, analytics, accounts, or audience declarations befor",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| OQ-001 | stakeholder | high | Should the intended audience be children, casual adults, or both? | **Open.** ANS-001 says external evidence cannot choose. EVD-001, EVD-002, EVD-003, and EVD-004 constrain consequences only. | Select one aud",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| Audience-dependent platform and privacy risks are documented in the canonical evidence records. | Research-constrained risk | OQ-001; EVD-001; EVD-002; EVD-003; EVD-004 | Do not add ads, analytics, accounts, or audience declarations befor",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| OQ-001 | stakeholder | high | Should the intended audience be children, casual adults, or both? | **Open.** ANS-001 says external evidence cannot choose. EVD-001, EVD-002, EVD-003, and EVD-004 constrain consequences only. | Select one aud",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| Audience-dependent platform and privacy risks are documented in the canonical evidence records. | Research-constrained risk | OQ-001; EVD-001; EVD-002; EVD-003; EVD-004 | Do not add ads, analytics, accounts, or audience declarations befor",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| OQ-001 | stakeholder | high | Should the intended audience be children, casual adults, or both? | **Open.** ANS-001 says external evidence cannot choose. EVD-001, EVD-002, EVD-003, and EVD-004 constrain consequences only. | Select one aud",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-001",
+          "supporting_evidence": "| Audience-dependent platform and privacy risks are documented in the canonical evidence records. | Research-constrained risk | OQ-001; EVD-001; EVD-002; EVD-003; EVD-004 | Do not add ads, analytics, accounts, or audience declarations befor",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| OQ-002 | stakeholder | high | Should failure end a run, or reduce the player’s wages while the shift continues? | **Open.** ANS-002 says evidence supports no settled choice. EVD-005, EVD-006, and EVD-007 inform experience risk only. | Sel",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| OQ-002 | stakeholder | high | Should failure end a run, or reduce the player’s wages while the shift continues? | **Open.** ANS-002 says evidence supports no settled choice. EVD-005, EVD-006, and EVD-007 inform experience risk only. | Sel",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| Failure-rule variants could be tested after the stakeholder authorizes variants and evaluation criteria. | Recommendation, not decision | OQ-002; OQ-004; EVD-005; EVD-006; EVD-007 | A comparison can generate evidence without treating rese",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| OQ-002 | stakeholder | high | Should failure end a run, or reduce the player’s wages while the shift continues? | **Open.** ANS-002 says evidence supports no settled choice. EVD-005, EVD-006, and EVD-007 inform experience risk only. | Sel",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| Failure-rule variants could be tested after the stakeholder authorizes variants and evaluation criteria. | Recommendation, not decision | OQ-002; OQ-004; EVD-005; EVD-006; EVD-007 | A comparison can generate evidence without treating rese",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| OQ-002 | stakeholder | high | Should failure end a run, or reduce the player’s wages while the shift continues? | **Open.** ANS-002 says evidence supports no settled choice. EVD-005, EVD-006, and EVD-007 inform experience risk only. | Sel",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "| Failure-rule variants could be tested after the stakeholder authorizes variants and evaluation criteria. | Recommendation, not decision | OQ-002; OQ-004; EVD-005; EVD-006; EVD-007 | A comparison can generate evidence without treating rese",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Research-02-Experience.md",
+          "related_id": "OQ-002",
+          "supporting_evidence": "Outcome: **The evidence provides constraints and inspiration, not authority to choose the failure rule or complete behaviour set. OQ-002 and OQ-003 remain open.**",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-003",
+          "supporting_evidence": "| Additional pigeon behaviours could draw inspiration from the behaviour evidence after scope approval. | Design inference, not decision | OQ-003; EVD-008; EVD-009; EVD-010 | Plausibility is available as inspiration, but suitability remains",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-003",
+          "supporting_evidence": "| Additional pigeon behaviours could draw inspiration from the behaviour evidence after scope approval. | Design inference, not decision | OQ-003; EVD-008; EVD-009; EVD-010 | Plausibility is available as inspiration, but suitability remains",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "SWOT.md",
+          "related_id": "OQ-003",
+          "supporting_evidence": "| Additional pigeon behaviours could draw inspiration from the behaviour evidence after scope approval. | Design inference, not decision | OQ-003; EVD-008; EVD-009; EVD-010 | Plausibility is available as inspiration, but suitability remains",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-004",
+          "supporting_evidence": "This proposed summary is derived from REQ-004, REQ-007, REQ-008, REQ-009, REQ-013, REQ-014, and REQ-015. “Understand” is an intended quality, not a passed outcome; OQ-004 must define its evaluation.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-004",
+          "supporting_evidence": "This proposed summary is derived from REQ-004, REQ-007, REQ-008, REQ-009, REQ-013, REQ-014, and REQ-015. “Understand” is an intended quality, not a passed outcome; OQ-004 must define its evaluation.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-004",
+          "supporting_evidence": "This proposed summary is derived from REQ-004, REQ-007, REQ-008, REQ-009, REQ-013, REQ-014, and REQ-015. “Understand” is an intended quality, not a passed outcome; OQ-004 must define its evaluation.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-004",
+          "supporting_evidence": "This proposed summary is derived from REQ-004, REQ-007, REQ-008, REQ-009, REQ-013, REQ-014, and REQ-015. “Understand” is an intended quality, not a passed outcome; OQ-004 must define its evaluation.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-004",
+          "supporting_evidence": "This proposed summary is derived from REQ-004, REQ-007, REQ-008, REQ-009, REQ-013, REQ-014, and REQ-015. “Understand” is an intended quality, not a passed outcome; OQ-004 must define its evaluation.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-019",
+          "supporting_evidence": "| REQ-019 | scope; high | The first prototype shall use a small set of pigeon behaviours. | BCL-006 | **AC-019 — Behaviour scope gate.** Pass only if the registry contains breadcrumb attraction and impatient food-stealing/combo behaviour pl",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "BrandPrompt.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "| Title | REQ-001 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "BrandPrompt.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| Mobile arcade cafe-worker premise | REQ-002; REQ-003 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "BrandPrompt.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| Three tables and one cafe screen | REQ-017; REQ-018 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "BrandPrompt.md",
+          "related_id": "REQ-011",
+          "supporting_evidence": "| Pastry theft and combo | REQ-011; REQ-012 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| Useful actions carry comic cost. | Brief-derived: REQ-005, REQ-006, REQ-007 | Present attraction pressure and cleanup cost as legible consequences of breadcrumb use. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| Finish the smallest honest test. | Brief-derived: REQ-017, REQ-018, REQ-019 | Keep one cafe screen and three tables; do not fill unresolved behaviour scope by invention. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "| BCL-001 | `Pigeon Payroll` | REQ-001 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| BCL-002 | `I want to create a comedic mobile arcade game about a cafe worker who must keep a flock of pigeons away from outdoor customers.` | REQ-002; REQ-003 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| BCL-006 | `A first prototype only needs one cafe screen, three customer tables, and a small set of pigeon behaviours.` | REQ-017; REQ-018; REQ-019 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "| REQ-001 | identity; medium | The product title shall be `Pigeon Payroll`. | BCL-001 | **AC-001 — Title identity.** Pass only if both inspected title locations equal `Pigeon Payroll`; otherwise fail. | VER-001 | DEC-001 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| REQ-002 | product; high | The prototype shall be a comedic mobile arcade game. | BCL-002 | **AC-002 — Format and genre.** Pass only if a build launches on a supported mobile target, presents a real-time score-driven arcade shift, and the ",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-003",
+          "supporting_evidence": "| REQ-003 | gameplay; high | The player shall act as a cafe worker keeping pigeons away from outdoor customers. | BCL-002 | **AC-003 — Role and objective.** Pass only if a shift identifies the player role as cafe worker, includes outdoor cu",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| REQ-005 | gameplay; high | A swipe shall throw breadcrumbs and permit the player to herd the flock. | BCL-003 | **AC-005 — Throw and herd response.** Pass only if a recorded swipe creates a breadcrumb target, at least one eligible pigeon ",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-006",
+          "supporting_evidence": "| REQ-006 | gameplay; high | Every breadcrumb shall also attract more pigeons. | BCL-003 | **AC-006 — Attraction trade-off.** Pass only if each breadcrumb event increases the defined attraction pressure relative to the immediately preceding",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-010",
+          "supporting_evidence": "| REQ-010 | gameplay; medium | Customers shall move tables during a shift. | BCL-004 | **AC-010 — Table movement.** Pass only if at least one customer changes from one table anchor to another during every full seeded shift and both anchors ",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-011",
+          "supporting_evidence": "| REQ-011 | gameplay; medium | Pastries shall appear during a shift. | BCL-004 | **AC-011 — Pastry event.** Pass only if at least one pastry transitions from absent to visible and stealable during every full seeded shift; otherwise fail. | ",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| REQ-012 | gameplay; medium | Impatient pigeons shall steal food and form combos. | BCL-004 | **AC-012 — Steal combo.** Pass only if an impatient state can lead to a food-steal event and two qualifying steals inside the configured combo wi",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| REQ-016 | platform; high | Play shall be presented in portrait mode. | BCL-005 | **AC-016 — Portrait orientation.** Pass only if the supported build's playable viewport has height greater than width and gameplay does not rotate into lands",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| REQ-017 | scope; high | The first prototype shall contain one cafe gameplay screen. | BCL-006 | **AC-017 — One-screen scope.** Pass only if the runtime scene manifest contains exactly one playable cafe gameplay screen; overlays do not cou",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| REQ-018 | scope; high | The first prototype shall contain exactly three customer tables. | BCL-006 | **AC-018 — Table count.** Pass only if exactly three customer-table anchors are active in the gameplay screen; otherwise fail. | VER-007 ",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-022",
+          "supporting_evidence": "| REQ-022 | governance; high | The exact pigeon-behaviour set and its transitions shall remain unresolved beyond brief-mandated behaviour until the stakeholder approves them. | ANS-003 | **AC-022 — Behaviour authority.** Pass only if mandat",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-023",
+          "supporting_evidence": "| REQ-023 | governance; high | Prototype success criteria shall remain unset until the stakeholder approves learning objectives, measures, and pass/fail thresholds. | ANS-004 | **AC-023 — Success authority.** Pass only if no success declara",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Research-04-Technology.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "scene and entity workflow for REQ-017 and REQ-018;",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "SWOT.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| Breadcrumbs both herd pigeons and create attraction and score costs. | Established brief fact | REQ-005; REQ-006; REQ-007 | The core action has an explicit trade-off suitable for prototype observation. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "SWOT.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| The prototype scope names one cafe screen and three tables. | Established brief constraint | REQ-017; REQ-018 | Scene scope is bounded even though behaviour count is not. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| App shell | Mobile lifecycle, portrait lock, scene entry, pause/resume. | REQ-002; REQ-016 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| Breadcrumb system | Spawn/land breadcrumb targets and emit one authoritative breadcrumb event. | REQ-005 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-006",
+          "supporting_evidence": "| Attraction system | Apply configurable attraction pressure once per breadcrumb event. | REQ-006 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| Flock coordinator | Route eligible pigeons toward targets while preserving per-pigeon behaviour state. Any coordination beyond mandatory behaviour remains proposed. | REQ-005; REQ-022; OQ-003 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| Pigeon state machine | Host only approved states and transitions; mandatory capabilities are breadcrumb attraction and impatient food stealing/combo participation. | REQ-012; REQ-019; REQ-022 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-010",
+          "supporting_evidence": "| Cafe scene model | Own one playfield, exactly three table anchors, customers, pastries, and occupancy changes. | REQ-010; REQ-011; REQ-017; REQ-018 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| Combo system | Qualify food steals and count successive qualifying events inside a configurable window. | REQ-012; OQ-006 |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "| BCL-001 | REQ-001 | generates | The exact source text supplies the product title. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| BCL-002 | REQ-002 | generates | The clause explicitly supplies comedy, mobile, and arcade format. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-003",
+          "supporting_evidence": "| BCL-002 | REQ-003 | generates | The clause explicitly supplies cafe-worker role, pigeons, and protected customers. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| BCL-003 | REQ-005 | generates | The clause explicitly connects swipes, breadcrumb throwing, and herding. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-006",
+          "supporting_evidence": "| BCL-003 | REQ-006 | generates | The clause explicitly states every breadcrumb attracts more pigeons. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-010",
+          "supporting_evidence": "| BCL-004 | REQ-010 | generates | Customer table movement is a named chaos event. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-011",
+          "supporting_evidence": "| BCL-004 | REQ-011 | generates | Pastry appearance is a named chaos event. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| BCL-004 | REQ-012 | generates | Impatient birds stealing food to form combos is explicit. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| BCL-005 | REQ-016 | generates | The clause requires portrait-mode play. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| BCL-006 | REQ-017 | generates | The clause limits the first prototype to one cafe screen. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| BCL-006 | REQ-018 | generates | The clause supplies three customer tables. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "| REQ-001 | DEC-001 | governed by | The decision accepts the exact product name. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-002",
+          "supporting_evidence": "| REQ-002 | DEC-002 | governed by | The decision accepts the required product format. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-003",
+          "supporting_evidence": "| REQ-003 | DEC-003 | governed by | The decision accepts the role and protection objective. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-005",
+          "supporting_evidence": "| REQ-005 | DEC-005 | governed by | The decision accepts breadcrumb throwing as the herding action. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-006",
+          "supporting_evidence": "| REQ-006 | DEC-006 | governed by | The decision accepts attraction as a breadcrumb consequence. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-010",
+          "supporting_evidence": "| REQ-010 | DEC-010 | governed by | The decision accepts customer table movement. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-011",
+          "supporting_evidence": "| REQ-011 | DEC-011 | governed by | The decision accepts pastry appearance. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| REQ-012 | DEC-012 | governed by | The decision accepts impatient steal combos while leaving values open. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| REQ-016 | CON-003 | constrained by | The constraint fixes portrait play. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "| REQ-017 | CON-004 | constrained by | The constraint fixes one cafe screen. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| REQ-018 | CON-005 | constrained by | The constraint fixes three customer tables. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-022",
+          "supporting_evidence": "| REQ-022 | DEC-019 | governed by | The decision separates mandatory behaviour from unapproved additions. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-023",
+          "supporting_evidence": "| REQ-023 | DEC-022 | governed by | The decision explicitly defers success criteria. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "VisualIdentity.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "REQ-016 requires portrait play.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "VisualIdentity.md",
+          "related_id": "REQ-017",
+          "supporting_evidence": "REQ-017 constrains the prototype to one cafe gameplay screen.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "VisualIdentity.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| Composition | Three table anchors in a portrait playfield, clear pedestrian paths, uncluttered score and cleanup areas. | Applies REQ-016 and REQ-018; exact layout is not approved. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        }
+      ]
+    },
+    "actionability": {
+      "score": 8.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Actionability.A",
+          "description": "Not all identified requirements have explicit acceptance criteria.",
+          "artifact": "generated package",
+          "supporting_evidence": "Acceptance criteria coverage: 0.0%.",
+          "recommended_correction": "Add testable acceptance criteria for every implementable important requirement.",
+          "failure_mode": "UnderSpecification"
+        }
+      ]
+    },
+    "artifact_quality": {
+      "score": 5.0,
+      "max": 5,
+      "findings": []
+    }
+  },
+  "metrics": {
+    "required_artifact_completion": null,
+    "acceptance_criteria_coverage": 0.0,
+    "requirement_traceability_coverage": 43.5,
+    "unsupported_decision_rate": 87.2,
+    "high_impact_assumption_labeling_rate": 0.0,
+    "evidence_linkage_rate": 71.4,
+    "broken_internal_links": 0,
+    "conflicting_project_names": [],
+    "unresolved_high_severity_findings": null,
+    "unresolved_high_severity_finding_ids": [],
+    "user_answer_adoption_rate": 100.0,
+    "duplicate_question_rate": null,
+    "answer_reuse_rate": null,
+    "context_compression_ratio": null,
+    "retrieval_utilization_rate": null,
+    "repeated_research_rate": null,
+    "stale_retrieval_rate": null,
+    "cross_project_leakage": null,
+    "context_supplied": null,
+    "retrieval_calls": null,
+    "execution_time_seconds": null,
+    "human_interaction_time_seconds": null,
+    "user_questions": null,
+    "model_calls": null,
+    "token_usage": null,
+    "cost": null
+  },
+  "critical_failures": [],
+  "strengths": [
+    "All extracted explicit brief requirements are represented without detected contradiction.",
+    "No broken submitted internal artifact links were found."
+  ],
+  "highest_priority_improvements": [
+    "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+    "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+    "Link the decision to identifiable evidence that actually informed it.",
+    "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+    "Add testable acceptance criteria for every implementable important requirement.",
+    "Connect useful evidence to a decision or remove decorative research.",
+    "Link the requirement to at least one relevant decision or documented constraint."
+  ],
+  "unsupported_decisions": [
+    "These exact imported answer texts explain why the corresponding questions remain open. `FAIL` records failure to resolve; it is not a selected option.",
+    "Keep development-only deterministic verification possible under A-004.",
+    "Status: **logical prototype architecture, technology-neutral under A-002**. It does not select an engine, language, platform, backend, SDK, store, or production topology.",
+    "Make every gameplay requirement observable and testable.",
+    "Isolate unresolved audience, failure, tuning, and behaviour choices behind configuration or strategy boundaries.",
+    "Support one portrait cafe playfield with three table anchors.",
+    "| From | To | Relationship | Semantic relevance |",
+    "|---|---|---|---|",
+    "| From | To | Relationship | Semantic relevance |",
+    "|---|---|---|---|",
+    "| Decision | One subject | Status | Provenance type | Exact source IDs | Relevant evidence IDs | Rationale |",
+    "|---|---|---|---|---|---|---|",
+    "This file is the canonical consequential-decision register and exact trace-edge ledger. Each edge occupies its own row and includes a semantic explanation; proximity, wording similarity, ID grouping, or an ID range does not imply a relationship.",
+    "| DEC-001 | Product name | accepted | stakeholder brief | BCL-001 | none | Preserve the supplied identity. |",
+    "| DEC-002 | Product format | accepted | stakeholder brief | BCL-002 | none | The prototype is a comedic mobile arcade game. |",
+    "| DEC-003 | Player role and objective | accepted | stakeholder brief | BCL-002 | none | The cafe worker protects outdoor customers from pigeons. |",
+    "| DEC-004 | Primary control | accepted | stakeholder brief | BCL-003 | none | The primary loop uses one-finger swipes. |",
+    "| DEC-005 | Breadcrumb herding action | accepted | stakeholder brief | BCL-003 | none | A swipe throws breadcrumbs that can herd the flock. |",
+    "| DEC-006 | Breadcrumb attraction consequence | accepted | stakeholder brief | BCL-003 | none | Each breadcrumb must also increase pigeon attraction pressure. |",
+    "| DEC-007 | Cleanup scoring consequence | accepted | stakeholder brief | BCL-003 | none | Breadcrumb use adds a bill deducted from final score. |",
+    "| DEC-008 | Shift duration | accepted | stakeholder brief | BCL-004 | none | A completed shift must stay within the stated duration boundary. |",
+    "| DEC-009 | Chaos escalation | partially accepted | stakeholder brief plus design assumption | BCL-004; A-005 | none | Escalation is authoritative; the concurrent-threat verification definition is non-authoritative pending OQ-006. |",
+    "| DEC-010 | Customer table movement | accepted | stakeholder brief | BCL-004 | none | Customers moving tables is a named source of escalation. |",
+    "| DEC-011 | Pastry appearance | accepted | stakeholder brief | BCL-004 | none | Pastries appearing is a named shift event. |",
+    "| DEC-012 | Impatient food-steal combos | accepted with tuning open | stakeholder brief | BCL-004 | none | The behaviour is required; thresholds and combo window remain OQ-006. |",
+    "| DEC-013 | Experience tone | accepted as intent, not evaluated | stakeholder brief | BCL-005 | none | The tone target is authoritative; passing it requires OQ-004 criteria. |",
+    "| A-006 | medium | **ASSUMPTION:** Visual guidance uses flat, high-contrast, exaggerated shapes and avoids detailed realism. | This is a design inference from BCL-005, not explicit art-direction authority. | DEC-014; VisualIdentity.md; BrandPrompt.md | Stakeholder approves a moodboard or revised identity direction. |",
+    "| DEC-015 | Slapstick audio | accepted | stakeholder brief | BCL-005 | none | Slapstick sound effects are required presentation feedback. |",
+    "| DEC-016 | Play orientation | accepted | stakeholder brief | BCL-005 | none | Portrait mode is explicit. |",
+    "| DEC-017 | Cafe gameplay-screen count | accepted | stakeholder brief | BCL-006 | none | The first prototype contains one playable cafe screen. |",
+    "| DEC-018 | Customer-table count | accepted | stakeholder brief | BCL-006 | none | The screen contains exactly three table anchors. |",
+    "Informs: DEC-020 and OQ-001.",
+    "Informs: DEC-022 and OQ-004.",
+    "| A-001 | high | **ASSUMPTION:** The prototype is single-player and locally playable without accounts, networking, ads, analytics, or purchases. | The brief describes one player and no connected systems; silence is not approval. | DEC-023; TechnicalArchitecture.md | Stakeholder confirms service, monetization, telemetry, and privacy scope; otherwise keep integrations out of the prototype. |",
+    "| A-002 | high | **ASSUMPTION:** Technology and engine remain unselected; the architecture is logical and engine-agnostic. | No platform, engine, language, device floor, budget, or team capability was supplied. | DEC-024; OQ-005; Research-04-Technology.md | Stakeholder supplies target platforms and delivery constraints, followed by a recorded technology decision. |",
+    "| A-003 | medium | **ASSUMPTION:** The one cafe is a single 2D playfield with overlays, rather than a 3D navigable environment. | Portrait, one-screen arcade scope suggests this implementation, but the brief does not state dimensionality. | DEC-025; TechnicalArchitecture.md; VisualIdentity.md | Approve an art/interaction prototype or replace the assumption. |",
+    "| DEC-026 | Development verification instrumentation | proposed | non-authoritative engineering assumption | A-004 | none | Deterministic seeds and event capture support exact verification without defining product behaviour. |"
+  ],
+  "unresolved_assumptions_and_questions": [
+    "**Recommendation:** once OQ-002 and OQ-004 are authorized, compare labelled failure variants under approved criteria. This is not a decision.",
+    "Apply the authorized shift-end condition. This step is blocked for a product build until OQ-002 closes; test variants must be explicitly labelled.",
+    "Audience-coded art choices are deliberately deferred under OQ-001.",
+    "Close or sufficiently constrain OQ-005 before comparing technologies. The technical lead should then define evaluation criteria tied to actual requirements, including:",
+    "No stakeholder approval was obtained during package generation, so OQ-001, OQ-002, OQ-003, OQ-004, OQ-005, OQ-006, OQ-007, and OQ-008 remain open.",
+    "OQ-001 leaves the audience unresolved, OQ-005 leaves platform and delivery constraints unresolved, and OQ-008 leaves the business model unresolved. A market scan performed without those inputs could create decorative comparisons that do not inform an authorized requirement or decision.",
+    "Outcome: **General evaluation frameworks support measurable stakeholder-owned criteria but do not supply Pigeon Payroll thresholds. OQ-004 remains open.**",
+    "Outcome: **Research constrains consequences but does not select an audience. OQ-001 remains open.**",
+    "Outcome: **The evidence provides constraints and inspiration, not authority to choose the failure rule or complete behaviour set. OQ-002 and OQ-003 remain open.**",
+    "Perceptual results remain **not evaluated** until VER-006 has an approved protocol through OQ-004.",
+    "Production technology and performance budgets remain blocked by OQ-005.",
+    "This is the canonical register for inferred choices. Every item is **non-authoritative**. An assumption may support planning or a disposable prototype, but it cannot override the brief or close an open question.",
+    "This is the canonical register of unresolved choices. “Imported answer” means a prior research response was received; where that response says `FAIL`, the underlying stakeholder question remains open.",
+    "Under A-001, the prototype architecture includes no accounts, remote persistence, ads, analytics, purchases, or user-generated content. This is a scope-containment assumption, not a production privacy decision. OQ-001 and OQ-008 must close before any such integration is designed.",
+    "VER-006 is additionally blocked until OQ-004 supplies an approved perceptual evaluation protocol and thresholds.",
+    "VER-011 cannot pass until OQ-004 closes and corresponding results exist.",
+    "`AudienceProfile`: intentionally unset until OQ-001 closes. It must not silently enable data, ad, account, or store features.",
+    "`BehaviourRegistry`: explicit state and transition entries. New entries require an approved OQ-003 answer.",
+    "`EvaluationPlan`: intentionally unset until OQ-004 closes.",
+    "`FailurePolicy`: intentionally unset until OQ-002 closes. A development test may inject a labelled variant, but no variant may ship or be documented as selected.",
+    "`TuningConfig`: attraction magnitude, impatience threshold, combo window, scoring values. Values remain open under OQ-006.",
+    "business model and distribution intent through OQ-008;",
+    "intended audience and age scope through OQ-001;",
+    "launch territories and supported platforms through OQ-005;",
+    "| A-004 | medium | **ASSUMPTION:** Deterministic seeds and event telemetry may be included in development builds solely to verify gameplay requirements. | Objective verification needs repeatable observations; this is an engineering inference. | VER-004; VER-005; TechnicalArchitecture.md | Technical review accepts the harness, or specifies an equivalent exact verification method. |",
+    "| A-007 | medium | **ASSUMPTION:** Mission and vision statements in this package are internal proposed summaries, not approved public copy. | The brief supplies intent but no corporate mission or vision. | MissionVision.md | Stakeholder approves or replaces each statement. |",
+    "| Additional pigeon behaviours could draw inspiration from the behaviour evidence after scope approval. | Design inference, not decision | OQ-003; EVD-008; EVD-009; EVD-010 | Plausibility is available as inspiration, but suitability remains unproven. |",
+    "| An engine choice made before platform, device, budget, and team constraints are known may create rework. | Delivery inference | A-002; OQ-005 | Keep the initiation architecture logical and technology-neutral. |",
+    "| Assumption | Impact | Non-authoritative working statement | Basis | Affected records | Validation or retirement trigger |",
+    "| Audience and failure exclusions | OQ-001; OQ-002 |",
+    "| Audience-dependent platform and privacy risks are documented in the canonical evidence records. | Research-constrained risk | OQ-001; EVD-001; EVD-002; EVD-003; EVD-004 | Do not add ads, analytics, accounts, or audience declarations before an authorized decision and compliance review. |",
+    "| Failure handling is unselected. | Established unresolved choice | OQ-002; DEC-021 | A complete run-state and score-economy specification is blocked. |",
+    "| Failure-rule variants could be tested after the stakeholder authorizes variants and evaluation criteria. | Recommendation, not decision | OQ-002; OQ-004; EVD-005; EVD-006; EVD-007 | A comparison can generate evidence without treating research as product authority. |",
+    "| Intended audience is unselected. | Established unresolved choice | OQ-001; DEC-020 | Positioning, evaluation participants, and child-related platform scope cannot be finalized. |",
+    "| OQ-001 | stakeholder | high | Should the intended audience be children, casual adults, or both? | **Open.** ANS-001 says external evidence cannot choose. EVD-001, EVD-002, EVD-003, and EVD-004 constrain consequences only. | Select one audience and applicable age/local-market scope. | Product positioning; compliance architecture; final identity approval; REQ-020 retirement. |",
+    "| OQ-002 | stakeholder | high | Should failure end a run, or reduce the player’s wages while the shift continues? | **Open.** ANS-002 says evidence supports no settled choice. EVD-005, EVD-006, and EVD-007 inform experience risk only. | Select a rule; then approve deduction magnitude, frequency, and cap if relevant. | Failure-state design; final score economy; REQ-021 retirement. |",
+    "| OQ-003 | stakeholder | high | What exact pigeon behaviours and state transitions complete the first prototype set? | **Open.** Breadcrumb attraction and impatient food stealing/combos are authoritative; remaining behaviour is not. ANS-003 failed to settle it. | Name each added behaviour, transition, and scope limit. | Behaviour registry; REQ-019 numeric interpretation; REQ-022 retirement. |",
+    "| OQ-004 | stakeholder | high | What learning objectives, measures, participants, and pass/fail thresholds define prototype success? | **Open.** ANS-004 failed to define project-specific criteria. EVD-011, EVD-012, and EVD-013 provide general evaluation guidance only. | Approve exact measures, thresholds, audience-aligned participants, and decision rules. | Tone/readability evaluation; prototype success declaration; REQ-023 retirement. |",
+    "| OQ-005 | stakeholder and technical lead | high | Which mobile platforms, minimum OS/device profile, engine, language, delivery channel, budget, schedule, and team constraints apply? | **Open; no supplied research or authority.** | Supply constraints and approve a technology decision record. | Production architecture, tooling, performance budget, store compliance, delivery estimate. |",
+    "| OQ-006 | stakeholder and game designer | high | What numeric values define chaos escalation, attraction pressure, impatience, combo timing, score values, cleanup cost, and balance? | **Open; A-005 is only a disposable verification assumption.** | Approve initial tuning table and playtest adjustment authority. | Final balance; quantitative interpretation of REQ-006, REQ-009, and REQ-012. |",
+    "| OQ-007 | stakeholder | medium | What accessibility baseline and supported input accommodations are required beyond one-finger play? | **Open; the brief establishes readability but no accessibility standard.** | Approve visual, audio, motor, and feedback accommodations plus verification targets. | Accessibility acceptance and final UI/audio specifications. |",
+    "| OQ-008 | stakeholder | medium | What business model, data collection, analytics, ads, purchases, or account features—if any—are in scope? | **Open; A-001 keeps them out of the prototype without claiming a production decision.** | Approve allowed services and data practices after OQ-001. | Privacy review, child-audience consequences, production service architecture. |",
+    "| Product choices deliberately not made | No audience, failure rule, added pigeon behaviour, success threshold, engine, platform, business model, or remote-service choice was selected. | OQ-001; OQ-002; OQ-003; OQ-004; OQ-005; OQ-008 |",
+    "| Prototype success has no approved measures or thresholds. | Established unresolved choice | OQ-004; DEC-022 | The team may test requirements, but cannot honestly declare prototype success. |",
+    "| Question | Owner | Impact | Exact unresolved choice | Current status and authority boundary | Needed answer | Blocks |",
+    "| VER-006 | Conduct the stakeholder-approved tone review and readability inspection at the supported portrait reference viewport; record each checklist result and sound-event trigger. This verification cannot be executed until OQ-004 supplies success thresholds where perception is involved. |",
+    "| VER-010 | Inspect the behaviour registry: breadcrumb attraction and impatient food-stealing combo behaviour must be present; no additional behaviour may be represented as stakeholder-approved without an approved OQ-003 answer. |",
+    "| VER-011 | Inspect the evaluation plan and release gate: no prototype-success claim may be made until an approved OQ-004 answer defines measures and pass/fail thresholds and recorded results meet them. |",
+    "|---|---|---|---|---|---|",
+    "|---|---|---|---|---|---|---|"
+  ],
+  "external_verification_note": "External source correctness was not independently verified; citation identity and submitted decision linkage were evaluated locally."
+}

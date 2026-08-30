@@ -1,0 +1,988 @@
+# Validation Report
+
+## Overall Score
+
+DRPFS: 77.6 / 100
+
+## Scorecard
+
+| Dimension | Score |
+|---|---:|
+| Brief Fidelity | 18.8/20 |
+| Assumption Discipline | 15.0/15 |
+| Cross-Document Consistency | 15.0/15 |
+| Evidence Quality | 9.0/15 |
+| Requirements → Decision Traceability | 0.0/15 |
+| Actionability | 14.8/15 |
+| Artifact Completeness | 5.0/5 |
+| TOTAL | 77.6/100 |
+
+## Deterministic Metrics
+
+- Required Artifact Completion: Unavailable
+- Acceptance Criteria Coverage: 95.2%
+- Requirement Traceability Coverage: 100.0%
+- Unsupported Decision Rate: 0.0%
+- High-Impact Assumption Labeling Rate: 100.0%
+- Evidence Linkage Rate: 100.0%
+- User Answer Adoption Rate: 80.0%
+- Duplicate Question Rate: Unavailable
+- Answer Reuse Rate: Unavailable
+- Retrieval Utilization Rate: Unavailable
+- Repeated Research Rate: Unavailable
+- Stale Retrieval Rate: Unavailable
+- Broken Internal Links: 0
+- Unresolved High-Severity Findings: Unavailable
+- Cross-Project Leakage: Unavailable
+- Context Supplied: Unavailable
+- Retrieval Calls: Unavailable
+- Context Compression Ratio: Unavailable
+- Execution Time (seconds): Unavailable
+- Human Interaction Time (seconds): Unavailable
+- User Questions: Unavailable
+- Model Calls: Unavailable
+- Token Usage: Unavailable
+- Cost: Unavailable
+- Conflicting Project Names: None discovered
+
+## Critical Findings
+
+### [HIGH] A consequential user answer is not adopted by any requirement or decision trace.
+
+- Criterion: Brief Fidelity.C
+- Artifact: ValidationReport.md
+- Related ID: ANS-
+- Failure mode: UserOverrideFailure
+- Evidence: | `ANS-*` definitions | 4 |
+- Recommended correction: Link the answer to the final requirement or decision that reflects it.
+
+### [HIGH] Cited evidence has no meaningful subject overlap with the decision it claims to support.
+
+- Criterion: Evidence Quality.B
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-006
+- Failure mode: EvidenceMisuse
+- Evidence: EVD-006: WCAG 2.2 Success Criterion 2.1.1 requires functionality to be operable through a keyboard interface without requiring specific timings for individual keystrokes except where movement path is essential ([W3C WAI](https://www.w3.org/
+- Recommended correction: Replace the evidence relationship with a source that actually supports the decision, or remove the claim.
+
+### [HIGH] Cited evidence has no meaningful subject overlap with the decision it claims to support.
+
+- Criterion: Evidence Quality.B
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-008
+- Failure mode: EvidenceMisuse
+- Evidence: EVD-008: Microsoft identifies prolonged control holds as a potential barrier and lists configurable alternatives such as toggles, automatic holds, and remapping ([Microsoft Game Dev](https://learn.microsoft.com/en-us/xbox/accessibility/xbox
+- Recommended correction: Replace the evidence relationship with a source that actually supports the decision, or remove the claim.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: AC-001: A build inspection shows only gameplay-relevant geometric bodies, feedback, score, multiplier, and restart state, with no decorative scene layer outside the inventory in ASM-001; PASS if that exact inventory is observed and FAIL oth
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: AC-001: A build inspection shows only gameplay-relevant geometric bodies, feedback, score, multiplier, and restart state, with no decorative scene layer outside the inventory in ASM-001; PASS if that exact inventory is observed and FAIL oth
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-001 | supports | REQ-001 | Both inspect the bounded minimalist visual inventory. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-002
+- Failure mode: TraceabilityTheater
+- Evidence: AC-002: An input-event log for a complete run contains exactly one primary gameplay action with press/hold and release phases, excluding browser-level focus and pause controls; PASS if exactly one primary action is logged and FAIL otherwise
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-002
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-002 | supports | REQ-002 | Both count one primary gameplay action. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-007
+- Failure mode: TraceabilityTheater
+- Evidence: AC-007: Crossing the configured skim boundary without crossing the hazard collision boundary adds the configured bonus exactly once, while a collision adds no skim bonus; PASS for all boundary fixtures and FAIL otherwise supports REQ-007 be
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-007
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-007 | supports | REQ-007 | Both distinguish a hazard skim bonus from collision. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-008
+- Failure mode: TraceabilityTheater
+- Evidence: AC-008: A valid qualifying orbit event increases or maintains the displayed multiplier and expiry of the configured continuity window resets it to baseline; PASS if both transitions match the configuration and FAIL otherwise supports REQ-00
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-008
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-008 | supports | REQ-008 | Both test orbit-multiplier continuity and expiry. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-010
+- Failure mode: TraceabilityTheater
+- Evidence: AC-010: Across 100 automated runs measured from first gameplay input to terminal state, every duration is less than 180000 ms; PASS only if 100/100 durations are below 180000 ms and FAIL otherwise supports REQ-010 because each run is object
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-010
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-010 | supports | REQ-010 | Both impose a strict duration below 180000 ms. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-012
+- Failure mode: TraceabilityTheater
+- Evidence: AC-012: With instructional text absent and animation plus sound enabled, at least four of five first-time participants identify hold-to-attach and release-to-fly and perform one successful attach-release cycle within 30 seconds under ASM-00
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-012
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-012 | supports | REQ-012 | Both test animation-and-sound comprehension without instructional text. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: AC-013: The asset inventory contains only vector primitives, procedural effects, synthesized sound, and reusable parameter variants under ASM-007 and ASM-008, with no bespoke frame-by-frame animation; PASS if the inventory matches and FAIL 
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: AC-013: The asset inventory contains only vector primitives, procedural effects, synthesized sound, and reusable parameter variants under ASM-007 and ASM-008, with no bespoke frame-by-frame animation; PASS if the inventory matches and FAIL 
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-013 | supports | REQ-013 | Both inspect primitive, reusable, solo-producible assets. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-014
+- Failure mode: TraceabilityTheater
+- Evidence: AC-014: In the provisional evaluation in ASM-004, identical initial state and input traces remain within 1 px after 60 seconds and at least four of five participants reach two scripted gates in three of five post-practice attempts; PASS onl
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-014
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-014 | supports | REQ-014 | Both evaluate predictable replay and learned gravity-anchor execution. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-015
+- Failure mode: TraceabilityTheater
+- Evidence: AC-015: From run start through terminal state and restart, gameplay uses one fixed viewport with no page scroll, route change, camera-room transition, or loading screen; PASS if the recorded run contains none of those transitions and FAIL o
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-015
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-015 | supports | REQ-015 | Both inspect absence of viewport, route, scroll, and room transitions. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-016
+- Failure mode: TraceabilityTheater
+- Evidence: AC-016: A baseline inspection finds OQ-001 open and finds no CONFIRMED decision selecting anchor-lock timing, force-source count, body kinematics, collision-radius behavior, integrator, or timestep; PASS if both observations hold and FAIL o
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-018
+- Failure mode: TraceabilityTheater
+- Evidence: AC-018: A baseline inspection finds OQ-003 open and finds no CONFIRMED decision selecting a low-end benchmark or sustained frame-rate threshold; PASS if both observations hold and FAIL otherwise supports REQ-018 because the low-end-device t
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ANS-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ANS-001 | supports | DEC-014 | Both leave the exact physics model unapproved. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: CON-002
+- Failure mode: TraceabilityTheater
+- Evidence: | CON-002 | supports | REQ-012 | Both preserve “instead of text” for core understanding. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: CON-003
+- Failure mode: TraceabilityTheater
+- Evidence: | CON-003 | supports | REQ-013 | Both preserve solo-developer production feasibility. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-003
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-003: status=CONFIRMED; provenance=user brief; source=REQ-005; release preserves satellite momentum into a new arc supports REQ-005 because preserved momentum and new arc are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-003
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-003 | supports | REQ-005 | Both retain momentum-preserving release. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-004
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-004: status=CONFIRMED; provenance=user brief; source=REQ-006; data-fragment collection is a play goal supports REQ-006 because data fragments are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-004
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-004 | supports | REQ-006 | Both make data fragments a play goal. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-005
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-005: status=CONFIRMED; provenance=user brief; source=REQ-007; hazard skims award bonus points supports REQ-007 because hazard skim bonus points are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-005
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-005 | supports | REQ-007 | Both award bonus points for hazard skims. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-009
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-009: status=CONFIRMED; provenance=user brief; source=REQ-011; terminal play offers an immediate restart path supports REQ-011 because instant restart is explicitly supplied while the latency threshold remains open.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-009
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-009 | supports | REQ-011 | Both retain an immediate restart path without claiming a final threshold. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-010
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-010: status=CONFIRMED; provenance=user brief; source=REQ-012; animation and sound teach core play instead of instructional text supports REQ-012 because non-textual animation-and-sound understanding is explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-011
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-011 | supports | REQ-001 | Sparse geometric art is the confirmed minimalist production language. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-012
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-012: status=CONFIRMED; provenance=user brief; source=REQ-014; gravity-anchor switching is the prototype’s skillful-and-predictable movement proof supports REQ-014 because the switching gravity anchors proof is explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-012
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-012 | supports | REQ-014 | Both define gravity-anchor switching as the prototype proof. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-015
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-015: status=DEFERRED; provenance=supplied answer; source=ANS-002; relevant=EVD-005; the input-accessibility feature set remains stakeholder-owned supports REQ-017 because input accessibility features are explicitly unchosen and cannot b
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-015
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-015 | supports | REQ-017 | Both defer the stakeholder-owned input-accessibility feature set. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-019
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-019: status=PROPOSED; provenance=agent design inference; source=ASM-006; relevant=EVD-004; the replaceable simulation-policy boundary isolates timestep and force choices supports REQ-014 because predictable movement tests need swappable
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-006
+- Failure mode: TraceabilityTheater
+- Evidence: EVD-006: WCAG 2.2 Success Criterion 2.1.1 requires functionality to be operable through a keyboard interface without requiring specific timings for individual keystrokes except where movement path is essential ([W3C WAI](https://www.w3.org/
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-008
+- Failure mode: TraceabilityTheater
+- Evidence: EVD-008: Microsoft identifies prolonged control holds as a potential barrier and lists configurable alternatives such as toggles, automatic holds, and remapping ([Microsoft Game Dev](https://learn.microsoft.com/en-us/xbox/accessibility/xbox
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-02-Experience.md
+- Related ID: OQ-004
+- Failure mode: TraceabilityTheater
+- Evidence: The retained material supports evaluation methods, not a randomness amount, distribution, or subsystem. `OQ-004` remains stakeholder-owned, and `ASM-004` is only a provisional movement-proof protocol.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: ValidationReport.md
+- Related ID: REQ-
+- Failure mode: TraceabilityTheater
+- Evidence: Requirement-to-criterion scan found every defined `REQ-*` on at least one one-line `AC-* supports REQ-* because` edge.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] Not all identified requirements have explicit acceptance criteria.
+
+- Criterion: Actionability.A
+- Artifact: generated package
+- Failure mode: UnderSpecification
+- Evidence: Acceptance criteria coverage: 95.2%.
+- Recommended correction: Add testable acceptance criteria for every implementable important requirement.
+
+
+## Detailed Findings
+
+### [HIGH] A consequential user answer is not adopted by any requirement or decision trace.
+
+- Criterion: Brief Fidelity.C
+- Artifact: ValidationReport.md
+- Related ID: ANS-
+- Failure mode: UserOverrideFailure
+- Evidence: | `ANS-*` definitions | 4 |
+- Recommended correction: Link the answer to the final requirement or decision that reflects it.
+
+### [HIGH] Cited evidence has no meaningful subject overlap with the decision it claims to support.
+
+- Criterion: Evidence Quality.B
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-006
+- Failure mode: EvidenceMisuse
+- Evidence: EVD-006: WCAG 2.2 Success Criterion 2.1.1 requires functionality to be operable through a keyboard interface without requiring specific timings for individual keystrokes except where movement path is essential ([W3C WAI](https://www.w3.org/
+- Recommended correction: Replace the evidence relationship with a source that actually supports the decision, or remove the claim.
+
+### [HIGH] Cited evidence has no meaningful subject overlap with the decision it claims to support.
+
+- Criterion: Evidence Quality.B
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-008
+- Failure mode: EvidenceMisuse
+- Evidence: EVD-008: Microsoft identifies prolonged control holds as a potential barrier and lists configurable alternatives such as toggles, automatic holds, and remapping ([Microsoft Game Dev](https://learn.microsoft.com/en-us/xbox/accessibility/xbox
+- Recommended correction: Replace the evidence relationship with a source that actually supports the decision, or remove the claim.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: AC-001: A build inspection shows only gameplay-relevant geometric bodies, feedback, score, multiplier, and restart state, with no decorative scene layer outside the inventory in ASM-001; PASS if that exact inventory is observed and FAIL oth
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: AC-001: A build inspection shows only gameplay-relevant geometric bodies, feedback, score, multiplier, and restart state, with no decorative scene layer outside the inventory in ASM-001; PASS if that exact inventory is observed and FAIL oth
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-001
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-001 | supports | REQ-001 | Both inspect the bounded minimalist visual inventory. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-002
+- Failure mode: TraceabilityTheater
+- Evidence: AC-002: An input-event log for a complete run contains exactly one primary gameplay action with press/hold and release phases, excluding browser-level focus and pause controls; PASS if exactly one primary action is logged and FAIL otherwise
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-002
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-002 | supports | REQ-002 | Both count one primary gameplay action. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-007
+- Failure mode: TraceabilityTheater
+- Evidence: AC-007: Crossing the configured skim boundary without crossing the hazard collision boundary adds the configured bonus exactly once, while a collision adds no skim bonus; PASS for all boundary fixtures and FAIL otherwise supports REQ-007 be
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-007
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-007 | supports | REQ-007 | Both distinguish a hazard skim bonus from collision. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-008
+- Failure mode: TraceabilityTheater
+- Evidence: AC-008: A valid qualifying orbit event increases or maintains the displayed multiplier and expiry of the configured continuity window resets it to baseline; PASS if both transitions match the configuration and FAIL otherwise supports REQ-00
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-008
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-008 | supports | REQ-008 | Both test orbit-multiplier continuity and expiry. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-010
+- Failure mode: TraceabilityTheater
+- Evidence: AC-010: Across 100 automated runs measured from first gameplay input to terminal state, every duration is less than 180000 ms; PASS only if 100/100 durations are below 180000 ms and FAIL otherwise supports REQ-010 because each run is object
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-010
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-010 | supports | REQ-010 | Both impose a strict duration below 180000 ms. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-012
+- Failure mode: TraceabilityTheater
+- Evidence: AC-012: With instructional text absent and animation plus sound enabled, at least four of five first-time participants identify hold-to-attach and release-to-fly and perform one successful attach-release cycle within 30 seconds under ASM-00
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-012
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-012 | supports | REQ-012 | Both test animation-and-sound comprehension without instructional text. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: AC-013: The asset inventory contains only vector primitives, procedural effects, synthesized sound, and reusable parameter variants under ASM-007 and ASM-008, with no bespoke frame-by-frame animation; PASS if the inventory matches and FAIL 
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: AC-013: The asset inventory contains only vector primitives, procedural effects, synthesized sound, and reusable parameter variants under ASM-007 and ASM-008, with no bespoke frame-by-frame animation; PASS if the inventory matches and FAIL 
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-013
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-013 | supports | REQ-013 | Both inspect primitive, reusable, solo-producible assets. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-014
+- Failure mode: TraceabilityTheater
+- Evidence: AC-014: In the provisional evaluation in ASM-004, identical initial state and input traces remain within 1 px after 60 seconds and at least four of five participants reach two scripted gates in three of five post-practice attempts; PASS onl
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-014
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-014 | supports | REQ-014 | Both evaluate predictable replay and learned gravity-anchor execution. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-015
+- Failure mode: TraceabilityTheater
+- Evidence: AC-015: From run start through terminal state and restart, gameplay uses one fixed viewport with no page scroll, route change, camera-room transition, or loading screen; PASS if the recorded run contains none of those transitions and FAIL o
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: AC-015
+- Failure mode: TraceabilityTheater
+- Evidence: | AC-015 | supports | REQ-015 | Both inspect absence of viewport, route, scroll, and room transitions. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-016
+- Failure mode: TraceabilityTheater
+- Evidence: AC-016: A baseline inspection finds OQ-001 open and finds no CONFIRMED decision selecting anchor-lock timing, force-source count, body kinematics, collision-radius behavior, integrator, or timestep; PASS if both observations hold and FAIL o
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: AC-018
+- Failure mode: TraceabilityTheater
+- Evidence: AC-018: A baseline inspection finds OQ-003 open and finds no CONFIRMED decision selecting a low-end benchmark or sustained frame-rate threshold; PASS if both observations hold and FAIL otherwise supports REQ-018 because the low-end-device t
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ANS-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ANS-001 | supports | DEC-014 | Both leave the exact physics model unapproved. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: CON-002
+- Failure mode: TraceabilityTheater
+- Evidence: | CON-002 | supports | REQ-012 | Both preserve “instead of text” for core understanding. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: CON-003
+- Failure mode: TraceabilityTheater
+- Evidence: | CON-003 | supports | REQ-013 | Both preserve solo-developer production feasibility. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-003
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-003: status=CONFIRMED; provenance=user brief; source=REQ-005; release preserves satellite momentum into a new arc supports REQ-005 because preserved momentum and new arc are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-003
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-003 | supports | REQ-005 | Both retain momentum-preserving release. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-004
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-004: status=CONFIRMED; provenance=user brief; source=REQ-006; data-fragment collection is a play goal supports REQ-006 because data fragments are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-004
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-004 | supports | REQ-006 | Both make data fragments a play goal. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-005
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-005: status=CONFIRMED; provenance=user brief; source=REQ-007; hazard skims award bonus points supports REQ-007 because hazard skim bonus points are explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-005
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-005 | supports | REQ-007 | Both award bonus points for hazard skims. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-009
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-009: status=CONFIRMED; provenance=user brief; source=REQ-011; terminal play offers an immediate restart path supports REQ-011 because instant restart is explicitly supplied while the latency threshold remains open.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-009
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-009 | supports | REQ-011 | Both retain an immediate restart path without claiming a final threshold. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-010
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-010: status=CONFIRMED; provenance=user brief; source=REQ-012; animation and sound teach core play instead of instructional text supports REQ-012 because non-textual animation-and-sound understanding is explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-011
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-011 | supports | REQ-001 | Sparse geometric art is the confirmed minimalist production language. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-012
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-012: status=CONFIRMED; provenance=user brief; source=REQ-014; gravity-anchor switching is the prototype’s skillful-and-predictable movement proof supports REQ-014 because the switching gravity anchors proof is explicitly supplied.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-012
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-012 | supports | REQ-014 | Both define gravity-anchor switching as the prototype proof. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-015
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-015: status=DEFERRED; provenance=supplied answer; source=ANS-002; relevant=EVD-005; the input-accessibility feature set remains stakeholder-owned supports REQ-017 because input accessibility features are explicitly unchosen and cannot b
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: DEC-015
+- Failure mode: TraceabilityTheater
+- Evidence: | DEC-015 | supports | REQ-017 | Both defer the stakeholder-owned input-accessibility feature set. |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: TechnicalArchitecture.md
+- Related ID: DEC-019
+- Failure mode: TraceabilityTheater
+- Evidence: DEC-019: status=PROPOSED; provenance=agent design inference; source=ASM-006; relevant=EVD-004; the replaceable simulation-policy boundary isolates timestep and force choices supports REQ-014 because predictable movement tests need swappable
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-006
+- Failure mode: TraceabilityTheater
+- Evidence: EVD-006: WCAG 2.2 Success Criterion 2.1.1 requires functionality to be operable through a keyboard interface without requiring specific timings for individual keystrokes except where movement path is essential ([W3C WAI](https://www.w3.org/
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-01-Audience.md
+- Related ID: EVD-008
+- Failure mode: TraceabilityTheater
+- Evidence: EVD-008: Microsoft identifies prolonged control holds as a potential barrier and lists configurable alternatives such as toggles, automatic holds, and remapping ([Microsoft Game Dev](https://learn.microsoft.com/en-us/xbox/accessibility/xbox
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-02-Experience.md
+- Related ID: OQ-004
+- Failure mode: TraceabilityTheater
+- Evidence: The retained material supports evaluation methods, not a randomness amount, distribution, or subsystem. `OQ-004` remains stakeholder-owned, and `ASM-004` is only a provisional movement-proof protocol.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: ValidationReport.md
+- Related ID: REQ-
+- Failure mode: TraceabilityTheater
+- Evidence: Requirement-to-criterion scan found every defined `REQ-*` on at least one one-line `AC-* supports REQ-* because` edge.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] Not all identified requirements have explicit acceptance criteria.
+
+- Criterion: Actionability.A
+- Artifact: generated package
+- Failure mode: UnderSpecification
+- Evidence: Acceptance criteria coverage: 95.2%.
+- Recommended correction: Add testable acceptance criteria for every implementable important requirement.
+
+
+## Unsupported Decisions
+
+- None.
+
+## Unresolved Assumptions and Questions
+
+- A deterministic input-replay harness can make predictability defects reproducible; this is a proposed implementation direction under `ASM-006`, not a stakeholder requirement.
+- A small parameterized shape and sound vocabulary can create variety without bespoke assets; this is a non-authoritative production inference under `ASM-007` and `ASM-008`.
+- ASM-001: ASSUMPTION: The non-authoritative minimalist build inventory is limited to the satellite, eligible planets or debris, data fragments, hazards, collapsing star, trajectories and feedback, score, multiplier, and restart state.
+- ASM-002: ASSUMPTION: The non-authoritative provisional meaning of “restart instantly” is a fresh controllable state within 500 ms on the eventual benchmark device and browser.
+- ASM-003: ASSUMPTION: The non-authoritative provisional comprehension test uses five first-time participants, a four-of-five pass threshold, and a 30-second completion window.
+- ASM-004: ASSUMPTION: The non-authoritative provisional skill-and-predictability test uses deterministic input replay plus five participants, two scripted gates, five practice runs, and a four-of-five participant threshold.
+- ASM-005: ASSUMPTION: A Canvas 2D renderer is a non-authoritative implementation candidate because the planned art consists primarily of sparse geometric primitives.
+- ASM-006: ASSUMPTION: A replaceable simulation-policy boundary is a non-authoritative architecture choice that reduces rework while the exact physics model remains unapproved.
+- ASM-007: ASSUMPTION: Procedurally synthesized cues are a non-authoritative audio candidate that may reduce solo production effort while retaining distinct state feedback.
+- ASM-008: ASSUMPTION: The provisional palette is deep navy, warm white, cyan, amber, and red-orange, and remains non-authoritative until visual review.
+- ASM-009: ASSUMPTION: A system sans-serif interface face with geometric numeral forms is a non-authoritative typography candidate that avoids a custom-font dependency.
+- ASM-010: ASSUMPTION: A client-only prototype with in-memory run state and optional local preferences is a non-authoritative delivery candidate because no account, service, or persistence need is supplied.
+- ASM-011: ASSUMPTION: Scheduling visual presentation with requestAnimationFrame is a non-authoritative browser implementation candidate and does not settle the simulation timestep or low-end frame-rate target.
+- Browser and device variance can undermine timing and input consistency until `OQ-003` and `OQ-007` define the supported matrix.
+- Converted inferred thresholds and implementation candidates into visibly non-authoritative `ASM-*` records.
+- Mastery over mystery: any eventual randomness must preserve learnable cause and effect; `OQ-004` remains open.
+- No slice may silently resolve `OQ-001` through `OQ-007`; experiments must label candidate configurations and record them separately from stakeholder-approved baselines.
+- No sustained frame-rate threshold, device floor, browser matrix, or test duration is selected. Those authority gaps remain in `OQ-003` and `OQ-007`.
+- OQ-001: Which exact physics model does the stakeholder approve, including anchor selection timing, force-source count, moving-body behavior, collision-radius behavior, numerical integrator, and simulation timestep?
+- OQ-002: Which input-accessibility target does the stakeholder approve, including keyboard bindings, remapping, prolonged-hold alternatives, and whether toggle or auto-hold may alter hold/release timing?
+- OQ-003: Which benchmark devices and browsers define “low-end devices,” and what sustained frame-rate and frame-time thresholds must they meet?
+- OQ-004: Which subsystems may vary between runs, what seed behavior is required, and what bounds preserve skillful, predictable movement?
+- OQ-005: What stakeholder-approved participant count, practice allowance, task, and pass threshold will prove skillful, predictable gravity-anchor switching?
+- OQ-006: What stakeholder-approved maximum restart latency qualifies as “instantly,” and on which benchmark environment?
+- OQ-007: Which desktop and mobile browsers, viewport sizes, orientations, pointer types, and audio policies are in the supported prototype matrix?
+- Physical grounding can improve legibility, but research does not decide anchor locking, source count, body kinematics, collision handling, integrator, or timestep. Those remain within `OQ-001`.
+- Seeded test scenarios could separate learnability from run variety after `OQ-004` is answered; no randomness quantity is currently selected.
+- The planned deliverable is a client-side browser prototype with one fixed playfield. No account, network service, leaderboard, purchase, analytics pipeline, or remote persistence is authorized. Client-only delivery is proposed under `ASM-010`, not confirmed by the brief.
+- The quoted phrases are exact clauses from the supplied brief. Acceptance thresholds that the brief did not authorize are visibly tied to non-authoritative `ASM-*` records and remain subject to the open matters in [Pending matters](OpenQuestions.md).
+- The replaceable simulation policy advances bodies and the satellite; exact force, integration, collision-radius, and timestep rules wait on `OQ-001`.
+- The retained material supports evaluation methods, not a randomness amount, distribution, or subsystem. `OQ-004` remains stakeholder-owned, and `ASM-004` is only a provisional movement-proof protocol.
+- These forms are provisional applications of `ASM-001`; they can change without altering the brief.
+- `ASM-008` proposes deep navy `#07111F` for space, warm white `#F4F1E8` for the satellite and neutral information, cyan `#59E1E8` for attachment and fragments, amber `#FFC857` for multiplier and skim rewards, and red-orange `#FF5A47` for hazards and collapse pressure. The palette is not stakeholder-approved (`DEC-021`).
+- `ASM-009` proposes a system sans-serif stack with tabular numerals for score and multiplier. Type is limited to score, multiplier, and browser-level controls; it must not become instructional copy that conflicts with `REQ-012`. This typography choice is not stakeholder-approved (`DEC-022`).
+- `OQ-001` through `OQ-004` block final implementation baselines. `OQ-005` and `OQ-006` block final acceptance thresholds. `OQ-007` blocks a complete compatibility and performance matrix.
+- `RunState` contains phase, elapsed time, score, multiplier value and expiry, satellite transform and velocity, eligible bodies, fragments, hazards, star state, active or candidate anchor identifiers, and a run configuration identifier. Random seeds and distributions are intentionally absent from the settled model until `OQ-004` is answered.
+- | ASM-002 | supports | AC-011 | Both use the provisional 500 ms restart threshold. |
+- | ASM-003 | supports | AC-012 | Both use the provisional first-time comprehension protocol. |
+- | ASM-004 | supports | AC-014 | Both use the provisional replay and participant skill protocol. |
+- | ASM-005 | supports | DEC-018 | Both keep Canvas 2D a replaceable rendering proposal. |
+- | ASM-006 | supports | DEC-019 | Both isolate the unapproved simulation policy behind a replaceable boundary. |
+- | ASM-007 | supports | DEC-020 | Both keep synthesized audio cues provisional. |
+- | ASM-008 | supports | DEC-021 | Both keep the palette provisional. |
+- | ASM-009 | supports | DEC-022 | Both keep typography provisional. |
+- | ASM-010 | supports | DEC-023 | Both keep client-only delivery provisional. |
+- | ASM-011 | supports | DEC-024 | Both separate requestAnimationFrame presentation from simulation policy. |
+- | `ASM-*` definitions | 11 |
+- | `InputAdapter` | Normalize pointer, touch, and eventual keyboard/accessibility modes into one action state | Feature set waits on `OQ-002` |
+- | `OQ-*` definitions | 7 |
+- | `SimulationPolicy` | Apply the approved motion and collision model behind a replaceable interface | `OQ-001`, `ASM-006` |
+- “Skillful, predictable” and “instantly” lack stakeholder-approved thresholds (`OQ-005`, `OQ-006`).
+
+## Strengths
+
+- Every identified requirement participates in an explicit validated trace.
+- No broken submitted internal artifact links were found.
+
+## Recommended Improvements
+
+1. Link the answer to the final requirement or decision that reflects it.
+2. Replace the evidence relationship with a source that actually supports the decision, or remove the claim.
+3. Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+4. Add testable acceptance criteria for every implementable important requirement.
+
+## External Verification Scope
+
+External source correctness was not independently verified; citation identity and submitted decision linkage were evaluated locally.

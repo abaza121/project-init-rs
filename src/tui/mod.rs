@@ -25,7 +25,7 @@ use tokio::sync::{mpsc, oneshot};
 
 use crate::agents::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentError, AgentExecution, CancellationToken,
-    CodexCliClient, CodexCliConfig, DocumentationClient, DocumentationRequest,
+    CodexCliClient, CodexCliConfig, ConfiguredProvider, DocumentationClient, DocumentationRequest,
     resolve_codex_executable, sanitize_terminal_text,
 };
 use crate::domain::{ProjectId, ProjectSnapshot};
@@ -44,14 +44,14 @@ pub enum WorkspaceDirective {
     Quit,
     /// Starts or resumes one background run and identifies provider-backed presentation.
     Execute {
-        /// Shows the full-screen overlay only while Codex generation or repair is required.
+        /// Shows the full-screen overlay only while provider generation or repair is required.
         show_overlay: bool,
     },
     /// Starts fixed three-worker automatic clarification with a dedicated progress board.
     AutoAnswer,
 }
 
-/// Carries process and storage configuration needed only when the workbench executes Codex.
+/// Carries process, storage, and provider configuration for workbench execution.
 #[derive(Debug, Clone)]
 pub struct WorkspaceRuntimeConfig {
     data_dir: PathBuf,
@@ -60,10 +60,11 @@ pub struct WorkspaceRuntimeConfig {
     history_capacity: usize,
     activity_capacity: usize,
     disable_skills: bool,
+    provider_override: Option<ConfiguredProvider>,
 }
 
 impl WorkspaceRuntimeConfig {
-    /// Creates skill-free background execution configuration without resolving Codex eagerly.
+    /// Creates skill-free background execution configuration without resolving a provider eagerly.
     pub fn new(
         data_dir: &Path,
         codex_override: Option<OsString>,
@@ -78,12 +79,19 @@ impl WorkspaceRuntimeConfig {
             history_capacity,
             activity_capacity,
             disable_skills: true,
+            provider_override: None,
         }
     }
 
     /// Selects skill suppression for Codex work started later from this workbench.
     pub fn with_skills_disabled(mut self, disable_skills: bool) -> Self {
         self.disable_skills = disable_skills;
+        self
+    }
+
+    /// Supplies an already validated non-default provider for later background execution.
+    pub fn with_provider(mut self, provider: ConfiguredProvider) -> Self {
+        self.provider_override = Some(provider);
         self
     }
 
@@ -117,15 +125,15 @@ impl Drop for ActiveWorkspaceExecution {
     }
 }
 
-/// Decorates the Codex documentation client with exact provider-active UI signals.
+/// Decorates the documentation client with exact provider-active UI signals.
 struct SignalingDocumentationClient {
-    inner: CodexCliClient,
+    inner: ConfiguredProvider,
     provider_activity: mpsc::Sender<bool>,
 }
 
 #[async_trait::async_trait]
 impl DocumentationClient for SignalingDocumentationClient {
-    /// Brackets only the external Codex call, leaving local workflow work unobscured.
+    /// Brackets only the external provider call, leaving local workflow work unobscured.
     async fn execute(
         &self,
         request: DocumentationRequest,
@@ -326,7 +334,8 @@ fn run_workspace_with_initial_mode(
                     if provider_active {
                         state.begin_execution();
                     } else if state.execution_active() {
-                        state.finish_execution("Codex finished. Applying local workflow checks…");
+                        state
+                            .finish_execution("Provider finished. Applying local workflow checks…");
                     }
                 }
                 while let Ok(event) = active.activity.try_recv() {
@@ -395,7 +404,7 @@ fn run_workspace_with_initial_mode(
                     Ok(WorkspaceDirective::Quit) => return Ok(()),
                     Ok(WorkspaceDirective::Execute { show_overlay }) => {
                         if show_overlay {
-                            state.show_notice("Preparing Codex documentation execution…");
+                            state.show_notice("Preparing provider documentation execution…");
                         } else {
                             state.show_notice("Resuming workflow…");
                         }
@@ -458,7 +467,7 @@ fn spawn_workspace_execution(
     }
 }
 
-/// Opens worker-owned dependencies and resolves Codex only for provider-backed steps.
+/// Opens worker-owned dependencies and resolves a client only for provider-backed steps.
 async fn run_workspace_worker(
     config: WorkspaceRuntimeConfig,
     project_id: ProjectId,
@@ -481,35 +490,42 @@ async fn run_workspace_worker(
             .await
             .map_err(|error| sanitize_terminal_text(&error.to_string()));
     }
-    let executable = match resolve_codex_executable(config.codex_override.clone()) {
-        Ok(executable) => executable,
-        Err(error) => {
-            if service
-                .active_run(&project_id)
-                .map_err(|active_error| active_error.to_string())?
-                .is_some()
-            {
-                service
-                    .pause_run(&project_id, "capability_unavailable")
-                    .map_err(|pause_error| pause_error.to_string())?;
-            }
-            return Err(error.to_string());
+    let provider = match config.provider_override.clone() {
+        Some(provider) => provider,
+        None => {
+            let executable = match resolve_codex_executable(config.codex_override.clone()) {
+                Ok(executable) => executable,
+                Err(error) => {
+                    if service
+                        .active_run(&project_id)
+                        .map_err(|active_error| active_error.to_string())?
+                        .is_some()
+                    {
+                        service
+                            .pause_run(&project_id, "capability_unavailable")
+                            .map_err(|pause_error| pause_error.to_string())?;
+                    }
+                    return Err(error.to_string());
+                }
+            };
+            ConfiguredProvider::Codex(
+                CodexCliClient::new(CodexCliConfig {
+                    executable,
+                    working_directory: config.data_dir.clone(),
+                    timeout: config.timeout,
+                    history_capacity: config.history_capacity,
+                })
+                .with_skills_disabled(config.disable_skills),
+            )
         }
     };
-    let codex = CodexCliClient::new(CodexCliConfig {
-        executable,
-        working_directory: config.data_dir.clone(),
-        timeout: config.timeout,
-        history_capacity: config.history_capacity,
-    })
-    .with_skills_disabled(config.disable_skills);
     let client = SignalingDocumentationClient {
-        inner: codex.clone(),
+        inner: provider.clone(),
         provider_activity,
     };
     let mut runner = WorkflowRunner::online(service, &output, &client);
     if auto_answer {
-        runner = runner.with_auto_answer_client(Arc::new(codex));
+        runner = runner.with_auto_answer_client(Arc::new(provider));
         runner
             .run_until_pause_with_auto_answer_progress(
                 &project_id,
@@ -755,7 +771,7 @@ fn render_creation(frame: &mut Frame<'_>, state: &CreationState) {
             ),
             Span::raw(&state.project_name),
         ]),
-        Line::from("Initial brief analysis · isolated Codex CLI"),
+        Line::from("Initial brief analysis · configured provider"),
     ];
     frame.render_widget(
         Paragraph::new(header).block(Block::default().borders(Borders::ALL)),

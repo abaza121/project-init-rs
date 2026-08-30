@@ -1,0 +1,26 @@
+a0b7729c-0d0c-4974-8ab1-48de7ef93f9b	Half-Mech Heroes	AwaitingClarification
+Q-002	priority=125	Please clarify: solo play
+Q-004	priority=125	Please clarify: the exact target age
+Q-005	priority=125	Which platform should be the primary target for this project?
+Q-006	priority=125	Please clarify: The three hazard types are not specified.
+Q-007	priority=125	Please clarify: The condition for a successful rescue attempt is not specified.
+Q-001	priority=75	Please clarify: input remapping
+Q-003	priority=75	Please clarify: difficulty scaling
+Q-008	priority=75	Please clarify: The scoring rules for the teamwork multiplier are not specified.
+{
+  "run": {
+    "id": "fb08811b-d594-43e2-943b-79528d52f4d6",
+    "project_id": "a0b7729c-0d0c-4974-8ab1-48de7ef93f9b",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T09:24:40.068989900Z",
+    "updated_at": "2026-08-30T09:45:19.506602100Z",
+    "completed_at": "2026-08-30T09:45:19.506602100Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

@@ -1,0 +1,22 @@
+e1d8205f-4bdc-4ed8-a999-a16a22fcf2a6	Borrowed Orbit	AwaitingClarification
+Q-001	priority=125	Please clarify: exact physics model
+Q-002	priority=125	Please clarify: input accessibility features
+Q-003	priority=125	Please clarify: target frame rate on low-end devices
+Q-004	priority=125	Please clarify: how much randomness each run should contain
+{
+  "run": {
+    "id": "67c3dfda-947c-4f83-a24f-4724c02353c7",
+    "project_id": "e1d8205f-4bdc-4ed8-a999-a16a22fcf2a6",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T08:47:55.575017600Z",
+    "updated_at": "2026-08-30T09:03:24.815921800Z",
+    "completed_at": "2026-08-30T09:03:24.815921800Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

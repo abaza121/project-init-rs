@@ -1,0 +1,49 @@
+# Product Definition
+
+## Requirements
+REQ-001: The browser game must be minimalist; exact brief wording: “minimalist”.
+REQ-002: The browser game must use one primary gameplay button; exact brief wording: “one-button browser game”.
+REQ-003: The browser game must let a small satellite survive by borrowing gravity from moving screen objects; exact brief wording: “a small satellite survives by borrowing gravity from objects moving across the screen”.
+REQ-004: Holding the button must attach the satellite to the nearest eligible planet or debris; exact brief wording: “Holding the button attaches the satellite to the nearest planet or piece of debris”.
+REQ-005: Releasing the button must preserve the satellite’s momentum and send it into a new arc; exact brief wording: “releasing it preserves momentum and sends the player into a new arc”.
+REQ-006: The play goal must include collecting data fragments; exact brief wording: “collect data fragments”.
+REQ-007: The play goal must award bonus points for skimming hazards; exact brief wording: “skim hazards for bonus points”.
+REQ-008: The play goal must include keeping an orbit multiplier alive; exact brief wording: “keep an orbit multiplier alive”.
+REQ-009: Available objects must drift toward a collapsing star; exact brief wording: “the available objects drift toward a collapsing star”.
+REQ-010: Each run must end in less than three minutes; exact brief wording: “Runs should take less than three minutes”.
+REQ-011: A completed run must restart instantly; exact brief wording: “restart instantly”.
+REQ-012: Core play must be understandable from animation and sound rather than instructional text; exact brief wording: “understandable from animation and sound instead of text”.
+REQ-013: The visual style must use sparse geometric space art feasible for one solo developer; exact brief wording: “sparse geometric space art that a solo developer could produce”.
+REQ-014: The prototype must demonstrate that switching gravity anchors creates skillful, predictable movement; exact brief wording: “The prototype should prove that switching gravity anchors creates skillful, predictable movement”.
+REQ-015: The prototype must keep gameplay on one screen; exact brief wording: “on one screen”.
+REQ-016: Project baselines must not present an exact physics model as stakeholder-approved until a new authoritative answer supplies one; exact brief wording: “I have not chosen the exact physics model”.
+REQ-017: Project baselines must not present input accessibility features as stakeholder-approved until a new authoritative answer supplies them; exact brief wording: “input accessibility features”.
+REQ-018: Project baselines must not present a target frame rate on low-end devices as stakeholder-approved until a new authoritative answer supplies one; exact brief wording: “target frame rate on low-end devices”.
+REQ-019: Project baselines must not present how much randomness each run contains as stakeholder-approved until a new authoritative answer supplies it; exact brief wording: “how much randomness each run should contain”.
+REQ-020: Project identity must use the supplied name Borrowed Orbit; exact brief wording: “Borrowed Orbit”.
+
+## Acceptance Criteria
+AC-001: A build inspection shows only gameplay-relevant geometric bodies, feedback, score, multiplier, and restart state, with no decorative scene layer outside the inventory in ASM-001; PASS if that exact inventory is observed and FAIL otherwise supports REQ-001 because the minimalist browser game has a bounded visual inventory.
+AC-002: An input-event log for a complete run contains exactly one primary gameplay action with press/hold and release phases, excluding browser-level focus and pause controls; PASS if exactly one primary action is logged and FAIL otherwise supports REQ-002 because the one primary gameplay button is directly counted.
+AC-003: During a 60-second instrumented run, the satellite trajectory changes while at least one eligible gravity object moves across the playfield; PASS if both satellite gravity response and object displacement are logged and FAIL otherwise supports REQ-003 because the satellite borrows gravity from moving objects.
+AC-004: For ten scripted hold events with known distances, the selected attachment identifier equals the nearest eligible planet-or-debris identifier at attachment time in all ten events; PASS on 10/10 matches and FAIL otherwise supports REQ-004 because the nearest eligible planet or debris is exactly inspected.
+AC-005: For ten scripted releases, the first post-release velocity equals the final attached-state velocity within 0.1% per component and the subsequent sampled positions are non-collinear with the release point; PASS on 10/10 velocity and arc observations and FAIL otherwise supports REQ-005 because release preserves momentum into a new arc.
+AC-006: Collision overlap between the satellite and a data fragment increments the collected-fragment count by exactly one and removes that fragment once; PASS for ten of ten fixtures and FAIL otherwise supports REQ-006 because data fragment collection is objectively counted.
+AC-007: Crossing the configured skim boundary without crossing the hazard collision boundary adds the configured bonus exactly once, while a collision adds no skim bonus; PASS for all boundary fixtures and FAIL otherwise supports REQ-007 because hazard skim bonus points are distinguished from collision.
+AC-008: A valid qualifying orbit event increases or maintains the displayed multiplier and expiry of the configured continuity window resets it to baseline; PASS if both transitions match the configuration and FAIL otherwise supports REQ-008 because the orbit multiplier can be kept alive and can expire.
+AC-009: Every available moving object has a decreasing star-center distance over a scripted drift interval unless temporarily affected by an explicitly logged gameplay rule; PASS if all unexcepted distances decrease and FAIL otherwise supports REQ-009 because available objects drift toward the collapsing star.
+AC-010: Across 100 automated runs measured from first gameplay input to terminal state, every duration is less than 180000 ms; PASS only if 100/100 durations are below 180000 ms and FAIL otherwise supports REQ-010 because each run is objectively shorter than three minutes.
+AC-011: From a terminal state, activation of the restart action reaches a fresh controllable run within the provisional 500 ms threshold in ASM-002 and resets score, multiplier, satellite state, and run clock; PASS if all values reset within 500 ms in 20/20 trials and FAIL otherwise supports REQ-011 because instant restart has a measurable provisional latency and exact reset inspection.
+AC-012: With instructional text absent and animation plus sound enabled, at least four of five first-time participants identify hold-to-attach and release-to-fly and perform one successful attach-release cycle within 30 seconds under ASM-003; PASS at four or more successes and FAIL otherwise supports REQ-012 because animation and sound communicate core play without text.
+AC-013: The asset inventory contains only vector primitives, procedural effects, synthesized sound, and reusable parameter variants under ASM-007 and ASM-008, with no bespoke frame-by-frame animation; PASS if the inventory matches and FAIL otherwise supports REQ-013 because sparse geometric space art remains solo-developer producible.
+AC-014: In the provisional evaluation in ASM-004, identical initial state and input traces remain within 1 px after 60 seconds and at least four of five participants reach two scripted gates in three of five post-practice attempts; PASS only if both predictability and skill thresholds hold and FAIL otherwise supports REQ-014 because gravity-anchor switching is tested for repeatability and learned execution.
+AC-015: From run start through terminal state and restart, gameplay uses one fixed viewport with no page scroll, route change, camera-room transition, or loading screen; PASS if the recorded run contains none of those transitions and FAIL otherwise supports REQ-015 because gameplay remains on one screen.
+AC-016: A baseline inspection finds OQ-001 open and finds no CONFIRMED decision selecting anchor-lock timing, force-source count, body kinematics, collision-radius behavior, integrator, or timestep; PASS if both observations hold and FAIL otherwise supports REQ-016 because the exact physics model remains visibly unapproved.
+AC-017: A baseline inspection finds OQ-002 open and finds no CONFIRMED decision selecting conformance target, bindings, remapping, toggle, or auto-hold behavior; PASS if both observations hold and FAIL otherwise supports REQ-017 because input accessibility features remain visibly unapproved.
+AC-018: A baseline inspection finds OQ-003 open and finds no CONFIRMED decision selecting a low-end benchmark or sustained frame-rate threshold; PASS if both observations hold and FAIL otherwise supports REQ-018 because the low-end-device target frame rate remains visibly unapproved.
+AC-019: A baseline inspection finds OQ-004 open and finds no CONFIRMED decision selecting randomized subsystems, distributions, seed behavior, or variation bounds; PASS if both observations hold and FAIL otherwise supports REQ-019 because the amount of run randomness remains visibly unapproved.
+AC-020: A case-sensitive scan of identity-bearing document titles and named project references finds “Borrowed Orbit” and no alternate project name; PASS if the supplied name is the only project identity and FAIL otherwise supports REQ-020 because Borrowed Orbit is exactly preserved.
+
+## Neutral notes
+
+The quoted phrases are exact clauses from the supplied brief. Acceptance thresholds that the brief did not authorize are visibly tied to non-authoritative `ASM-*` records and remain subject to the open matters in [Pending matters](OpenQuestions.md).

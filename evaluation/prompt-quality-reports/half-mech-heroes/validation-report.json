@@ -1,0 +1,2374 @@
+{
+  "drpfs": 60.0,
+  "dimensions": {
+    "brief_fidelity": {
+      "score": 20.0,
+      "max": 20,
+      "findings": []
+    },
+    "assumption_discipline": {
+      "score": 12.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Assumption Discipline.A",
+          "description": "A consequential inferred choice is presented as a settled decision without labeled provenance.",
+          "artifact": "SWOT.md",
+          "related_id": "DEC-041",
+          "supporting_evidence": "Abstract input ports in DEC-041 allow early mechanic tests while platform and engine decisions remain open.",
+          "recommended_correction": "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+          "failure_mode": "AssumptionPromotion"
+        }
+      ]
+    },
+    "cross_document_consistency": {
+      "score": 15.0,
+      "max": 15,
+      "findings": []
+    },
+    "evidence_quality": {
+      "score": 0.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-032",
+          "supporting_evidence": "| DEC-032 | Exact target age | Deferred | Stakeholder-declared open choice | SRC-021; ANS-008 | EVD-AUD-001; EVD-AUD-002 | Ratings evidence cannot select intended audience capability. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-032",
+          "supporting_evidence": "| DEC-032 | Exact target age | Deferred | Stakeholder-declared open choice | SRC-021; ANS-008 | EVD-AUD-001; EVD-AUD-002 | Ratings evidence cannot select intended audience capability. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-DEL-001",
+          "supporting_evidence": "| EVD-DEL-001 | DEC-038 | Supports explicit use context without supplying a comedy threshold. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-DEL-001",
+          "supporting_evidence": "| EVD-DEL-001 | DEC-039 | Supports context-specific evaluation without supplying a mastery threshold. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-003",
+          "supporting_evidence": "| EVD-EXP-003 | DEC-039 | Supports cohort-sensitive interpretation of skill barriers. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-004",
+          "supporting_evidence": "| EVD-EXP-004 | DEC-037 | Supports distinguishability as part of silhouette evaluation. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-TEC-001",
+          "supporting_evidence": "| EVD-TEC-001 | DEC-028 | Shows one candidate technology supports relevant input. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.B",
+          "description": "Cited evidence has no meaningful subject overlap with the decision it claims to support.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-TEC-002",
+          "supporting_evidence": "| EVD-TEC-002 | DEC-028 | Shows another candidate technology supports relevant input. |",
+          "recommended_correction": "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+          "failure_mode": "EvidenceMisuse"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Requirements.md",
+          "related_id": "DEC-035",
+          "supporting_evidence": "Consequential decision: DEC-035. Research constraint: EVD-EXP-001.",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "supporting_evidence": "This file is the canonical consequential-decision register and the explicit semantic trace graph. Each edge names one source and one target; comma-separated ID lists are not used as substitutes for trace edges. Evidence constrains a decisio",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "supporting_evidence": "| Decision ID | One subject | Status | Provenance type | Exact source IDs | Relevant evidence IDs | Rationale |",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-035",
+          "supporting_evidence": "| DEC-035 | Television-readability test gate | Provisional | Research-constrained inference | SRC-015; ASM-001; ASM-006 | EVD-EXP-001; EVD-DEL-001 | A reproducible context is needed; display, distance, cohort, and pass rate remain unapprove",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Evidence Quality.C",
+          "description": "A research-dependent decision has no explicit evidence relationship.",
+          "artifact": "Traceability.md",
+          "supporting_evidence": "| Evidence | Decision | Relationship and semantic relevance |",
+          "recommended_correction": "Link the decision to identifiable evidence that actually informed it.",
+          "failure_mode": "ResearchAfterDecision"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "MissionVision.md",
+          "related_id": "SRC-002",
+          "supporting_evidence": "This mission is a normalized summary of SRC-002, SRC-003, SRC-006, SRC-008, SRC-011, and SRC-020. The exact stakeholder wording remains canonical in [Requirements.md](Requirements.md).",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "related_id": "EVD-",
+          "supporting_evidence": "Each retained research claim is recorded once in the relevant file below. Other documents cite only its `EVD-*` ID.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "supporting_evidence": "[Research-01-Audience.md](Research-01-Audience.md)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "supporting_evidence": "[Research-02-Experience.md](Research-02-Experience.md)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "supporting_evidence": "[Research-03-Market.md](Research-03-Market.md)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "supporting_evidence": "[Research-04-Technology.md](Research-04-Technology.md)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "supporting_evidence": "[Research-05-Delivery.md](Research-05-Delivery.md)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "README.md",
+          "related_id": "SRC-TO-REQ",
+          "supporting_evidence": "Accepted stakeholder scope is represented by SRC-to-REQ traces and accepted `DEC-*` records.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "Each quote below is exact source wording. Each row maps to at least one generated requirement; the detailed semantic edge appears separately in [Traceability.md](Traceability.md).",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "| Source ID | Exact source wording | Generated requirement |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "supporting_evidence": "|---|---|---|",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-001",
+          "supporting_evidence": "| SRC-001 | “Half-Mech Heroes” | REQ-001 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-002",
+          "supporting_evidence": "| SRC-002 | “I want a local two-player couch arcade game” | REQ-002 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-003",
+          "supporting_evidence": "| SRC-003 | “where both players operate the same malfunctioning rescue mech.” | REQ-003 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-004",
+          "supporting_evidence": "| SRC-004 | “One player controls movement and jumping with the left side of a gamepad” | REQ-004 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-005",
+          "supporting_evidence": "| SRC-005 | “while the other aims a magnetic arm and shield with the right side” | REQ-005 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-006",
+          "supporting_evidence": "| SRC-006 | “the roles automatically swap whenever the mech takes damage.” | REQ-006 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-007",
+          "supporting_evidence": "| SRC-007 | “Together they cross a single scrolling disaster zone” | REQ-007 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-008",
+          "supporting_evidence": "| SRC-008 | “catch falling civilians” | REQ-008 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-009",
+          "supporting_evidence": "| SRC-009 | “throw wreckage out of the way” | REQ-009 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-010",
+          "supporting_evidence": "| SRC-010 | “build a teamwork multiplier before time runs out.” | REQ-010 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-011",
+          "supporting_evidence": "| SRC-011 | “Sessions should consist of short three-minute rescue attempts” | REQ-011 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-012",
+          "supporting_evidence": "| SRC-012 | “with quick restarts” | REQ-012 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-013",
+          "supporting_evidence": "| SRC-013 | “exaggerated physics” | REQ-013 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-014",
+          "supporting_evidence": "| SRC-014 | “chunky silhouettes” | REQ-014 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "| SRC-015 | “funny mechanical failures that remain readable on a television.” | REQ-015 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "| SRC-015 | “funny mechanical failures that remain readable on a television.” | REQ-016 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-016",
+          "supporting_evidence": "| SRC-016 | “The first prototype should support two controllers or one shared keyboard” | REQ-017 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-017",
+          "supporting_evidence": "| SRC-017 | “include one city block” | REQ-018 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-018",
+          "supporting_evidence": "| SRC-018 | “one civilian type” | REQ-019 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-019",
+          "supporting_evidence": "| SRC-019 | “three hazards.” | REQ-020 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | “I want coordination to create both mastery and comedy” | REQ-021 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | “I want coordination to create both mastery and comedy” | REQ-022 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | “I want coordination to create both mastery and comedy” | REQ-023 |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-001",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-001",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-002",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-002",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-003",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-003",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-004",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-004",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-005",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-005",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-006",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-006",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-007",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-007",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-008",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-008",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-009",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-009",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-010",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-010",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-011",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-011",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-012",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-012",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-013",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-013",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-014",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-014",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-015",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-015",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-016",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-016",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-017",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-017",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-018",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-018",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-019",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-019",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-020",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-020",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Requirements.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "Authority and source: stakeholder brief, SRC-020",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "Research date: 2026-08-30",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "Scope: primary-source checks that constrain audience discussion. No audience interviews, demographic data, or stakeholder audience decision were available.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "No stakeholder audience choice.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "No interviews or observational research with children, families, adult couch-co-op players, disabled players, or mixed-skill pairs.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "No jurisdiction or ratings-submission plan.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "No approved language, content-sensitivity, motor-skill, reading-level, or cognitive-load criteria.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-01-Audience.md",
+          "supporting_evidence": "Any audience persona created before those inputs would be invented and is therefore omitted.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "Research date: 2026-08-30",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "Scope: primary Microsoft guidance used as nonbinding design and test constraints. These recommendations do not provide stakeholder authority or prove compliance.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "The experience evidence constrains presentation and suggests accessibility options. It does not settle scope, content identities, target cohort, difficulty design, or project-specific pass thresholds. Those choices remain in OpenQuestions.m",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "No paired-player sessions were observed.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "No players with disabilities participated in the supplied work.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "No comedy, coordination, mastery, readability, or restart data exists.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-02-Experience.md",
+          "supporting_evidence": "No final display, room, controller models, keyboard layout, or target-hardware performance is available.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Research date: 2026-08-30",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Scope: official platform documentation only. No sales estimates, market sizing, competitor ranking, price research, store review mining, or commercial forecast was performed.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Claim type: sourced fact",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Claim: Nintendo describes developer registration and a subsequent request for Nintendo Switch information access.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Primary source: [Nintendo Developer Portal registration](https://developer.nintendo.com/register)",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Reliability: high; official platform documentation.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Checked: available 2026-08-30.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Official platform records establish differing capability labels and onboarding constraints. They do not identify a primary platform, target market, commercial opportunity, price, audience, or distribution plan for this project.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Comparable-game list and verified feature comparison.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Current unit sales, revenue, wishlists, concurrent players, or conversion data.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Regional platform share for the intended audience.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Pricing, launch-window, publisher, funding, or marketing constraints.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Stakeholder commercial goals.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-03-Market.md",
+          "supporting_evidence": "Market positioning is therefore unresolved and no competitor claim is asserted.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Research date: 2026-08-30",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Scope: official engine capability documentation used to show that the input brief does not uniquely determine a technology.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "At least two candidate engines document relevant mapped keyboard/gamepad input, so the control brief does not uniquely select a stack. Console support models may materially affect feasibility. The architecture must remain engine-agnostic un",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Team size, skills, existing licenses, budget, source-control/build infrastructure, and schedule.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Physics determinism spike or controller coexistence spike in any engine.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Target-hardware profiling.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "License/legal review.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "Console NDA material or approved SDK access.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-04-Technology.md",
+          "supporting_evidence": "No engine ranking or recommendation is supportable from the available evidence.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Research date: 2026-08-30",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Scope: primary institutional sources that constrain evaluation and prototype-scope reasoning.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Evaluation must be bound to approved users, goals, contexts, methods, and thresholds. Prototype discipline should focus on risky assumptions, but neither source supplies game-specific acceptance gates or stakeholder authority over exclusion",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Budget, team, milestone date, release objective, delivery methodology, and stakeholder review cadence.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Reference devices and performance budgets.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Definition of done beyond the brief and this initiation package.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "User-research recruitment, consent, safeguarding, compensation, and data-handling plan.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Research-05-Delivery.md",
+          "supporting_evidence": "Production, certification, localisation, ratings, support, and operations plans.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "SWOT.md",
+          "related_id": "EVD-EXP-001",
+          "supporting_evidence": "Readability constraints informed by EVD-EXP-001, EVD-EXP-004, and EVD-EXP-005 can improve couch play beyond minimum legibility.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-001",
+          "supporting_evidence": "| SRC-001 | REQ-001 | Declares the exact project name. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-002",
+          "supporting_evidence": "| SRC-002 | REQ-002 | Declares local two-player couch arcade play. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-003",
+          "supporting_evidence": "| SRC-003 | REQ-003 | Declares one shared malfunctioning mech. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-004",
+          "supporting_evidence": "| SRC-004 | REQ-004 | Assigns movement and jump to the left-side role. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-005",
+          "supporting_evidence": "| SRC-005 | REQ-005 | Assigns arm and shield aiming to the right-side role. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-006",
+          "supporting_evidence": "| SRC-006 | REQ-006 | Defines damage as automatic role-swap trigger. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-007",
+          "supporting_evidence": "| SRC-007 | REQ-007 | Defines the single scrolling zone. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-008",
+          "supporting_evidence": "| SRC-008 | REQ-008 | Defines falling-civilian catching. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-009",
+          "supporting_evidence": "| SRC-009 | REQ-009 | Defines wreckage throwing. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-010",
+          "supporting_evidence": "| SRC-010 | REQ-010 | Defines teamwork-multiplier growth before timeout. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-011",
+          "supporting_evidence": "| SRC-011 | REQ-011 | Defines three-minute attempts. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-012",
+          "supporting_evidence": "| SRC-012 | REQ-012 | Defines quick-restart intent. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-013",
+          "supporting_evidence": "| SRC-013 | REQ-013 | Defines exaggerated-physics intent. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-014",
+          "supporting_evidence": "| SRC-014 | REQ-014 | Defines chunky-silhouette intent. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "| SRC-015 | REQ-015 | Defines funny mechanical failures. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-015",
+          "supporting_evidence": "| SRC-015 | REQ-016 | Defines the television-readability condition. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-016",
+          "supporting_evidence": "| SRC-016 | REQ-017 | Defines both mandatory input configurations. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-017",
+          "supporting_evidence": "| SRC-017 | REQ-018 | Sets city-block content count. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-018",
+          "supporting_evidence": "| SRC-018 | REQ-019 | Sets civilian-type content count. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-019",
+          "supporting_evidence": "| SRC-019 | REQ-020 | Sets hazard-type content count. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | REQ-021 | Declares coordination as an outcome. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | REQ-022 | Declares mastery as an outcome. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "SRC-020",
+          "supporting_evidence": "| SRC-020 | REQ-023 | Declares comedy as an outcome. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-MKT-001",
+          "supporting_evidence": "| EVD-MKT-001 | DEC-002 | Corroborates local multiplayer as a distinct platform capability. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-001",
+          "supporting_evidence": "| EVD-EXP-001 | DEC-015 | Constrains television-readable text design. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-005",
+          "supporting_evidence": "| EVD-EXP-005 | DEC-015 | Constrains critical state to redundant cue channels. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-DEL-002",
+          "supporting_evidence": "| EVD-DEL-002 | DEC-024 | Shows geographic “block” terminology cannot supply a fixed extent. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-005",
+          "supporting_evidence": "| EVD-EXP-005 | DEC-025 | Constrains eventual civilian cues without choosing identity. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-005",
+          "supporting_evidence": "| EVD-EXP-005 | DEC-026 | Constrains eventual hazard cues without choosing identities. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-002",
+          "supporting_evidence": "| EVD-EXP-002 | DEC-029 | Supplies nonbinding remapping benefit and breadth guidance. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-MKT-001",
+          "supporting_evidence": "| EVD-MKT-001 | DEC-030 | Establishes local capability without implying solo capability. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-MKT-004",
+          "supporting_evidence": "| EVD-MKT-004 | DEC-030 | Establishes single-player as a distinct capability label. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-001",
+          "supporting_evidence": "| EVD-EXP-001 | DEC-035 | Supplies a provisional 1080p text floor and context reminder. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "ValidationReport.md",
+          "related_id": "SRC-",
+          "supporting_evidence": "| VAL-003 | Parsed the material source ledger and source-to-requirement trace table. | Pass | 21 unique `SRC-*` clauses found; every clause has at least one generated-requirement mapping and at least one explicit semantic edge. |",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "log-2026-08-30-02-17-08.md",
+          "related_id": "SRC-",
+          "supporting_evidence": "Preserved the full brief verbatim and split it into exact material `SRC-*` clauses in Requirements.md.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "log-2026-08-30-02-17-08.md",
+          "supporting_evidence": "Accessed only public, primary-source web pages; no remote record was created or changed.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "log-2026-08-30-02-17-08.md",
+          "related_id": "EVD-",
+          "supporting_evidence": "Checked the retained sources on 2026-08-30 and consolidated the useful material into the canonical `EVD-*` records in the five research files.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "log-2026-08-30-02-17-08.md",
+          "supporting_evidence": "Removed duplicate claims from the supplied evidence set and omitted claims that did not constrain a requirement or consequential decision.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "log-2026-08-30-02-17-08.md",
+          "supporting_evidence": "Recorded unavailable audience, market, technical, delivery, and playtest research instead of inventing results.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        }
+      ]
+    },
+    "traceability": {
+      "score": 0.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-032",
+          "supporting_evidence": "| DEC-032 | Exact target age | Deferred | Stakeholder-declared open choice | SRC-021; ANS-008 | EVD-AUD-001; EVD-AUD-002 | Ratings evidence cannot select intended audience capability. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "DEC-032",
+          "supporting_evidence": "| DEC-032 | Exact target age | Deferred | Stakeholder-declared open choice | SRC-021; ANS-008 | EVD-AUD-001; EVD-AUD-002 | Ratings evidence cannot select intended audience capability. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-DEL-001",
+          "supporting_evidence": "| EVD-DEL-001 | DEC-038 | Supports explicit use context without supplying a comedy threshold. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-DEL-001",
+          "supporting_evidence": "| EVD-DEL-001 | DEC-039 | Supports context-specific evaluation without supplying a mastery threshold. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-003",
+          "supporting_evidence": "| EVD-EXP-003 | DEC-039 | Supports cohort-sensitive interpretation of skill barriers. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-EXP-004",
+          "supporting_evidence": "| EVD-EXP-004 | DEC-037 | Supports distinguishability as part of silhouette evaluation. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-TEC-001",
+          "supporting_evidence": "| EVD-TEC-001 | DEC-028 | Shows one candidate technology supports relevant input. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Traceability.md",
+          "related_id": "EVD-TEC-002",
+          "supporting_evidence": "| EVD-TEC-002 | DEC-028 | Shows another candidate technology supports relevant input. |",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-005",
+          "supporting_evidence": "| OQ-005 | Open | Stakeholder | What is the primary target platform? | Determines input APIs, performance budgets, packaging, certification, and hardware tests. | ANS-002 cannot decide. Platform prerequisites are evidence, not authority; se",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "OpenQuestions.md",
+          "related_id": "OQ-005",
+          "supporting_evidence": "| OQ-005 | Open | Stakeholder | What is the primary target platform? | Determines input APIs, performance budgets, packaging, certification, and hardware tests. | ANS-002 cannot decide. Platform prerequisites are evidence, not authority; se",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "OQ-006",
+          "supporting_evidence": "A stakeholder decision on OQ-006 should evaluate at least: compatibility with the selected platform from OQ-005, two-controller and shared-keyboard input, deterministic physics/test seams, television output, team capability, licensing, cons",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-001",
+          "supporting_evidence": "The snapshot’s imported requirement-shaped records `REQ-001`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, and `REQ-011` repeat research answers beginning with “FAIL” as though they were",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-013",
+          "supporting_evidence": "| Readable chaos | REQ-013; REQ-014; REQ-016 | Physics and failures can be exaggerated, but state and hazards must remain interpretable. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "MissionVision.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| Immediate replay | REQ-012 | Restart stays in the attempt flow and resets state cleanly. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Requirements.md",
+          "related_id": "REQ-",
+          "supporting_evidence": "Rule: this file is the only canonical register of requirements. `REQ-*` records are generated project requirements; `SRC-*` records preserve exact stakeholder wording.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Research-02-Experience.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "Informs: REQ-016, DEC-035, ASM-001, and OQ-010D. The numeric guidance informs the provisional test but does not approve the project’s display, distance, cohort, or threshold.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Research-02-Experience.md",
+          "related_id": "REQ-014",
+          "supporting_evidence": "Informs: REQ-014, DEC-037, DEC-025, and DEC-026 as a presentation constraint, not an identity selection.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Research-02-Experience.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "Informs: REQ-016, DEC-025, and DEC-026 as a cue-design constraint, not a creative content choice.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "SWOT.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "Prototype content counts are bounded: REQ-018, REQ-019, and REQ-020.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "SWOT.md",
+          "related_id": "REQ-022",
+          "supporting_evidence": "Mastery and comedy are both explicit intended outcomes: REQ-022 and REQ-023.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "SWOT.md",
+          "related_id": "REQ-015",
+          "supporting_evidence": "Damage-driven swaps may turn ordinary mistakes into replayable social stories if REQ-015 and REQ-023 test positively.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-013",
+          "supporting_evidence": "| REQ-013 | Physics parameters are data-driven and observable in fixtures. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-014",
+          "supporting_evidence": "| REQ-014; REQ-015; REQ-016 | Presentation state exposes role, hazard, civilian, timer, multiplier, and failure cues through redundant channels. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| REQ-018; REQ-019; REQ-020 | Content manifests enforce one block, one civilian archetype, and three hazard archetypes. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| REQ-012 | DEC-011 | Restart-intent decision establishes repeat-attempt behaviour. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-012",
+          "supporting_evidence": "| REQ-012 | DEC-034 | Provisional timing decision supplies the temporary measurable threshold. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-013",
+          "supporting_evidence": "| REQ-013 | DEC-012 | Physics-style decision establishes the qualitative behaviour. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-013",
+          "supporting_evidence": "| REQ-013 | DEC-036 | Provisional physics decision supplies temporary observable bounds. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-014",
+          "supporting_evidence": "| REQ-014 | DEC-013 | Silhouette-style decision establishes visual intent. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-014",
+          "supporting_evidence": "| REQ-014 | DEC-037 | Provisional recognition decision supplies the temporary evaluation gate. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-015",
+          "supporting_evidence": "| REQ-015 | DEC-014 | Failure-tone decision establishes humorous malfunction intent. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-015",
+          "supporting_evidence": "| REQ-015 | DEC-038 | Provisional comedy decision supplies the temporary observation gate. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| REQ-016 | DEC-015 | Television-presentation decision establishes readability intent. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-016",
+          "supporting_evidence": "| REQ-016 | DEC-035 | Provisional readability decision supplies the temporary context and threshold. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| REQ-018 | DEC-017 | City-block count decision governs manifest count. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-018",
+          "supporting_evidence": "| REQ-018 | DEC-024 | Deferred boundary prevents conflating authored block and logical zone. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-019",
+          "supporting_evidence": "| REQ-019 | DEC-018 | Civilian-count decision governs archetype count. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-019",
+          "supporting_evidence": "| REQ-019 | DEC-025 | Deferred identity prevents invented civilian art or behaviour. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-020",
+          "supporting_evidence": "| REQ-020 | DEC-019 | Hazard-count decision governs archetype count. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-020",
+          "supporting_evidence": "| REQ-020 | DEC-026 | Deferred identities prevent invented hazard selections. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-021",
+          "supporting_evidence": "| REQ-021 | DEC-020 | Coordination-outcome decision establishes desired effect. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-021",
+          "supporting_evidence": "| REQ-021 | DEC-040 | Provisional coordination decision supplies the temporary comparison gate. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-022",
+          "supporting_evidence": "| REQ-022 | DEC-021 | Mastery-outcome decision establishes desired learning effect. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-022",
+          "supporting_evidence": "| REQ-022 | DEC-039 | Provisional mastery decision supplies the temporary progression gate. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-023",
+          "supporting_evidence": "| REQ-023 | DEC-022 | Comedy-outcome decision establishes desired amusement effect. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-023",
+          "supporting_evidence": "| REQ-023 | DEC-038 | Provisional comedy decision supplies the temporary observation gate. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "Traceability.md",
+          "related_id": "REQ-024",
+          "supporting_evidence": "| REQ-024 | DEC-023 | Authority decision prevents research from closing stakeholder-open choices. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "ValidationReport.md",
+          "related_id": "REQ-",
+          "supporting_evidence": "| VAL-002 | Parsed `Requirements.md` for generated requirement sections and required fields. | Pass | 24 `REQ-*` sections found; each contains an explicitly labelled objective pass/fail acceptance criterion, exact verification reference, an",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "ValidationReport.md",
+          "related_id": "REQ-",
+          "supporting_evidence": "| VAL-004 | Compared all `REQ-*`, `SRC-*`, `ASM-*`, `OQ-*`, `EVD-*`, and `DEC-*` references with their canonical definitions. | Pass | No undefined IDs and no single-occurrence canonical IDs remain. |",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "VisualIdentity.md",
+          "related_id": "REQ-014",
+          "supporting_evidence": "Use a broad, asymmetric rescue-mech silhouette assembled from large geometric masses: cab-like torso, piston legs, one oversized magnetic arm, and one clearly separate shield plane. Civilians should read as a single compact silhouette class",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        },
+        {
+          "severity": "MEDIUM",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An identified important requirement has no explicit decision trace.",
+          "artifact": "VisualIdentity.md",
+          "related_id": "REQ-015",
+          "supporting_evidence": "Keep all humorous failures playable; a failure may disrupt control allocation or motion but must not obscure critical state or prevent attempt completion under REQ-015.",
+          "recommended_correction": "Link the requirement to at least one relevant decision or documented constraint."
+        }
+      ]
+    },
+    "actionability": {
+      "score": 8.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Actionability.A",
+          "description": "Not all identified requirements have explicit acceptance criteria.",
+          "artifact": "generated package",
+          "supporting_evidence": "Acceptance criteria coverage: 0.0%.",
+          "recommended_correction": "Add testable acceptance criteria for every implementable important requirement.",
+          "failure_mode": "UnderSpecification"
+        }
+      ]
+    },
+    "artifact_quality": {
+      "score": 5.0,
+      "max": 5,
+      "findings": []
+    }
+  },
+  "metrics": {
+    "required_artifact_completion": null,
+    "acceptance_criteria_coverage": 0.0,
+    "requirement_traceability_coverage": 48.0,
+    "unsupported_decision_rate": 16.3,
+    "high_impact_assumption_labeling_rate": 66.7,
+    "evidence_linkage_rate": 93.2,
+    "broken_internal_links": 0,
+    "conflicting_project_names": [],
+    "unresolved_high_severity_findings": null,
+    "unresolved_high_severity_finding_ids": [],
+    "user_answer_adoption_rate": null,
+    "duplicate_question_rate": null,
+    "answer_reuse_rate": null,
+    "context_compression_ratio": null,
+    "retrieval_utilization_rate": null,
+    "repeated_research_rate": null,
+    "stale_retrieval_rate": null,
+    "cross_project_leakage": null,
+    "context_supplied": null,
+    "retrieval_calls": null,
+    "execution_time_seconds": null,
+    "human_interaction_time_seconds": null,
+    "user_questions": null,
+    "model_calls": null,
+    "token_usage": null,
+    "cost": null
+  },
+  "critical_failures": [],
+  "strengths": [
+    "All extracted explicit brief requirements are represented without detected contradiction.",
+    "No broken submitted internal artifact links were found."
+  ],
+  "highest_priority_improvements": [
+    "Label the choice as an assumption or link it to user input, a constraint, or evidence.",
+    "Replace the evidence relationship with a source that actually supports the decision, or remove the claim.",
+    "Link the decision to identifiable evidence that actually informed it.",
+    "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+    "Add testable acceptance criteria for every implementable important requirement.",
+    "Connect useful evidence to a decision or remove decorative research.",
+    "Link the requirement to at least one relevant decision or documented constraint."
+  ],
+  "unsupported_decisions": [
+    "The exact `TST-REQ-*` references are defined with each requirement in [Requirements.md](Requirements.md). Automated fixtures cover state, input isolation, manifests, timer, catches, throws, score, and reset. Human protocols cover silhouettes, television readability, mastery, coordination, and comedy; all current thresholds are explicitly provisional assumptions.",
+    "| Evidence | Decision | Relationship and semantic relevance |",
+    "|---|---|---|",
+    "| Decision | Open question | Relationship and semantic relevance |",
+    "|---|---|---|",
+    "This file is the canonical consequential-decision register and the explicit semantic trace graph. Each edge names one source and one target; comma-separated ID lists are not used as substitutes for trace edges. Evidence constrains a decision but never supplies stakeholder authority.",
+    "| Decision ID | One subject | Status | Provenance type | Exact source IDs | Relevant evidence IDs | Rationale |",
+    "|---|---|---|---|---|---|---|",
+    "Consequential decision: DEC-001.",
+    "Consequential decision: DEC-002.",
+    "Consequential decision: DEC-003.",
+    "Consequential decision: DEC-004.",
+    "Consequential decision: DEC-005.",
+    "Consequential decision: DEC-006. Boundary constraint: DEC-024 and OQ-009.",
+    "Consequential decision: DEC-007.",
+    "Consequential decision: DEC-008.",
+    "Consequential decision: DEC-009.",
+    "Consequential decision: DEC-010.",
+    "Consequential decision: DEC-016.",
+    "Consequential decision: DEC-017. Boundary constraint: DEC-024 and OQ-009.",
+    "Consequential decision: DEC-018. Identity constraint: DEC-025 and OQ-008.",
+    "Consequential decision: DEC-019. Identity constraint: DEC-026 and OQ-007.",
+    "Consequential decision: DEC-034.",
+    "Informs: DEC-035, DEC-038, DEC-039, and DEC-040 by supporting context-specific evaluation while withholding project-specific thresholds.",
+    "Consequential decision: DEC-036.",
+    "Abstract input ports in DEC-041 allow early mechanic tests while platform and engine decisions remain open."
+  ],
+  "unresolved_assumptions_and_questions": [
+    "A stakeholder decision on OQ-006 should evaluate at least: compatibility with the selected platform from OQ-005, two-controller and shared-keyboard input, deterministic physics/test seams, television output, team capability, licensing, console-support model, build automation, and profiling. EVD-TEC-001, EVD-TEC-002, and EVD-TEC-003 show that capability evidence constrains but does not decide this selection.",
+    "Added the missing use-site citation for ASM-010.",
+    "Checked: available 2026-08-30.",
+    "Claim type: sourced recommendation",
+    "Claim: The GOV.UK Service Manual advises using alpha to prototype and test risky assumptions and to build enough to support a decision about moving forward.",
+    "Core evaluation terms lack stakeholder-approved measures: OQ-010A, OQ-010B, OQ-010C, OQ-010D, and OQ-010E.",
+    "Evidence supports only an authority boundary: age-classification information cannot choose the exact intended audience or validate gameplay difficulty for Half-Mech Heroes. Target age remains stakeholder-owned in OQ-004.",
+    "Hazard and civilian identities are undecided, blocking final art and behaviour specifications: OQ-007 and OQ-008.",
+    "Hazards remain abstract because OQ-007 is open.",
+    "Imported Q-010 was split into OQ-010A, OQ-010B, OQ-010C, OQ-010D, and OQ-010E.",
+    "Imported Q-011 was split into OQ-011A, OQ-011B, OQ-011C, and OQ-011D.",
+    "Keep platform adapters and engine APIs outside the gameplay domain until OQ-005 and OQ-006 close.",
+    "No stakeholder approved the proposed `ASM-*` values or answered the open questions during this session.",
+    "No target age is implied as an approved choice while OQ-004 remains open.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if a restart input produces controllable gameplay in no more than 5.0 seconds on the reference test device, resets timer, score, multiplier, roles, entities, and deterministic seed, and does not reload the application; otherwise **fail**. The 5.0-second gate is non-authoritative ASM-002 and cannot close OQ-010E.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if at least four of five evaluators correctly identify every entity class from randomized, label-free, single-colour 1080p silhouette captures at the assumed couch setup; otherwise **fail**. The setup and cohort are non-authoritative ASM-004.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if at least four of five test pairs improve either rescued-civilian count or peak teamwork multiplier from their first valid attempt to their fifth valid attempt without a difficulty reduction; otherwise **fail**. Cohort and threshold are non-authoritative ASM-008.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if at least four of five test pairs independently record at least one laughter or amusement event during a valid attempt and can identify the triggering gameplay event immediately afterward; otherwise **fail**. Cohort and coding rule are non-authoritative ASM-005.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if the scripted damage fixture exposes at least three mechanically distinct failure presentations, none blocks completion, and at least four of five paired-playtest participants mark at least one observed failure as funny on the defined binary prompt; otherwise **fail**. Counts and cohort are non-authoritative ASM-005.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if the standard throw fixture propels wreckage at least one mech-height horizontally before first ground contact and the standard damage fixture produces a visible mech recoil of at least one-quarter mech-height without losing player control for more than 1.0 second; otherwise **fail**. These bounds are non-authoritative ASM-003.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if, across the fixed paired-playtest script, the median rescued-civilian count in coordinated trials is greater than the median in deliberately uncoordinated control trials; otherwise **fail**. Protocol and sample size are non-authoritative ASM-007.",
+    "Objective pass/fail acceptance criterion: **Provisional pass** if, at 1920×1080 on the assumed 55-inch display at 3 metres, all critical text has at least 26-pixel body height and at least four of five evaluators correctly report timer, multiplier, current role, civilian state, and active hazard cue during the test script; otherwise **fail**. Display, distance, and cohort are non-authoritative ASM-001 and ASM-006.",
+    "Platform and technology are undecided, blocking concrete budgets and tooling: OQ-005 and OQ-006.",
+    "Primary source: [How the alpha phase works — GOV.UK Service Manual](https://www.gov.uk/service-manual/agile-delivery/how-the-alpha-phase-works)",
+    "Reads immutable frame state and maps critical state to shape, placement, text/icon, motion, audio, and optional haptic channels. Presentation cannot author damage, rescue, or score events. Television test settings remain provisional under ASM-001 and ASM-006.",
+    "Reliability: high for general government service-delivery practice; indirect for game development.",
+    "Status: **provisional, engine-agnostic architecture** under ASM-009 and DEC-041. It describes boundaries and test seams, not a selected implementation stack. OQ-005 and OQ-006 must close before vendor APIs, build targets, performance budgets, or release packaging can be authoritative.",
+    "Status: accepted intent; provisional evaluation pending OQ-010B",
+    "Status: accepted intent; provisional measurement pending OQ-010A",
+    "Status: accepted intent; provisional measurement pending OQ-010B",
+    "Status: accepted intent; provisional measurement pending OQ-010C",
+    "Status: accepted intent; provisional test context pending OQ-010D",
+    "Status: accepted intent; provisional threshold pending OQ-010E",
+    "The city-block/disaster-zone boundary is unresolved: OQ-009.",
+    "The civilian remains a neutral placeholder because OQ-008 is open.",
+    "The mandatory prototype is local. The architecture specifies no accounts, chat, remote telemetry, purchases, cloud saves, or deployment. This is a working omission under ASM-012, not an approved exclusion. If any remote capability enters scope, threat modelling, consent, data retention, and network-failure requirements must be added before implementation.",
+    "The zone streamer accepts one `city_block` manifest reference. It does not assume whether that unit equals the whole logical zone under ASM-011. Under non-authoritative ASM-010, factories load one neutral civilian fixture and three neutral hazard fixtures until OQ-007 and OQ-008 close; fixture names carry no creative identity.",
+    "This is the canonical register for inferred choices. Every assumption is non-authoritative until a stakeholder approves it. An assumption may support a provisional test but may not close an open question or silently become product scope.",
+    "This is the canonical register for unresolved choices. Snapshot questions marked “answered” remain open here when their imported answer explicitly says the evidence cannot decide or begins with `FAIL`.",
+    "Translate controller and keyboard events into semantic actions such as `move`, `jump`, `arm_aim`, `magnet`, and `shield_aim`. Controller brand, key layout, dead zones, and remapping UI are not selected. Remapping remains behind OQ-001.",
+    "Use a heavy condensed display face for the title and a highly legible sans serif for all operational UI. The implementation font is not selected. At the provisional 1080p television context, critical text uses at least 26-pixel body height under ASM-001 and EVD-EXP-001; this is a non-authoritative test baseline, not a final brand size system.",
+    "When a stakeholder answers an open question, update the matching `OQ-*`, add or revise one single-subject `DEC-*` record with provenance and rationale, update affected requirements and assumptions, add explicit trace edges, and rerun the checks described in ValidationReport.md. Research may constrain that decision but may not be cited as stakeholder authority.",
+    "When an assumption appears outside this file, it must retain the label **non-authoritative** and cite its exact `ASM-*` ID. Acceptance of a prototype under an assumed threshold is provisional; it cannot be represented as stakeholder acceptance of the underlying qualitative brief term.",
+    "| ASM-001 | High | Proposed | Television evaluation uses a 55-inch 1920×1080 display viewed from 3 metres. | REQ-016; DEC-035 | Stakeholder approves a reference display and distance, or OQ-010D records replacements. |",
+    "| ASM-002 | High | Proposed | “Quick” restart is provisionally tested as controllable gameplay within 5.0 seconds after restart input. | REQ-012; DEC-034 | Measure on target hardware after OQ-005; stakeholder approves or replaces threshold through OQ-010E. |",
+    "| ASM-003 | Medium | Proposed | Exaggeration is provisionally observable through at least one mech-height of throw travel and one-quarter mech-height of damage recoil, with no more than 1.0 second loss of control. | REQ-013; DEC-036 | Playtest capture demonstrates inadequacy, or stakeholder approves/replaces values. |",
+    "| ASM-004 | High | Proposed | A five-person evaluator set and four-of-five recognition gate are sufficient for a prototype silhouette check. Evaluator age cannot be targeted until OQ-004 closes. | REQ-014; DEC-037 | Audience decision and evaluation plan replace cohort and gate. |",
+    "| ASM-005 | High | Proposed | A five-pair playtest with a four-of-five-pairs amusement gate is sufficient only as a prototype comedy signal. | REQ-015; REQ-023; DEC-038 | OQ-010B approves comedy definition, cohort, observation method, and threshold. |",
+    "| ASM-006 | High | Proposed | A five-person evaluator set and four-of-five correct-report gate are sufficient for a prototype television-readability check. | REQ-016; DEC-035 | OQ-010D approves readability context and threshold. |",
+    "| ASM-007 | High | Proposed | A within-pair coordinated-versus-deliberately-uncoordinated comparison can indicate whether coordination affects rescue outcomes. It does not define desired effect size. | REQ-021; DEC-040 | OQ-010C approves outcome metric, control protocol, cohort, and effect threshold. |",
+    "| ASM-008 | High | Proposed | First-to-fifth-attempt improvement for four of five pairs is a prototype mastery signal, not proof of long-term mastery. | REQ-022; DEC-039 | OQ-010A approves mastery definition, cohort, attempt count, and threshold. |",
+    "| ASM-009 | High | Proposed | Until engine and platform are chosen, the architecture remains engine-agnostic, uses abstract ports, and specifies no vendor SDK. | TechnicalArchitecture.md; DEC-041 | OQ-005 and OQ-006 close with compatible selections. |",
+    "| ASM-010 | Medium | Proposed | Unselected civilian and hazard identities are represented by neutral test-fixture archetypes, not creative commitments. | REQ-019; REQ-020; DEC-025; DEC-026 | OQ-007 and OQ-008 close. |",
+    "| ASM-011 | Medium | Proposed | The one authored city-block unit may be streamed within a larger logical zone, but neither equality nor inequality between those boundaries is assumed. | REQ-007; REQ-018; DEC-024 | OQ-009 closes. |",
+    "| ASM-012 | High | Proposed | Online services, monetisation, progression, extra content, and release packaging are not planned in the initiation slice, but are not declared exclusions. | DEC-033; Research-05-Delivery.md | Stakeholder answers OQ-011A, OQ-011B, OQ-011C, and OQ-011D. |",
+    "| ID | Impact | Status | Non-authoritative working assumption | Used by | Falsification or approval path |",
+    "| ID | Status | Owner | Decision needed | Why it matters | Unavailable authority / next action |",
+    "| OQ-001 | Open | Stakeholder | Should in-game input remapping be included in the first prototype, and if so for which inputs? | Affects accessibility, UI, persistence, tests, and schedule. | ANS-006 supplies guidance but no authority. Decide scope explicitly; see EVD-EXP-002. |",
+    "| OQ-002 | Open | Stakeholder | Should solo play be included in addition to mandatory local two-player play? | Changes control substitution, AI, onboarding, and scope. | ANS-001 cannot decide. No current project authority is available. |",
+    "| OQ-003 | Open | Stakeholder | Should difficulty scaling be included, and what experience should it preserve? | Changes tuning, UI, content parameters, and evaluation. | ANS-007 supplies guidance but no authority; see EVD-EXP-003. |",
+    "| OQ-004 | Open | Stakeholder | What exact target age or age range is intended? | Affects evaluation cohort, language, complexity, content, and ratings planning. | ANS-008 cannot decide; classification is not audience selection. See EVD-AUD-001 and EVD-AUD-002. |",
+    "| OQ-005 | Open | Stakeholder | What is the primary target platform? | Determines input APIs, performance budgets, packaging, certification, and hardware tests. | ANS-002 cannot decide. Platform prerequisites are evidence, not authority; see EVD-MKT-002 and EVD-MKT-003. |",
+    "| OQ-006 | Open | Stakeholder | Which engine, language, and framework should implement the prototype? | Determines runtime architecture, tooling, team needs, and platform feasibility. | ANS-003 cannot decide. Resolve after or together with OQ-005; see EVD-TEC-001, EVD-TEC-002, and EVD-TEC-003. |",
+    "| OQ-007 | Open | Stakeholder / creative lead | Which three hazard identities should fill the required hazard slots? | Required for art, behaviour, telegraphing, and tuning. | ANS-009 constrains communication only. No identity authority is available. |",
+    "| OQ-008 | Open | Stakeholder / creative lead | Which single civilian type should fill the required civilian slot? | Required for art, tone, animation, and rescue presentation. | ANS-010 cannot decide and incorrectly suggested the rescue mechanic was absent; SRC-008 already requires catching. |",
+    "| OQ-009 | Open | Stakeholder / level-design lead | Does the one city block constitute the entire single scrolling disaster zone? | Changes level length, content boundaries, camera design, and completion definition. | ANS-004 cannot decide; see EVD-DEL-002 only for why “block” lacks a standard extent. |",
+    "| OQ-010A | Open | Stakeholder / research lead | What observable definition, cohort, method, and pass threshold establish mastery? | Required to replace ASM-008 and approve REQ-022. | Imported Q-010 bundled this with unrelated outcomes; no threshold authority is available. |",
+    "| OQ-010B | Open | Stakeholder / research lead | What observable definition, cohort, method, and pass threshold establish comedy? | Required to replace ASM-005 and approve REQ-015 and REQ-023. | Imported Q-010 bundled this with unrelated outcomes; no threshold authority is available. |",
+    "| OQ-010C | Open | Stakeholder / research lead | What observable definition, cohort, method, and pass threshold establish coordination? | Required to replace ASM-007 and approve REQ-021. | Imported Q-010 bundled this with unrelated outcomes; no threshold authority is available. |",
+    "| OQ-010D | Open | Stakeholder / UX lead | What display, viewing distance, cohort, tasks, and pass threshold establish television readability? | Required to replace ASM-001 and ASM-006 and approve REQ-016. | EVD-EXP-001 informs a test but cannot approve project context or threshold. |",
+    "| OQ-010E | Open | Stakeholder / delivery lead | What device and elapsed-time threshold establish a quick restart? | Required to replace ASM-002 and approve the qualitative part of REQ-012. | No project-specific threshold authority is available. |",
+    "| OQ-011A | Open | Stakeholder | Which gameplay features, if any, are explicitly excluded from the first prototype? | Prevents accidental scope expansion while preserving authority. | ANS-011 correctly identifies no current exclusion; decide individually. |",
+    "| OQ-011B | Open | Stakeholder | Which platforms or distribution channels, if any, are explicitly excluded? | Constrains technical evaluation and packaging. | No current exclusion authority is available. |",
+    "| OQ-011C | Open | Stakeholder | Which quality attributes, if any, may be deferred from the first prototype? | Affects definition of done and technical debt. | No current exclusion authority is available. |",
+    "| OQ-011D | Open | Stakeholder | Which deliverables beyond a playable prototype, if any, are explicitly excluded? | Clarifies whether tooling, analytics, documentation, or release artifacts are expected. | No current exclusion authority is available. |",
+    "|---|---|---|---|---|---|"
+  ],
+  "external_verification_note": "External source correctness was not independently verified; citation identity and submitted decision linkage were evaluated locally."
+}

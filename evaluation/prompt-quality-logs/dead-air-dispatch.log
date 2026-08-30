@@ -1,0 +1,24 @@
+4ba5c0f5-6e90-4c0c-bb5d-9bf38289c181	Dead Air Dispatch	AwaitingClarification
+Q-001	priority=125	Please clarify: I have not decided how to support deaf or hard-of-hearing players.
+Q-003	priority=125	Please clarify: No measurable threshold is provided for determining whether hidden information feels intriguing rather than unfair.
+Q-005	priority=125	Please clarify: The relative scoring weights for rescues, signal accuracy, and risky time are not specified.
+Q-002	priority=75	Please clarify: The intended player audience is not specified.
+Q-004	priority=75	Please clarify: The acceptable tolerance around the approximately five-minute run duration is not specified.
+Q-006	priority=75	Please clarify: No explicit project exclusions are stated.
+{
+  "run": {
+    "id": "64af4d05-ed3b-4592-96b1-de259f2a5d36",
+    "project_id": "4ba5c0f5-6e90-4c0c-bb5d-9bf38289c181",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T02:00:07.480980800Z",
+    "updated_at": "2026-08-30T02:16:32.241141100Z",
+    "completed_at": "2026-08-30T02:16:32.241141100Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

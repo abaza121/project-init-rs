@@ -1,0 +1,23 @@
+d614712c-9f5b-46d7-b59e-9c8550ddbbee	Borrowed Orbit	AwaitingClarification
+Q-001	priority=125	Please clarify: the exact physics model
+Q-002	priority=125	Please clarify: input accessibility features
+Q-003	priority=125	Please clarify: target frame rate on low-end devices
+Q-004	priority=125	Please clarify: how much randomness each run should contain
+Q-005	priority=75	Please clarify: The intended player audience is not specified.
+{
+  "run": {
+    "id": "d6273cfc-06cc-4f37-b057-43bfeceafd91",
+    "project_id": "d614712c-9f5b-46d7-b59e-9c8550ddbbee",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T10:31:30.527867700Z",
+    "updated_at": "2026-08-30T10:48:57.941849200Z",
+    "completed_at": "2026-08-30T10:48:57.941849200Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

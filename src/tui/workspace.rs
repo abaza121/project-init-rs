@@ -1470,7 +1470,7 @@ fn render_policy_selection(frame: &mut Frame<'_>, state: &WorkspaceState) {
     );
 }
 
-/// Covers the workspace with bounded activity while external Codex work is active.
+/// Covers the workspace with bounded activity while external provider work is active.
 fn render_execution_overlay(frame: &mut Frame<'_>, state: &WorkspaceState) {
     let Some(execution) = state.execution.as_ref() else {
         return;
@@ -1497,7 +1497,7 @@ fn render_execution_overlay(frame: &mut Frame<'_>, state: &WorkspaceState) {
                     .fg(Color::Cyan)
                     .add_modifier(Modifier::BOLD),
             )),
-            Line::from("Codex package work remains provisional until adoption."),
+            Line::from("Provider package work remains provisional until adoption."),
         ])
         .block(Block::default().borders(Borders::ALL)),
         rows[0],

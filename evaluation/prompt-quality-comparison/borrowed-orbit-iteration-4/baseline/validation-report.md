@@ -1,0 +1,1211 @@
+# Validation Report
+
+## Overall Score
+
+DRPFS: 59.5 / 100
+
+## Scorecard
+
+| Dimension | Score |
+|---|---:|
+| Brief Fidelity | 14.3/20 |
+| Assumption Discipline | 4.7/15 |
+| Cross-Document Consistency | 15.0/15 |
+| Evidence Quality | 12.5/15 |
+| Requirements → Decision Traceability | 0.0/15 |
+| Actionability | 8.0/15 |
+| Artifact Completeness | 5.0/5 |
+| TOTAL | 59.5/100 |
+
+## Deterministic Metrics
+
+- Required Artifact Completion: Unavailable
+- Acceptance Criteria Coverage: 0.0%
+- Requirement Traceability Coverage: 57.1%
+- Unsupported Decision Rate: 81.4%
+- High-Impact Assumption Labeling Rate: 0.0%
+- Evidence Linkage Rate: 72.7%
+- User Answer Adoption Rate: Unavailable
+- Duplicate Question Rate: Unavailable
+- Answer Reuse Rate: Unavailable
+- Retrieval Utilization Rate: Unavailable
+- Repeated Research Rate: Unavailable
+- Stale Retrieval Rate: Unavailable
+- Broken Internal Links: 0
+- Unresolved High-Severity Findings: Unavailable
+- Cross-Project Leakage: Unavailable
+- Context Supplied: Unavailable
+- Retrieval Calls: Unavailable
+- Context Compression Ratio: Unavailable
+- Execution Time (seconds): Unavailable
+- Human Interaction Time (seconds): Unavailable
+- User Questions: Unavailable
+- Model Calls: Unavailable
+- Token Usage: Unavailable
+- Cost: Unavailable
+- Conflicting Project Names: None discovered
+
+## Critical Findings
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: Research-05-Delivery.md
+- Failure mode: AssumptionPromotion
+- Evidence: Choose and record stop, bounded revision, or product exploration. Only product exploration opens market, variation, compatibility, distribution, backend, or monetization planning.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: TechnicalArchitecture.md
+- Failure mode: AssumptionPromotion
+- Evidence: A general engine or large framework could consume the low-end budget without helping the proof; add dependencies only against measured need.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: log-2026-08-29-23-45-49.md
+- Failure mode: AssumptionPromotion
+- Evidence: Market viability, final balance, final randomness, and final platform scope remain unproven.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Research-03-Market.md
+- Failure mode: ResearchAfterDecision
+- Evidence: **Revise:** evidence identifies a bounded control/cue change worth another prototype.
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Research-03-Market.md
+- Failure mode: ResearchAfterDecision
+- Evidence: **Explore product:** mechanic passes; conduct the unavailable competitor, audience, channel, and business-model research before defining an MVP.
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Traceability.md
+- Failure mode: ResearchAfterDecision
+- Evidence: | ADR | Working decision | Imported source | Evidence basis | Status / consequence |
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-001 | Custom 2D selected-anchor softened inverse-square gravity; unit-mass satellite, kinematic anchors, fixed 1/60 s velocity Verlet, impulse-free release, tick input replay | ANS-001 → imported REQ-001; Q-001/UNK-001 | EVD-001–005 |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-001 | Custom 2D selected-anchor softened inverse-square gravity; unit-mass satellite, kinematic anchors, fixed 1/60 s velocity Verlet, impulse-free release, tick input replay | ANS-001 → imported REQ-001; Q-001/UNK-001 | EVD-001–005 |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-002
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-002 | Hold input plus optional Toggle; remappable keyboard action; pointer/pen/touch; cancellation safety; local preference persistence | ANS-002 → imported REQ-002; Q-002/UNK-002 | EVD-006–010 | Adopted baseline. Does not claim compl
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-003
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-003 | Target 60 FPS; physical Android 13 Go / 2 GB / stable Chrome / landscape qualification; ≤1280×720 back buffer; p95 work target ≤10 ms | ANS-003 → imported REQ-003; Q-003/UNK-003 | EVD-011–015 | Adopted qualification baseline, no
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-003
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-003 | Target 60 FPS; physical Android 13 Go / 2 GB / stable Chrome / landscape qualification; ≤1280×720 back buffer; p95 work target ≤10 ms | ANS-003 → imported REQ-003; Q-003/UNK-003 | EVD-011–015 | Adopted qualification baseline, no
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-004
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-004 | Zero gameplay-affecting randomness for fixed reference validation; controlled cosmetic stream only; versioned PRNG reserved for later | ANS-004 → imported REQ-004; Q-004/UNK-004 | EVD-016–020 | Adopted for core validation, not f
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-005
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-005 | Centered star is non-gravitating absorbing hazard and deadline; expand 120–165 s; star/core/escape loss; swept contact; next-action restart | ANS-005 → imported REQ-005; Q-005/UNK-005 | EVD-021–024 | Adopted. Fictionalized behav
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-006
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-006 | Eligible visible tagged finite anchors; literal nearest by squared center distance then immutable spawn ordinal; prior-tick preview lock; no hysteresis | ANS-006 → imported REQ-006; Q-007/UNK-007 | EVD-025–028 | Adopted. Feel/st
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-006
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-006 | Eligible visible tagged finite anchors; literal nearest by squared center distance then immutable spawn ordinal; prior-tick preview lock; no hysteresis | ANS-006 → imported REQ-006; Q-007/UNK-007 | EVD-025–028 | Adopted. Feel/st
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-007
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-007 | Fragment 100×, skim 200×, then multiplier increment to ×5 and five-second refresh; one geometric skim/hazard; no other fragment effect | ANS-007 → imported REQ-007; Q-006/UNK-006 | EVD-029–033 | Adopted baseline; values are tuni
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-008
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-008 | No VR platform; conventional 2D web. Android qualification retained; broad browser/device matrix remains open | ANS-008 → imported REQ-008; malformed Q-008/UNK-008 | EVD-034–037 | Adopted scope correction. OQ-001 replaces the un
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-008
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-008 | No VR platform; conventional 2D web. Android qualification retained; broad browser/device matrix remains open | ANS-008 → imported REQ-008; malformed Q-008/UNK-008 | EVD-034–037 | Adopted scope correction. OQ-001 replaces the un
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-05-Delivery.md
+- Related ID: OQ-002
+- Failure mode: TraceabilityTheater
+- Evidence: resolved OQ-002, OQ-003, OQ-006–008 where evidence permits.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] Not all identified requirements have explicit acceptance criteria.
+
+- Criterion: Actionability.A
+- Artifact: generated package
+- Failure mode: UnderSpecification
+- Evidence: Acceptance criteria coverage: 0.0%.
+- Recommended correction: Add testable acceptance criteria for every implementable important requirement.
+
+
+## Detailed Findings
+
+### [MEDIUM] An explicit brief requirement is only partially represented by generated requirements.
+
+- Criterion: Brief Fidelity.A
+- Artifact: ORIGINAL_BRIEF
+- Evidence: I want a minimalist one-button browser game where a small satellite survives by borrowing gravity from objects moving across the screen. Holding the button attaches the satellite to the nearest planet or piece of debris; releasing it preser
+- Recommended correction: Preserve the complete requirement meaning in an identified generated requirement.
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: Research-05-Delivery.md
+- Failure mode: AssumptionPromotion
+- Evidence: Choose and record stop, bounded revision, or product exploration. Only product exploration opens market, variation, compatibility, distribution, backend, or monetization planning.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: TechnicalArchitecture.md
+- Failure mode: AssumptionPromotion
+- Evidence: A general engine or large framework could consume the low-end budget without helping the proof; add dependencies only against measured need.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A consequential inferred choice is presented as a settled decision without labeled provenance.
+
+- Criterion: Assumption Discipline.A
+- Artifact: log-2026-08-29-23-45-49.md
+- Failure mode: AssumptionPromotion
+- Evidence: Market viability, final balance, final randomness, and final platform scope remain unproven.
+- Recommended correction: Label the choice as an assumption or link it to user input, a constraint, or evidence.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Research-03-Market.md
+- Failure mode: ResearchAfterDecision
+- Evidence: **Revise:** evidence identifies a bounded control/cue change worth another prototype.
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Research-03-Market.md
+- Failure mode: ResearchAfterDecision
+- Evidence: **Explore product:** mechanic passes; conduct the unavailable competitor, audience, channel, and business-model research before defining an MVP.
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [HIGH] A research-dependent decision has no explicit evidence relationship.
+
+- Criterion: Evidence Quality.C
+- Artifact: Traceability.md
+- Failure mode: ResearchAfterDecision
+- Evidence: | ADR | Working decision | Imported source | Evidence basis | Status / consequence |
+- Recommended correction: Link the decision to identifiable evidence that actually informed it.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: README.md
+- Failure mode: DecorativeResearch
+- Evidence: The technical and accessibility research primarily uses authoritative W3C, Google/Android/Chrome, MDN, NASA, NIST, ECMAScript, Box2D, and published technical sources. Links appear beside supported claims in the research documents. Audience 
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: No primary audience study, demographic dataset, store analytics, interview transcript, or existing-player telemetry was supplied or collected. Audience size, age distribution, genre affinity, willingness to pay, and device prevalence are th
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Representative audience segmentation and size.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Device/browser prevalence for the intended audience.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Accessibility evaluation with diverse participants.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Session-length preference and return motivation.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Willingness to pay, ad tolerance, or platform preference.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: Age rating and child-directed product implications.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-01-Audience.md
+- Failure mode: DecorativeResearch
+- Evidence: No audience claim should be used in marketing until supported by approved research.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-02-Experience.md
+- Failure mode: DecorativeResearch
+- Evidence: A visible focus indicator helps users understand which element will receive an action; applying this UI principle to the in-world anchor preview supports a strong pre-activation ring and line ([Microsoft, UI Focus Handling](https://learn.mi
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-02-Experience.md
+- Failure mode: DecorativeResearch
+- Evidence: Critical information benefits from multiple sensory channels ([Microsoft, Additional Channels for Visual and Audio Cues](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/103)).
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-02-Experience.md
+- Failure mode: DecorativeResearch
+- Evidence: Color cannot be the sole visual carrier of information ([W3C WCAG 2.2, Use of Color](https://www.w3.org/TR/WCAG22/#use-of-color)), and meaningful non-text state indicators need adequate contrast ([W3C, Non-text Contrast](https://www.w3.org/
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-02-Experience.md
+- Failure mode: DecorativeResearch
+- Evidence: Web functionality should be keyboard operable, and single-pointer alternatives avoid mandatory multipoint/path gestures ([W3C Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html); [W3C Pointer Gestures](https://www.w3.org/WA
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-02-Experience.md
+- Failure mode: DecorativeResearch
+- Evidence: These sources support input and cue design principles. They do not prove the proposed ring, tether, tone, or timing is understandable; playtesting must do that.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: No verified market-size report, competitor dataset, store ranking, pricing study, traffic data, retention benchmark, distribution agreement, or user-demand study was supplied or gathered. Commercial conclusions would therefore be speculativ
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: Identify 10–15 currently available products across the substitute categories.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: Use first-party store/product pages for platform, pricing, control, and feature facts.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: Use developer postmortems only as practitioner evidence and label their limits.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: Record retrieval dates because pricing, availability, and platform support change.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-03-Market.md
+- Failure mode: DecorativeResearch
+- Evidence: Separate copied facts from analyst inference in the comparison sheet.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: A custom Canvas-based 2D simulation is technically plausible for the bounded prototype, but feasibility is conditional on deterministic collision/event ordering and a physical low-end-device benchmark. The evidence supports the architecture
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: NASA explains inverse-square gravity and the connection between gravity and orbital motion ([NASA, Gravity & Mechanics](https://science.nasa.gov/learn/basics-of-space-flight/chapter3-3/)). This supports a recognizable gravity metaphor.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: Evidence-supported:** inverse-square attraction is a familiar orbital basis; fixed-step simulation and kinematic prescribed-motion bodies are established game-simulation concepts ([Box2D simulation](https://box2d.org/documentation/md_simula
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: Project inference:** only the locked anchor attracts; gravity is softened; the satellite has unit mass; anchors share parameters; velocity Verlet is used; the star has zero pre-contact gravity; unattached motion is inertial.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: Tuning hypotheses:** `r₀=0.18L`, `ε=0.03L`, `T₀=2.4 s`, ±2% stability for 10 seconds.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-04-Technology.md
+- Failure mode: DecorativeResearch
+- Evidence: The core unknown is feel, not whether the formula can be implemented.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-05-Delivery.md
+- Failure mode: DecorativeResearch
+- Evidence: NIST describes holding controllable nuisance factors constant to reduce experimental error while evaluating a factor of interest ([NIST/SEMATECH, randomized block designs](https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm)). 
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Research-05-Delivery.md
+- Failure mode: DecorativeResearch
+- Evidence: PCG research notes that stochastic content creates additional evaluation demands ([PCG book, Chapter 12](https://www.pcgbook.com/chapter12.pdf)). This supports deferring procedural variation, but does not establish that fixed content is mor
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Failure mode: DecorativeResearch
+- Evidence: The imported evidence records were reviewed as source material. Duplicate sources are grouped; their original IDs remain traceable.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Failure mode: DecorativeResearch
+- Evidence: | Evidence IDs | Source and supported topic |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Failure mode: DecorativeResearch
+- Evidence: |---|---|
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-001
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-001 | [NASA Gravity & Mechanics](https://science.nasa.gov/learn/basics-of-space-flight/chapter3-3/) — inverse-square/orbital basis |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-002
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-002 | [NASA Orbit Types / Orbit Determination PDF](https://www.nasa.gov/wp-content/uploads/2023/09/nw-10182021.pdf?emrc=19999e) — circular-orbit relationship |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-003
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-003, EVD-025 | [Box2D Simulation](https://box2d.org/documentation/md_simulation.html) — fixed steps, kinematic bodies, arbitrary query order |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-004
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-004 | [Hairer, McLachlan, Skeel](https://www.cambridge.org/core/journals/esaim-mathematical-modelling-and-numerical-analysis/article/abs/on-energy-conservation-of-the-simplifiedtakahashiimada-method/BF75B4BD85D203F4027FA71EB0E8486A) —
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-005
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-005, EVD-012 | [MDN requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) — timestamps/refresh/background behavior |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-006
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-006 | [W3C Keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html) — keyboard-interface operation |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-007
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-007 | [Microsoft XAG 107](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/107) — sustained holds, remap, toggle alternatives |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-008
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-008 | [W3C Pointer Gestures](https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html) — single-pointer alternatives |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-009
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-009 | [WCAG 2.2 target size minimum](https://www.w3.org/TR/WCAG22/#target-size-minimum) — 24×24 CSS px Level AA criterion |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-010
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-010 | [W3C target size enhanced](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html) — 44×44 enhanced guidance |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-011
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-011 | [web.dev Rendering Performance](https://web.dev/articles/rendering-performance) — 60 Hz and approximate application work budget |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-013
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-013, EVD-035 | [Android Go](https://developer.android.com/guide/topics/androidgo) — Android 13 Go 2 GB minimum, entry-level constraints, VR disabled |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-014
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-014 | [Chrome DevTools real-world grounding](https://developer.chrome.com/blog/devtools-grounded-real-world) — throttling limits and physical devices |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-015
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-015 | [MDN WebGL best practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices) — smaller back buffers as performance tradeoff |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-016
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-016, EVD-033 | [NIST randomized block designs](https://www.itl.nist.gov/div898/handbook/pri/section3/pri332.htm) — holding nuisance factors constant |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-017
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-017 | [PCG book Chapter 1](https://www.pcgbook.com/chapter01.pdf) — reproducible procedural generation |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-018
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-018 | [PCG book Chapter 12](https://www.pcgbook.com/chapter12.pdf) — evaluation burden of stochastic content |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-019
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-019 | [ECMAScript Math.random](https://tc39.es/ecma262/#sec-math.random) — implementation-defined strategy |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-020
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-020 | [PCG family paper](https://www.pcg-random.org/pdf/toms-oneill-pcg-family.pdf) — seeded reproducible sequences |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-021
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-021 | [NASA Anatomy of a Black Hole](https://science.nasa.gov/universe/black-holes/anatomy/) — absorbing-boundary metaphor |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-022
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-022 | [NASA What Are Black Holes?](https://www.nasa.gov/universe/what-are-black-holes/) — collapse fiction and event-horizon metaphor |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-023
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-023 | [MDN Page Visibility API](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API) — hidden state/background throttling |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-024
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-024, EVD-031 | [WCAG 2.2 Use of Color](https://www.w3.org/TR/WCAG22/#use-of-color) — no color-only information |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-026
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-026 | [Microsoft XAG 113](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/113) — visible focus handling |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-027
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-027, EVD-030 | [Microsoft XAG 103](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/103) — redundant sensory channels |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-028
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-028 | [W3C Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) — meaningful indicator contrast |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-029
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-029 | [Box2D Collision](https://box2d.org/documentation/md_collision.html) — shape distance/cast/time of impact/tunneling |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-032
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-032 | [Game Developer, Orbitron: Revolution postmortem](https://www.gamedeveloper.com/design/the-making-of-orbitron-revolution) — limited practitioner evidence for direct multiplier events |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-034
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-034 | [MDN WebXR Device API](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API) — separate immersive XR scope |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-036
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-036 | [MDN Pointer Events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events) — unified mouse/pen/touch input model |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-037
+- Failure mode: DecorativeResearch
+- Evidence: | EVD-037 | [Google Chrome Help](https://support.google.com/chrome/answer/95414?co=GENIE.Platform%3DAndroid&hl=en) — current Android OS support floor |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: Traceability.md
+- Related ID: EVD-032
+- Failure mode: DecorativeResearch
+- Evidence: EVD-032 is a single practitioner postmortem and has medium reliability; it does not validate Borrowed Orbit’s score balance.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Related ID: EVD-001–037
+- Failure mode: DecorativeResearch
+- Evidence: EVD-001–037 appear in the grouped evidence index without changing their original meaning.
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Check | Result |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: |---|---|
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Direct links appear near current technical/accessibility claims | Pass |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Primary/authoritative sources preferred | Pass; one medium-reliability practitioner source is explicitly limited |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Evidence separated from inference | Pass |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Numeric game values labeled as tuning hypotheses | Pass |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Audience/market gaps labeled unavailable | Pass |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Current platform claims date-stamped | Pass; Android Go/Chrome/WCAG rechecked 2026-08-30 |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: ValidationReport.md
+- Failure mode: DecorativeResearch
+- Evidence: | Broad support, accessibility conformance, commercial viability claims avoided | Pass |
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [MEDIUM] An evidence claim is not connected to any consequential decision.
+
+- Criterion: Evidence Quality.A
+- Artifact: log-2026-08-29-23-45-49.md
+- Related ID: EVD-001–037
+- Failure mode: DecorativeResearch
+- Evidence: The snapshot stored EVD-001–037 covering NASA orbital/black-hole background, fixed-step and collision practices, symplectic integration, browser timing/lifecycle/input APIs, W3C and Microsoft accessibility guidance, Android Go and Chrome su
+- Recommended correction: Connect useful evidence to a decision or remove decorative research.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-001 | Custom 2D selected-anchor softened inverse-square gravity; unit-mass satellite, kinematic anchors, fixed 1/60 s velocity Verlet, impulse-free release, tick input replay | ANS-001 → imported REQ-001; Q-001/UNK-001 | EVD-001–005 |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-001
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-001 | Custom 2D selected-anchor softened inverse-square gravity; unit-mass satellite, kinematic anchors, fixed 1/60 s velocity Verlet, impulse-free release, tick input replay | ANS-001 → imported REQ-001; Q-001/UNK-001 | EVD-001–005 |
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-002
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-002 | Hold input plus optional Toggle; remappable keyboard action; pointer/pen/touch; cancellation safety; local preference persistence | ANS-002 → imported REQ-002; Q-002/UNK-002 | EVD-006–010 | Adopted baseline. Does not claim compl
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-003
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-003 | Target 60 FPS; physical Android 13 Go / 2 GB / stable Chrome / landscape qualification; ≤1280×720 back buffer; p95 work target ≤10 ms | ANS-003 → imported REQ-003; Q-003/UNK-003 | EVD-011–015 | Adopted qualification baseline, no
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-003
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-003 | Target 60 FPS; physical Android 13 Go / 2 GB / stable Chrome / landscape qualification; ≤1280×720 back buffer; p95 work target ≤10 ms | ANS-003 → imported REQ-003; Q-003/UNK-003 | EVD-011–015 | Adopted qualification baseline, no
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-004
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-004 | Zero gameplay-affecting randomness for fixed reference validation; controlled cosmetic stream only; versioned PRNG reserved for later | ANS-004 → imported REQ-004; Q-004/UNK-004 | EVD-016–020 | Adopted for core validation, not f
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-005
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-005 | Centered star is non-gravitating absorbing hazard and deadline; expand 120–165 s; star/core/escape loss; swept contact; next-action restart | ANS-005 → imported REQ-005; Q-005/UNK-005 | EVD-021–024 | Adopted. Fictionalized behav
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-006
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-006 | Eligible visible tagged finite anchors; literal nearest by squared center distance then immutable spawn ordinal; prior-tick preview lock; no hysteresis | ANS-006 → imported REQ-006; Q-007/UNK-007 | EVD-025–028 | Adopted. Feel/st
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-006
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-006 | Eligible visible tagged finite anchors; literal nearest by squared center distance then immutable spawn ordinal; prior-tick preview lock; no hysteresis | ANS-006 → imported REQ-006; Q-007/UNK-007 | EVD-025–028 | Adopted. Feel/st
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-007
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-007 | Fragment 100×, skim 200×, then multiplier increment to ×5 and five-second refresh; one geometric skim/hazard; no other fragment effect | ANS-007 → imported REQ-007; Q-006/UNK-006 | EVD-029–033 | Adopted baseline; values are tuni
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-008
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-008 | No VR platform; conventional 2D web. Android qualification retained; broad browser/device matrix remains open | ANS-008 → imported REQ-008; malformed Q-008/UNK-008 | EVD-034–037 | Adopted scope correction. OQ-001 replaces the un
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Traceability.md
+- Related ID: ADR-008
+- Failure mode: TraceabilityTheater
+- Evidence: | ADR-008 | No VR platform; conventional 2D web. Android qualification retained; broad browser/device matrix remains open | ANS-008 → imported REQ-008; malformed Q-008/UNK-008 | EVD-034–037 | Adopted scope correction. OQ-001 replaces the un
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [HIGH] An explicit trace links statements with no meaningful subject overlap.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Research-05-Delivery.md
+- Related ID: OQ-002
+- Failure mode: TraceabilityTheater
+- Evidence: resolved OQ-002, OQ-003, OQ-006–008 where evidence permits.
+- Recommended correction: Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-001/006
+- Evidence: | FR-005 | While attached, only the locked anchor MUST accelerate the satellite; another nearer anchor MUST NOT replace it before release or invalidation. | Must | imported REQ-001/006 | Anchor-lock test passes. |
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-005/006
+- Evidence: | FR-007 | A destroyed or star-absorbed locked anchor MUST cause impulse-free detachment and become immediately ineligible. | Must | imported REQ-005/006 | Absorbed anchor cannot be previewed or locked. |
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-005/007
+- Evidence: | FR-009 | Explicitly tagged hazard cores MUST be lethal; explicitly tagged `skim_scoring` hazards MUST have a nonlethal geometric skim band. | Must | REQF-006; imported REQ-005/007 | Core collision wins over skim; collapsing star never sco
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-004/005
+- Evidence: | FR-011 | The reference scenario MUST use an authored encounter timeline with fixed spawns, paths, objects, score opportunities, star progression, and failure rules; eligible moving anchors MUST visibly progress toward the centered star ov
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-001/004
+- Evidence: | FR-013 | A named, versioned reference scenario and tick-indexed input recording MUST be replayable. | Must | imported REQ-001/004 | Replays reproduce anchor IDs, event ticks, score, and loss tick. |
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: Requirements.md
+- Related ID: REQ-005/007
+- Evidence: | PHY-007 | Swept relative-motion tests MUST determine loss contacts and skim clearance between previous and current states. | Must | imported REQ-005/007 | High-speed fixtures cannot tunnel through a core or band. |
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [MEDIUM] An identified important requirement has no explicit decision trace.
+
+- Criterion: Requirements → Decision Traceability
+- Artifact: ValidationReport.md
+- Related ID: REQ-001–008
+- Evidence: Imported REQ-001–008 map to ADRs and normalized FR/PHY/NFR requirements.
+- Recommended correction: Link the requirement to at least one relevant decision or documented constraint.
+
+### [HIGH] Not all identified requirements have explicit acceptance criteria.
+
+- Criterion: Actionability.A
+- Artifact: generated package
+- Failure mode: UnderSpecification
+- Evidence: Acceptance criteria coverage: 0.0%.
+- Recommended correction: Add testable acceptance criteria for every implementable important requirement.
+
+
+## Unsupported Decisions
+
+- | ID | Decision | Status |
+- |---|---|---|
+- If participants cannot infer attach/release, revise cue and state presentation before physics depth.
+- If target intention mismatch exceeds 10% in the observed activation set, investigate preview lag/bisector behavior before content expansion.
+- If Toggle changes outcomes because state is unclear rather than because timing differs, fix feedback before removing or redesigning the mode.
+- If improvement comes only from memorizing spawn timing with no motion prediction, test a second authored script before claiming skill transfer.
+- After the mechanic gate, choose one recorded outcome:
+- **Stop:** the mechanic is not understandable or predictably skillful at acceptable complexity.
+- **Revise:** evidence identifies a bounded control/cue change worth another prototype.
+- **Explore product:** mechanic passes; conduct the unavailable competitor, audience, channel, and business-model research before defining an MVP.
+- No outcome should be selected from this document alone.
+- Choose and record stop, bounded revision, or product exploration. Only product exploration opens market, variation, compatibility, distribution, backend, or monetization planning.
+- Use Pointer Events for a unified mouse/pen/touch path; MDN describes them as a single event model for those pointer types ([MDN Pointer Events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)). Keyboard mapping is separate but emits the same logical `activate_down` / `activate_up` transitions.
+- Prevent duplicate synthetic mouse activation after pointer input.
+- Capture the active pointer where available and handle cancellation.
+- Ignore additional pointers while one gameplay pointer owns the action.
+- In Hold mode, release on `pointerup`, `pointercancel`, blur, or hidden state.
+- In Toggle mode, treat a completed activation edge as a state toggle; document pause semantics before test freeze.
+- Keep settings as semantic DOM, not canvas-only hit regions.
+- W3C’s keyboard criterion supports keyboard-interface operation, including keyboard-emulating assistive input ([WCAG 2.2 keyboard](https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html)); its pointer-gesture guidance supports avoiding mandatory multipoint/path gestures ([WCAG 2.2 pointer gestures](https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html)). These requirements do not by themselves establish full WCAG conformance.
+- Cross-browser floating-point differences may prevent broad bitwise replay; scope and tolerance must be explicit.
+- Rendered candidate state can lag simulation under dropped frames; measure stale-preview activations.
+- High satellite speeds make event ordering and swept collision correctness critical.
+- Canvas-only UI would undermine semantic settings access; retain DOM controls.
+- A general engine or large framework could consume the low-end budget without helping the proof; add dependencies only against measured need.
+- |---|---|---|---|---|
+- | ADR | Working decision | Imported source | Evidence basis | Status / consequence |
+- “New arc” remains semantically open because free flight is straight under the minimum model.
+- “Text-free” applies to core teaching; accessible labeled settings/help are permitted.
+- Android Go identifies a qualification class; no universal device or broad browser support is claimed.
+- Market viability, final balance, final randomness, and final platform scope remain unproven.
+- “Instant restart” is operationalized as reset by the next fixed tick after the next gameplay activation.
+- “Under three minutes” is operationalized as ≤165 seconds of active simulation, not paused wall time.
+- acceptance or amendment of ADR-001–008;
+- The documentation package is complete enough for stakeholder baseline review and Phase 1 planning. Implementation should begin only after disputed working decisions, especially ADR-001’s free-flight interpretation and the qualification-device availability, are acknowledged or amended. This recommendation concerns process readiness, not product or market viability.
+
+## Unresolved Assumptions and Questions
+
+- All imported clarification questions Q-001–Q-008 have answers. Q-008 was malformed as a VR-platform question and is closed as **not applicable**; it did not resolve the broader web compatibility matrix. The questions below are the remaining validation and product decisions.
+- Assumptions are testable beliefs, not facts. “Invalidation response” states what changes if evidence contradicts the assumption.
+- Avoid flashes beyond accepted accessibility thresholds; include a reduced-motion investigation under OQ-011.
+- Define replay equivalence as exact discrete IDs/ticks/score plus a documented absolute/relative tolerance for position and velocity (OQ-004).
+- Define retention/consent before any external playtest data leaves the device (OQ-015).
+- Imported questions Q-001–Q-008 map to ADR-001–008.
+- OQ-001 explicitly replaces the malformed VR-platform question with the unresolved compatibility matrix.
+- OQ-002: confirm whether inertial free flight satisfies “new arc.”
+- OQ-003: test literal-nearest preview stability and intended-target matching.
+- OQ-004: define executable replay numeric tolerance.
+- OQ-005: name and record the physical low-end qualification device.
+- OQ-008/OQ-011: validate cue vocabulary and reduced-motion handling.
+- The render snapshot carries both `previewAnchorId` and `lockedAnchorId`. Input processing consumes simulation state, not what happened to be drawn most recently. This means a dropped frame may show a stale preview; diagnostics must measure this and OQ-003 must assess whether it is perceptible.
+- named owner for OQ-001–015;
+- resolved OQ-002, OQ-003, OQ-006–008 where evidence permits.
+- | 2 | Test motion comprehension and target intention with the smallest complete vertical slice. | ASM-001–003, OQ-002–003 |
+- | 4 | Profile on a named physical low-end device before claiming support. | NFR-001–003, NFR-008, OQ-005, AT-PERF |
+- | 5 | Defer market, variation, backend, and distribution decisions until the mechanic gate passes. | OQ-013–015 |
+- | ASM-001 | A one-button attach/release loop can produce enough agency for repeated runs. | Brief hypothesis | Low | Five-participant observed playtest using the reference scenario | Revisit selection, control states, or scope before adding content. |
+- | ASM-002 | Literal nearest-anchor selection is understandable when previewed every fixed tick. | ADR-006 design inference | Low | Compare intended versus resolved target; inspect bisector switching | Add a separately specified hysteresis or selection rule only if ambiguity is observed. |
+- | ASM-003 | Straight inertial free flight after release is acceptable as a “new arc” in the product language. | Minimum physics model | Low | Ask participants to predict and describe release motion | If continuous curvature is essential, experiment with weak star gravity under a new ADR. |
+- | ASM-004 | Common gravity parameters across anchors are sufficient for the core test. | Scope-control inference | Medium | Reference orbit stability plus route playtest | Introduce authored anchor classes only after establishing need. |
+- | ASM-005 | `r₀=0.18L`, `ε=0.03L`, and `T₀=2.4 s` yield controllable motion. | Imported tuning hypothesis | Low | Parameter sweep and stationary-anchor test | Tune one variable at a time and update ADR-001. |
+- | ASM-006 | A fixed authored encounter isolates skill better than randomized content during core validation. | Experimental-design inference | Medium | Compare input-replay stability and participant learning across repeats | If memorization hides mechanic defects, add a small set of whole authored scripts after the fixed gate. |
+- | ASM-007 | A five-second multiplier window and ×5 cap create legible route pressure. | Imported tuning hypothesis | Low | Compare 4/5/6-second windows in controlled playtest | Adopt the clearest window; preserve event ordering and deterministic timing. |
+- | ASM-008 | A skim band of `0 < c ≤ 2rₛ` supports intentional near misses. | Imported tuning hypothesis | Low | Compare 1.5/2/2.5 `rₛ`; collect intentionality reports | Change the collision-geometry threshold, not rendered effects. |
+- | ASM-009 | A 165-second hard deadline meets the “less than three minutes” intent. | Clarified requirement | High | Automated tick-limit test | Reduce the deadline if the stakeholder intends wall-clock time including pauses. |
+- | ASM-010 | The star can expand lethally while exerting no gravity without confusing players. | Fictionalized game rule | Low | Observe predictions and loss-cause identification | Strengthen visual language or reconsider the fiction; do not silently add acceleration. |
+- | ASM-011 | Sparse Canvas 2D geometry and lightweight audio can remain within the low-end budget. | Architecture inference | Medium | Profile worst-case run on throttled development setup and physical device | Reduce back-buffer resolution/effects before considering a 30 FPS fallback. |
+- | ASM-012 | Hold and Toggle modes preserve the same timing skill. | Accessibility inference | Medium | Compare completion and anchor timing across modes | Adjust activation feedback or timing semantics; do not remove the no-sustained-hold option without review. |
+- | ASM-013 | Core-play text can be absent while optional settings retain concise accessible labels. | Reconciliation of brief and accessibility guidance | Medium | Screen-reader/keyboard settings review plus first-use playtest | Separate expressive core play from an accessible help/settings layer more explicitly. |
+- | ASM-014 | Landscape is acceptable for the initial mobile prototype. | Imported qualification choice | Medium | Test orientation entry and common viewport sizes | Add a portrait-safe presentation or orientation guidance under an explicit compatibility decision. |
+- | ASM-015 | Five observed participants are enough to detect blocking prototype failures. | Delivery heuristic | Low | Use only as an early gate; report raw observations | Expand the sample before making broader claims. |
+- | ASM-016 | A solo developer can produce the proposed geometric art and cue set. | Brief constraint | Medium | Time-box one complete vertical-slice scene and audio pass | Reduce palette, animation count, or content breadth. |
+- | Free-flight model | Pass with open question | Inertial straight flight is stated; “arc” interpretation remains OQ-002 rather than silently resolved. |
+- | ID | Assumption | Basis | Confidence | Validation | Invalidation response |
+- | ID | Question | Why it matters | Owner | Resolution gate | Current handling |
+- | OQ-001 | Which desktop/mobile browsers, OS versions, screen sizes, and orientations constitute supported release targets? | Changes testing, input, rendering, and support claims. | Product + engineering | After Android qualification, before public release claim | Only Android 13 Go / 2 GB / then-current stable Chrome / landscape is a prototype qualification class. |
+- | OQ-002 | Does “release into a new arc” require continuous curvature, or is inertial tangent flight acceptable? | Could change the force model and game feel. | Product + design | First motion-comprehension playtest | ADR-001 uses straight free flight; weak star gravity is a separate experiment only if required. |
+- | OQ-003 | Does literal-nearest preview switch too rapidly near distance bisectors? | Ambiguity directly threatens the skill claim. | Design + engineering | Instrumented reference playtest | No hysteresis initially; log preview changes and intended targets. |
+- | OQ-004 | What floating-point tolerance and state fields define replay equivalence? | “Within tolerance” must become an executable test. | Engineering | Before deterministic replay gate | Compare anchor IDs, event/loss ticks exactly; specify numeric state tolerance in test harness. |
+- | OQ-005 | Which physical Android 13 Go / 2 GB phone is the recorded qualification device? | Performance claims require a reproducible device record. | QA / project owner | Before performance acceptance | Device model, OS build, Chrome version, viewport, temperature/power state are required fields. |
+- | OQ-006 | Are the initial gravity values controllable and stable in moving-anchor encounters? | Numeric values are unvalidated hypotheses. | Design | Physics tuning gate | Start with `r₀=0.18L`, `ε=0.03L`, `T₀=2.4 s`; change one parameter at a time. |
+- | OQ-007 | Which multiplier expiry and skim width are clearest? | Affects routing pressure and perceived fairness. | Design + research | Scoring playtest | Test 4/5/6 seconds, then 1.5/2/2.5 `rₛ`, one factor at a time. |
+- | OQ-008 | What exact audiovisual cue vocabulary communicates each gameplay state? | Text-free learning and accessibility depend on distinct cues. | Art/audio + research | Cue-comprehension gate | Use the minimum cue map in VisualIdentity; validate muted and grayscale modes. |
+- | OQ-009 | How should pause work when the page remains visible, especially in Toggle mode? | Must preserve deterministic active time and avoid stuck input. | Product + engineering | Input-state implementation | Hidden/blur always pauses safely; an explicit player pause UI is undecided. |
+- | OQ-010 | Is optional gamepad support in prototype scope? | Adds mapping and test cost but may broaden accessible input. | Product | Before input freeze | Keyboard, pointer, pen, touch required; gamepad deferred. |
+- | OQ-011 | What reduced-motion behavior preserves state legibility? | Interaction animations may create barriers, while motion is a teaching channel. | Accessibility + design | Before visual acceptance | Provide a research spike; do not simply remove necessary state cues. |
+- | OQ-012 | What audio policy applies before user activation and when audio is unavailable? | Browsers restrict autoplay and some players mute audio. | Engineering + audio | Vertical slice | Start audio only after activation; every critical cue must also be visual. |
+- | OQ-013 | What is the final-game variation strategy after core validation? | Fixed content may limit longevity; randomization may harm predictability. | Product + design | Only after core mechanic passes | First experiment selects one complete prevalidated script from a small fixed set at run start. |
+- | OQ-014 | Which distribution channel and business model, if any, should follow the prototype? | Market and delivery scope are currently unknown. | Project owner | Post-prototype | No monetization, publishing, analytics service, or remote backend is assumed. |
+- | OQ-015 | What telemetry, consent, retention, and privacy policy would apply to external playtests? | Remote data collection changes legal and implementation scope. | Project owner | Before any external instrumentation | Prototype logs remain local/exported manually until approved. |
+- | Q-001 | Custom selected-anchor gravity, fixed timestep, velocity Verlet | ADR-001 |
+- | Q-002 | Hold + Toggle accessibility baseline | ADR-002 |
+- | Q-003 | 60 FPS and Android Go qualification baseline | ADR-003 |
+- | Q-004 | Zero gameplay randomness for reference validation | ADR-004 |
+- | Q-005 | Star is deterministic absorbing deadline; three loss classes | ADR-005 |
+- | Q-006 | Event score, skim geometry, short multiplier | ADR-007 |
+- | Q-007 | Deterministic nearest-anchor eligibility and tie-break | ADR-006 |
+- | Q-008 | VR wording rejected as inconsistent; broader compatibility still open | ADR-008 + OQ-001 |
+- | RISK-001 | Nearest target ambiguity | RSK-001, ASM-002, OQ-003, AT-ANCHOR |
+- | RQ-002 | Which cues communicate state without prose? | Working vocabulary in VisualIdentity; still empirically validated via OQ-008 and AT-CUES |
+- | RSK-001 | Nearest target feels ambiguous | High | High | Preview diagnostics, intention test; OQ-003 hysteresis experiment if observed |
+- | RSK-004 | Straight free flight violates “arc” expectation | Medium | High | OQ-002 comprehension test; separate weak-star experiment only if required |
+- |---|---|---|---|---|---|
+
+## Strengths
+
+- No broken submitted internal artifact links were found.
+
+## Recommended Improvements
+
+1. Label the choice as an assumption or link it to user input, a constraint, or evidence.
+2. Link the decision to identifiable evidence that actually informed it.
+3. Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.
+4. Add testable acceptance criteria for every implementable important requirement.
+5. Preserve the complete requirement meaning in an identified generated requirement.
+6. Connect useful evidence to a decision or remove decorative research.
+7. Link the requirement to at least one relevant decision or documented constraint.
+
+## External Verification Scope
+
+External source correctness was not independently verified; citation identity and submitted decision linkage were evaluated locally.

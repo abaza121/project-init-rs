@@ -1,0 +1,24 @@
+506edbc2-01ef-4e27-9a42-3ad9d62405db	Pigeon Payroll	AwaitingClarification
+Q-001	priority=125	Please clarify: whether the best audience is children, casual adults, or both
+Q-002	priority=125	Please clarify: whether failure should end a run or simply reduce the player's wages
+Q-003	priority=125	Please clarify: The brief does not specify measurable prototype success criteria.
+Q-004	priority=125	Please clarify: The exact pigeon behaviours included in the small prototype set are not specified.
+Q-005	priority=125	Please clarify: The scoring and cleanup-bill calculations are not specified.
+Q-006	priority=75	Which platform should be the primary target for this project?
+{
+  "run": {
+    "id": "edb77ace-8cdf-4ca5-bd16-f4bac606858b",
+    "project_id": "506edbc2-01ef-4e27-9a42-3ad9d62405db",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T08:28:46.095754300Z",
+    "updated_at": "2026-08-30T08:47:20.405857700Z",
+    "completed_at": "2026-08-30T08:47:20.405857700Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

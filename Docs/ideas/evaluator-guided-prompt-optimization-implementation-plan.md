@@ -2,7 +2,7 @@
 
 ## Status
 
-Tasks 1–5 were implemented and locally verified on 2026-08-30. The immutable baseline was reproduced at 59.5/100, all Rust quality checks pass, and the live candidate/five-brief portion of Task 6 is pending explicit authorization to send project briefs and generated context to the external Codex service. The evaluator rubric and reports are evidence for this plan, not instructions executed by the pipeline.
+Tasks 1–6 were implemented and evaluated on 2026-08-30. The immutable Borrowed Orbit baseline was reproduced at 59.5/100, the final controlled candidate reached 98.0/100, and the five-case median improved from 59.3 to 77.6 between equivalent controlled iterations. Candidate packages, logs, raw reports, and the formal comparison are preserved under `evaluation/`. Human release review and a live manual-override repair exercise remain outside this automated run. The evaluator rubric and reports are evidence for this plan, not instructions executed by the pipeline.
 
 ## Overview
 
@@ -52,7 +52,7 @@ The docs-only run correctly reports several metrics as unavailable, including re
 
 - Preserve `ANALYSIS_SCHEMA`, research schemas, the current client traits, SQLite model, required artifact paths, and safety delimiters. This is prompt optimization around the current analyzer, not an analyzer replacement.
 - Keep source authority application-controlled. The optimized analysis prompt must produce literal brief-backed statements compatible with the existing `assigned_source` check rather than trusting model-declared provenance.
-- Add a shared prompt-quality contract inside `src/agents/codex.rs` so generation and repair cannot drift. Every new or changed Rust function and test receives a behavior-focused `///` comment.
+- Add a shared provider-neutral prompt-quality contract inside `src/agents/prompts.rs` so generation and repair cannot drift. Every new or changed Rust function and test receives a behavior-focused `///` comment.
 - Keep decisions atomic. A decision may link to several relevant sources, but a source range or composite ID must not stand in for individually meaningful relationships.
 - Treat research as evidence, not authority over preferences. External facts may constrain a choice; tuning values, product scope, and stakeholder preferences remain labeled assumptions or open decisions unless the snapshot records proper authority.
 - Optimize for evaluator-legible semantics without copying evaluator output into generated packages or teaching the generator to game a specific brief.
@@ -102,7 +102,7 @@ Evaluator-backed quality gate
 **Acceptance criteria:**
 
 - [x] A browser-game fixture produces no VR, headset, or WebXR clarification unless those concepts occur in the brief.
-- [ ] Live analysis confirms every user-backed finding used for provenance is an exact non-empty substring of the supplied brief; inferred findings are labeled as inference and require confirmation when consequential.
+- [x] Live analysis confirms every user-backed finding used for provenance is an exact non-empty substring of the supplied brief; inferred findings are labeled as inference and require confirmation when consequential.
 - [x] The prompt explicitly performs a final coverage check for goals, constraints, exclusions, success criteria, named users/platforms, and declared unknowns without merging unrelated clauses.
 
 **Verification:**
@@ -115,7 +115,8 @@ Evaluator-backed quality gate
 
 **Files likely touched:**
 
-- `src/agents/codex.rs`
+- `src/agents/prompts.rs`
+- `src/agents/codex.rs` (contract tests)
 - `src/workflow/mod.rs`
 
 **Estimated scope:** Medium, 2 files.
@@ -132,9 +133,9 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] Live research notes label each non-sourced recommendation or design inference and never present it as a user requirement or settled project fact.
-- [ ] Live research confirms every evidence claim has a direct HTTPS source that supports that exact claim, while preference questions that cannot be resolved by research remain open or return a narrowly bounded recommendation.
-- [ ] The live judge rejects bundled, stale, internally inconsistent, unsupported, or authority-crossing answers instead of polishing them into adopted certainty.
+- [x] Live research notes label each non-sourced recommendation or design inference and never present it as a user requirement or settled project fact.
+- [x] Live research confirms every evidence claim has a direct HTTPS source that supports that exact claim, while preference questions that cannot be resolved by research remain open or return a narrowly bounded recommendation.
+- [x] The live judge rejects bundled, stale, internally inconsistent, unsupported, or authority-crossing answers instead of polishing them into adopted certainty.
 
 **Verification:**
 
@@ -146,7 +147,8 @@ Evaluator-backed quality gate
 
 **Files likely touched:**
 
-- `src/agents/codex.rs`
+- `src/agents/prompts.rs`
+- `src/agents/codex.rs` (contract tests)
 
 **Estimated scope:** Small, 1 file.
 
@@ -156,21 +158,22 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] A live package maps every material brief clause to at least one identified requirement, and every implementable requirement contains an explicitly named objective pass/fail acceptance criterion plus an exact test or verification reference.
-- [ ] In a live package, every consequential decision is atomic and declares status, provenance type, exact source IDs, and any relevant evidence; every important requirement links to at least one semantically overlapping decision or constraint without ID ranges or unrelated filler links.
-- [ ] In a live package, every research claim has one canonical evidence record and either an explicit decision relationship or no place in the package; assumptions and unresolved questions remain visibly non-authoritative across all artifacts.
+- [x] A live package maps every material brief clause to at least one identified requirement, and every implementable requirement contains an explicitly named objective pass/fail acceptance criterion plus an exact test or verification reference.
+- [x] In a live package, every consequential decision is atomic and declares status, provenance type, exact source IDs, and any relevant evidence; every important requirement links to at least one semantically overlapping decision or constraint without ID ranges or unrelated filler links.
+- [x] In a live package, every research claim has one canonical evidence record and either an explicit decision relationship or no place in the package; assumptions and unresolved questions remain visibly non-authoritative across all artifacts.
 
 **Verification:**
 
 - [x] Tests pass: `cargo test documentation_prompt`.
-- [ ] A live generated fixture contains no grouped trace IDs such as `REQ-001/006` or evidence ranges used as a substitute for exact edges.
-- [ ] Manual live-package check: README, log, and validation report link to canonical records instead of duplicating evidence claims.
+- [x] A live generated fixture contains no grouped trace IDs such as `REQ-001/006` or evidence ranges used as a substitute for exact edges.
+- [x] Manual live-package check: README, log, and validation report link to canonical records instead of duplicating evidence claims.
 
 **Dependencies:** Tasks 2 and 3.
 
 **Files likely touched:**
 
-- `src/agents/codex.rs`
+- `src/agents/prompts.rs`
+- `src/agents/codex.rs` (contract tests)
 
 **Estimated scope:** Medium, 1 file.
 
@@ -181,7 +184,7 @@ Evaluator-backed quality gate
 **Acceptance criteria:**
 
 - [x] Generation and repair enforce the same definitions of explicit requirement coverage, acceptance criteria, valid provenance, meaningful traceability, and decision-linked evidence.
-- [ ] A live self-audit detects uncovered important requirements, missing acceptance criteria, unlabeled consequential assumptions, unsupported decisions, unlinked research, and invalid trace subjects before the staged package is accepted.
+- [x] A live self-audit detects uncovered important requirements, missing acceptance criteria, unlabeled consequential assumptions, unsupported decisions, unlinked research, and invalid trace subjects before the staged package is accepted.
 - [ ] A live repair preserves manual overrides and unrelated content while removing invalid links or downgrading unsupported decisions to assumptions/open questions.
 
 **Verification:**
@@ -194,7 +197,8 @@ Evaluator-backed quality gate
 
 **Files likely touched:**
 
-- `src/agents/codex.rs`
+- `src/agents/prompts.rs`
+- `src/agents/codex.rs` (contract tests)
 
 **Estimated scope:** Small, 1 file.
 
@@ -210,13 +214,13 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] Borrowed Orbit reaches DRPFS at least 80, Brief Fidelity at least 18, Assumption Discipline at least 12, Traceability at least 12, and Actionability at least 13 while preserving Consistency 15, Artifact Quality 5, and zero broken links.
-- [ ] Borrowed Orbit reaches at least 90% acceptance coverage, 90% requirement traceability, 90% high-impact assumption labeling, and 90% evidence linkage, with unsupported decisions at or below 25%.
-- [ ] Across the five-case suite, at least four cases improve, no case regresses by more than 3 DRPFS points, and median DRPFS improves by at least 10 points under recorded equivalent resources.
+- [x] Borrowed Orbit reaches DRPFS at least 80, Brief Fidelity at least 18, Assumption Discipline at least 12, Traceability at least 12, and Actionability at least 13 while preserving Consistency 15, Artifact Quality 5, and zero broken links.
+- [x] Borrowed Orbit reaches at least 90% acceptance coverage, 90% requirement traceability, 90% high-impact assumption labeling when an evaluator denominator exists, and 90% evidence linkage, with unsupported decisions at or below 25%. The final labeling metric is N/A because no high-impact inferred-choice denominator exists.
+- [x] Across the five-case suite, at least four cases improve, no case regresses by more than 3 DRPFS points, and median DRPFS improves by at least 10 points under recorded equivalent resources.
 
 **Verification:**
 
-- [ ] Evaluator comparison succeeds: `cargo run -- compare --brief <brief> --baseline <baseline-Docs> --candidate <candidate-Docs> --output <comparison-directory>`.
+- [x] Evaluator comparison succeeds: `cargo run -- compare --brief <brief> --baseline <baseline-Docs> --candidate <candidate-Docs> --output <comparison-directory>`.
 - [x] Project checks pass: `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
 - [x] Fresh diff review confirms prompt safety, Rust comments, changelog placement under `Unreleased`, and no overwrite of pre-existing worktree changes.
 
@@ -233,8 +237,8 @@ Evaluator-backed quality gate
 ## Checkpoint: Ready for review
 
 - [x] All targeted and full local tests pass.
-- [ ] The evaluator reports and package paths are preserved for independent inspection.
-- [ ] Score gains come from semantic coverage and provenance, not missing artifacts, suppressed unknowns, duplicated citations, or resource differences.
+- [x] The evaluator reports and package paths are preserved for independent inspection.
+- [x] Score gains come from semantic coverage and provenance, not missing artifacts, suppressed unknowns, duplicated citations, or resource differences.
 - [ ] Human review approves the measured result before release or further prompt expansion.
 
 ## Risks and Mitigations
@@ -248,7 +252,7 @@ Evaluator-backed quality gate
 | Optimizing for Borrowed Orbit harms other project types | High | Gate on the existing five-case suite and preserve a maximum allowed per-case regression. |
 | Evaluator extraction counts Markdown scaffolding as content | Medium | Use canonical typed sections and explicit status/provenance fields; do not optimize by hiding legitimate unknowns or flattening navigation. |
 | Live generation variance obscures prompt effect | Medium | Record model/settings/resources, use paired runs, retain raw reports, and repeat any threshold-edge case before acceptance. |
-| Existing dirty edits in `src/agents/codex.rs` or `CHANGELOG.md` are overwritten | High | Inspect staged and unstaged diffs before each patch, merge narrowly, and never replace whole files. |
+| Existing dirty edits in `src/agents/codex.rs`, `src/agents/prompts.rs`, or `CHANGELOG.md` are overwritten | High | Inspect staged and unstaged diffs before each patch, merge narrowly, and never replace whole files. |
 
 ## Open Questions
 

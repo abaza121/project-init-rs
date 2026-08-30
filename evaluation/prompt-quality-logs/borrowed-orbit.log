@@ -1,0 +1,25 @@
+7cacbe71-3c19-458b-a5b3-de0c44ecc12f	Borrowed Orbit	AwaitingClarification
+Q-001	priority=125	Please clarify: I have not chosen the exact physics model
+Q-002	priority=125	Please clarify: input accessibility features
+Q-003	priority=125	Please clarify: target frame rate on low-end devices
+Q-004	priority=125	Please clarify: how much randomness each run should contain
+Q-005	priority=125	Please clarify: The target audience is not specified.
+Q-006	priority=125	Please clarify: No quantitative test is specified for determining whether movement is skillful and predictable.
+Q-007	priority=125	Please clarify: No low-end device definition is specified.
+{
+  "run": {
+    "id": "87f59913-d4e3-404f-9ca8-84623414f80a",
+    "project_id": "7cacbe71-3c19-458b-a5b3-de0c44ecc12f",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T01:36:41.192528400Z",
+    "updated_at": "2026-08-30T01:59:44.986187600Z",
+    "completed_at": "2026-08-30T01:59:44.986187600Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

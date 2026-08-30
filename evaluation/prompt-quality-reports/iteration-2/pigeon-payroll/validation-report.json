@@ -1,0 +1,461 @@
+{
+  "drpfs": 74.5,
+  "dimensions": {
+    "brief_fidelity": {
+      "score": 20.0,
+      "max": 20,
+      "findings": []
+    },
+    "assumption_discipline": {
+      "score": 12.5,
+      "max": 15,
+      "findings": []
+    },
+    "cross_document_consistency": {
+      "score": 15.0,
+      "max": 15,
+      "findings": []
+    },
+    "evidence_quality": {
+      "score": 11.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "MEDIUM",
+          "criterion": "Evidence Quality.A",
+          "description": "An evidence claim is not connected to any consequential decision.",
+          "artifact": "ValidationReport.md",
+          "related_id": "EVD-TO-DEC",
+          "supporting_evidence": "External-claim use: 16 of 16 EVD records include one EVD-to-DEC relationship on the same physical line; no canonical external claim is repeated as a second EVD definition.",
+          "recommended_correction": "Connect useful evidence to a decision or remove decorative research.",
+          "failure_mode": "DecorativeResearch"
+        }
+      ]
+    },
+    "traceability": {
+      "score": 0.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-001",
+          "supporting_evidence": "AC-001: Inspection finds an explicit unresolved audience state naming children, casual adults, and both, with no selected audience; pass if present and fail otherwise supports REQ-001 because the intended audience must remain unresolved amo",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-002",
+          "supporting_evidence": "AC-002: Inspection finds no implemented terminal failure rule and finds the end-run versus reduce-wages choice exposed as pending; pass if both observations hold and fail otherwise supports REQ-002 because the failure rule must remain unres",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-003",
+          "supporting_evidence": "AC-003: Inspection finds no prototype go/no-go threshold and finds fields for a prioritized learning goal and acceptable success threshold; pass if both observations hold and fail otherwise supports REQ-003 because measurable prototype pass",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-004",
+          "supporting_evidence": "AC-004: Inspection finds the exact pigeon behaviour list uncommitted and gated by a prioritized gameplay question or riskiest assumption; pass if both observations hold and fail otherwise supports REQ-004 because exact prototype pigeon beha",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-005",
+          "supporting_evidence": "AC-005: Inspection finds score rewards, cleanup costs, and relative weights represented as unset configurable values rather than approved constants; pass if all are unset and fail otherwise supports REQ-005 because exact scoring and cleanup",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-006",
+          "supporting_evidence": "AC-006: Inspection finds no primary mobile platform selection and records all five missing inputs: build hardware, tester devices, market, distribution goal, and budget; pass if all observations hold and fail otherwise supports REQ-006 beca",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-007",
+          "supporting_evidence": "AC-007: A prototype build runs through touch input in a portrait mobile viewport, uses an arcade shift timer, and makes a pigeon theft trigger both squash-and-stretch motion and a slapstick sound; pass if all four observations occur and fai",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-008",
+          "supporting_evidence": "AC-008: A playthrough identifies the player avatar as a cafe worker and provides an observable objective state for keeping pigeons away from outdoor customers; pass if both are observed and fail otherwise supports REQ-008 because the cafe w",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-009",
+          "supporting_evidence": "AC-009: With all controls except touch disabled, one finger can swipe once to throw a breadcrumb and the thrown breadcrumb changes flock movement; pass if both effects occur and fail otherwise supports REQ-009 because one-finger swipes must",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-010",
+          "supporting_evidence": "AC-010: For each breadcrumb in a ten-throw instrumented test, pigeon attraction count or attraction strength increases above its pre-throw value; pass only if all ten increase and fail otherwise supports REQ-010 because every thrown breadcr",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-011",
+          "supporting_evidence": "AC-011: For each breadcrumb in a ten-throw instrumented test, cleanup bill increases, and the result screen computes final score as gross score minus cleanup bill; pass only if all eleven observations hold and fail otherwise supports REQ-01",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-012",
+          "supporting_evidence": "AC-012: Three uninterrupted instrumented shifts each end at an elapsed duration from 60.0 through 90.0 seconds inclusive; pass only if all three durations are in range and fail otherwise supports REQ-012 because each completed shift must la",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-013",
+          "supporting_evidence": "AC-013: Instrumentation shows the configured chaos intensity in the final shift third is greater than in the first shift third; pass if the comparison is strictly greater and fail otherwise supports REQ-013 because each shift must become mo",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-014",
+          "supporting_evidence": "AC-014: During a deterministic full-shift test, at least one customer leaves one table and occupies a different table; pass if the completed relocation occurs and fail otherwise supports REQ-014 because customers must move between tables du",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-015",
+          "supporting_evidence": "AC-015: During a deterministic full-shift test beginning with no pastry present, at least one pastry entity becomes visible and interactable; pass if both properties are observed and fail otherwise supports REQ-015 because pastries must app",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-016",
+          "supporting_evidence": "AC-016: A deterministic food-steal sequence by impatient pigeons increments a visible combo counter above one; pass if the counter exceeds one and fail otherwise supports REQ-016 because impatient pigeons must form combos by stealing food.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-017",
+          "supporting_evidence": "AC-017: A content inspection finds zero horror cues, punitive alarm loops, or hostile player-directed text, and a playtest prompt records the intended descriptor “playful” rather than “stressful”; pass if all observations hold and fail othe",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-018",
+          "supporting_evidence": "AC-018: In a silhouette-only identification check at the reference portrait resolution, five observers each label the cafe worker, customer, and pigeon correctly on every trial, and in a gameplay-scale expression check the same observers id",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-019",
+          "supporting_evidence": "AC-019: Logged events confirm distinct slapstick sound effects trigger for a breadcrumb throw, a pigeon food theft, and a combo; pass if all three triggers emit audio and fail otherwise supports REQ-019 because gameplay actions and mishaps ",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-020",
+          "supporting_evidence": "AC-020: On a test device, gameplay renders upright in portrait at both supported portrait orientations and never switches to landscape during a complete shift; pass if all observations hold and fail otherwise supports REQ-020 because gamepl",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-021",
+          "supporting_evidence": "AC-021: Scene enumeration in the first prototype finds exactly one playable cafe screen; pass if the count equals one and fail otherwise supports REQ-021 because the first prototype scope is one cafe gameplay screen.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-022",
+          "supporting_evidence": "AC-022: Runtime entity enumeration on the cafe screen finds exactly three customer-table entities; pass if the count equals three and fail otherwise supports REQ-022 because the first prototype cafe screen scope is three customer tables.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-023",
+          "supporting_evidence": "AC-023: Behaviour enumeration finds a finite pigeon behaviour collection, while an approval check confirms its members were selected only after OQ-004 was resolved; pass if both observations hold and fail otherwise supports REQ-023 because ",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "Requirements.md",
+          "related_id": "AC-024",
+          "supporting_evidence": "AC-024: The launch view and result view each display the exact text “Pigeon Payroll”; pass if both exact-string inspections succeed and fail otherwise supports REQ-024 because the project and prototype identity is Pigeon Payroll.",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-001",
+          "supporting_evidence": "DEC-001: STATUS: active boundary; PROVENANCE TYPE: supplied answer plus externally verified constraint; EXACT AUTHORITY: ANS-001; RELEVANT EVD: EVD-001 on Google child-inclusive audience policy; RELEVANT EVD: EVD-002 on Apple’s Kids categor",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-002",
+          "supporting_evidence": "DEC-002: STATUS: active boundary with proposed experiment; PROVENANCE TYPE: supplied answer plus non-authoritative inference; EXACT AUTHORITY: ANS-002; EXACT INFERENCE: ASM-001; RELEVANT EVD: EVD-004 on recoverable game failure; RELEVANT EV",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-003",
+          "supporting_evidence": "DEC-003: STATUS: active boundary; PROVENANCE TYPE: supplied answer plus method guidance; EXACT AUTHORITY: ANS-003; RELEVANT EVD: EVD-006 on goal-to-metric mapping; RELEVANT EVD: EVD-007 on defining learning objectives; RELEVANT EVD: EVD-008",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-004",
+          "supporting_evidence": "DEC-004: STATUS: active boundary; PROVENANCE TYPE: supplied answer plus method guidance; EXACT AUTHORITY: ANS-004; RELEVANT EVD: EVD-009 on minimum complexity for risky assumptions; RELEVANT EVD: EVD-010 on question-led prototyping; exact p",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-005",
+          "supporting_evidence": "DEC-005: STATUS: active boundary; PROVENANCE TYPE: supplied answer plus empirical-tuning guidance; EXACT AUTHORITY: ANS-005; EXACT INFERENCE: ASM-003; RELEVANT EVD: EVD-011 on design-goal-led parameter tuning; RELEVANT EVD: EVD-012 on score",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-006",
+          "supporting_evidence": "DEC-006: STATUS: active boundary; PROVENANCE TYPE: supplied answer plus current platform constraints; EXACT AUTHORITY: ANS-006; RELEVANT EVD: EVD-013 on Xcode macOS requirements; RELEVANT EVD: EVD-014 on Android Studio host support; RELEVAN",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-015",
+          "supporting_evidence": "DEC-015: STATUS: accepted with provisional styling; PROVENANCE TYPE: user brief plus non-authoritative creative inference; EXACT AUTHORITY: REQ-018; EXACT INFERENCE: ASM-005; bold silhouette-first character rendering supports REQ-018 becaus",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-020",
+          "supporting_evidence": "DEC-020: STATUS: accepted scope with unresolved membership; PROVENANCE TYPE: user brief constraint plus supplied answer; EXACT AUTHORITY: REQ-023; EXACT CONSTRAINT: CON-006; EXACT BOUNDARY: ANS-004; a finite small pigeon behaviour collectio",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        },
+        {
+          "severity": "HIGH",
+          "criterion": "Requirements → Decision Traceability",
+          "description": "An explicit trace links statements with no meaningful subject overlap.",
+          "artifact": "TechnicalArchitecture.md",
+          "related_id": "DEC-021",
+          "supporting_evidence": "DEC-021: STATUS: proposed and replaceable; PROVENANCE TYPE: non-authoritative implementation inference; EXACT INFERENCE: ASM-002; a platform-neutral gameplay core supports REQ-006 because replaceable input, audio, storage, and lifecycle ada",
+          "recommended_correction": "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+          "failure_mode": "TraceabilityTheater"
+        }
+      ]
+    },
+    "actionability": {
+      "score": 11.0,
+      "max": 15,
+      "findings": [
+        {
+          "severity": "MEDIUM",
+          "criterion": "Actionability.B",
+          "description": "Architecture lacks enough concrete responsibility or data-flow guidance to begin implementation confidently.",
+          "artifact": "generated package",
+          "supporting_evidence": "No complete combination of decisions, modules/components, responsibilities, and data flow was found.",
+          "recommended_correction": "Describe the smallest concrete modules, boundaries, data flow, and unresolved implementation choices.",
+          "failure_mode": "UnderSpecification"
+        }
+      ]
+    },
+    "artifact_quality": {
+      "score": 5.0,
+      "max": 5,
+      "findings": []
+    }
+  },
+  "metrics": {
+    "required_artifact_completion": null,
+    "acceptance_criteria_coverage": 100.0,
+    "requirement_traceability_coverage": 100.0,
+    "unsupported_decision_rate": 4.5,
+    "high_impact_assumption_labeling_rate": 66.7,
+    "evidence_linkage_rate": 100.0,
+    "broken_internal_links": 0,
+    "conflicting_project_names": [],
+    "unresolved_high_severity_findings": null,
+    "unresolved_high_severity_finding_ids": [],
+    "user_answer_adoption_rate": 100.0,
+    "duplicate_question_rate": null,
+    "answer_reuse_rate": null,
+    "context_compression_ratio": null,
+    "retrieval_utilization_rate": null,
+    "repeated_research_rate": null,
+    "stale_retrieval_rate": null,
+    "cross_project_leakage": null,
+    "context_supplied": null,
+    "retrieval_calls": null,
+    "execution_time_seconds": null,
+    "human_interaction_time_seconds": null,
+    "user_questions": null,
+    "model_calls": null,
+    "token_usage": null,
+    "cost": null
+  },
+  "critical_failures": [],
+  "strengths": [
+    "All extracted explicit brief requirements are represented without detected contradiction.",
+    "Every identified requirement participates in an explicit validated trace.",
+    "No broken submitted internal artifact links were found."
+  ],
+  "highest_priority_improvements": [
+    "Remove the unrelated link or replace it with a relationship whose rationale is substantively meaningful.",
+    "Connect useful evidence to a decision or remove decorative research.",
+    "Describe the smallest concrete modules, boundaries, data flow, and unresolved implementation choices."
+  ],
+  "unsupported_decisions": [
+    "Choice metadata: 21 of 21 DEC records include status, provenance type, an exact authority or inference ID, and a DEC-to-REQ relationship; zero metadata or relationship-syntax failures were observed."
+  ],
+  "unresolved_assumptions_and_questions": [
+    "ASM-001: ASSUMPTION: Allowing a shift to continue while failure reduces wages is a non-authoritative prototype hypothesis inferred from the playful-tone constraint and wage-deduction mechanic; it is not the selected failure rule.",
+    "ASM-002: ASSUMPTION: A platform-neutral gameplay core with replaceable device adapters is a non-authoritative implementation inference intended to limit rework while the primary mobile platform remains unselected.",
+    "ASM-003: ASSUMPTION: Score rewards, breadcrumb cleanup costs, and combo multipliers should be runtime-configurable tuning parameters; no numeric value or relative weight is authorized.",
+    "ASM-004: ASSUMPTION: The first prototype can run locally without accounts, analytics, advertising, purchases, cloud persistence, or a network backend because none is requested in the brief; production data handling remains unassessed.",
+    "ASM-005: ASSUMPTION: The proposed palette, typography, character shapes, and asset-generation prompt are provisional creative directions because the intended audience remains unselected.",
+    "Behaviour catalogue: registered pigeon states selected only after OQ-004 closes.",
+    "Deterministic seeds and an event log should expose entity counts, timestamps, state transitions, attraction changes, ledger entries, and audio triggers required by the gameplay acceptance checks. This observability supports feature conformance only; it does not create the stakeholder-owned success threshold in OQ-003.",
+    "Failure policy: a strategy slot with no selected implementation until OQ-002 closes.",
+    "OQ-001: Which intended audience should the stakeholder select: children, casual adults, or both, given the commercial goal and representative audience testing?",
+    "OQ-002: Should failure end a run or reduce the player’s wages, after stakeholder confirmation or representative playtesting of both failure rules?",
+    "OQ-003: What prioritized prototype learning goal and acceptable success threshold should define measurable prototype pass/fail criteria?",
+    "OQ-004: Which exact pigeon behaviours form the small prototype set after the prioritized gameplay question or riskiest assumption is selected?",
+    "OQ-005: What player behaviour and target end-of-shift outcome should the scoring rewards, cleanup costs, and relative weights incentivize?",
+    "OQ-006: Which primary mobile platform follows from the available build hardware, representative tester devices, intended market, distribution goal, and budget?",
+    "Telemetry: an interface with a no-op local implementation under ASM-004; analytics collection is out of scope unless separately authorized.",
+    "The audience is not selected, so age-appropriate interaction, content, store positioning, and testing participants cannot be finalized (OQ-001).",
+    "The exact behaviour catalogue and scoring economy are not specified, blocking full implementation and balance work (OQ-004 and OQ-005).",
+    "The failure policy is not selected, so the complete shift-state model remains open (OQ-002).",
+    "The platform and its device/performance budgets are not selected (OQ-006).",
+    "The prototype lacks a stakeholder learning goal and go/no-go threshold (OQ-003).",
+    "This prompt applies ASM-005 and the visual/audio direction in DEC-015 and DEC-016 while preserving OQ-001, OQ-002, OQ-004, OQ-005, and OQ-006.",
+    "Use deterministic event logging to compare failure-policy and tuning variants without hard-coding an answer (ASM-003 and DEC-021).",
+    "`Ready → Active → Resolving → Result` is the only committed shift lifecycle. OQ-002 prevents adding a terminal failure transition. During `Active`, a swipe emits `BreadcrumbThrown`; that event creates a breadcrumb, increases the cleanup ledger, and supplies an attraction target to the flock. Timed escalation emits table-move and pastry-appearance opportunities. Pigeon food theft emits combo and gross-score effects. `Resolving` freezes new input, completes the ledger calculation, and displays the result.",
+    "“Must” is normative. The first six REQ records deliberately require unresolved states; they do not authorize the provisional options described elsewhere. The acceptance checks define feature conformance, not prototype market success; the latter remains OQ-003."
+  ],
+  "external_verification_note": "External source correctness was not independently verified; citation identity and submitted decision linkage were evaluated locally."
+}

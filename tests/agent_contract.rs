@@ -1,7 +1,10 @@
 use project_init::agents::{
-    ActivityEvent, ActivityHistory, ActivityKind, JudgedResearchBatch, ResearchBatchPlan,
+    ActivityEvent, ActivityHistory, ActivityKind, JudgedResearchBatch, LocalDevice,
+    LocalHttpConfig, LocalHttpProvider, LocalRuntimeConfig, ResearchBatchPlan,
     decode_codex_jsonl_event,
 };
+use std::path::PathBuf;
+use std::time::Duration;
 
 /// Translates documented Codex lifecycle events into stable provider-neutral activity.
 #[test]
@@ -135,4 +138,153 @@ fn activity_history_is_bounded_without_reordering_events() {
     assert_eq!(events[0].sequence, 2);
     assert_eq!(events[1].sequence, 3);
     assert_eq!(history.dropped_count(), 1);
+}
+
+/// Accepts only a loopback local inference endpoint with coherent bounded deadlines.
+#[test]
+fn local_http_configuration_is_loopback_only_and_bounded() {
+    let config = LocalHttpConfig::new(
+        "http://127.0.0.1:1234/v1",
+        "default",
+        Duration::from_secs(30),
+        Duration::from_secs(10 * 60),
+        200,
+    )
+    .expect("a bounded loopback endpoint should be accepted");
+
+    assert_eq!(config.endpoint().as_str(), "http://127.0.0.1:1234/v1/");
+    for endpoint in [
+        "https://127.0.0.1:1234/v1",
+        "http://192.168.1.10:1234/v1",
+        "http://example.com/v1",
+        "http://127.0.0.1:0/v1",
+    ] {
+        assert!(
+            LocalHttpConfig::new(
+                endpoint,
+                "default",
+                Duration::from_secs(30),
+                Duration::from_secs(10 * 60),
+                200,
+            )
+            .is_err(),
+            "unsafe local endpoint should be rejected: {endpoint}"
+        );
+    }
+}
+
+/// Builds a hardened CPU container without exposing execution tools or host directories.
+#[test]
+fn local_runtime_arguments_are_hardened_and_model_scoped() {
+    let runtime = LocalRuntimeConfig::new(
+        PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+        "gemma-4-12b-it-qat-q4_0.gguf",
+        "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+        LocalDevice::Cpu,
+        1234,
+    )
+    .expect("a pinned CPU runtime should be accepted");
+    let arguments = runtime
+        .docker_arguments()
+        .into_iter()
+        .map(|value| value.to_string_lossy().into_owned())
+        .collect::<Vec<_>>();
+    let joined = arguments.join(" ");
+
+    assert!(joined.contains("127.0.0.1:1234:1234"));
+    assert!(joined.contains("readonly"));
+    assert!(joined.contains("--cap-drop ALL"));
+    assert!(joined.contains("no-new-privileges"));
+    assert!(joined.contains("--read-only"));
+    assert!(joined.contains("--enable-search"));
+    assert!(joined.contains("--cpu"));
+    assert!(!joined.contains("--gpus"));
+    assert!(!joined.contains("--agent"));
+    assert!(!joined.contains("--enable-code-execution"));
+    assert!(!joined.contains("--enable-shell"));
+}
+
+/// Rejects floating images and adds only the explicit GPU capability in CUDA mode.
+#[test]
+fn local_runtime_requires_a_pinned_image_and_explicit_device() {
+    assert!(
+        LocalRuntimeConfig::new(
+            PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+            "gemma-4-12b-it-qat-q4_0.gguf",
+            "ghcr.io/ericlbuehler/mistral.rs:latest",
+            LocalDevice::Cpu,
+            1234,
+        )
+        .is_err()
+    );
+    let runtime = LocalRuntimeConfig::new(
+        PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+        "gemma-4-12b-it-qat-q4_0.gguf",
+        "ghcr.io/ericlbuehler/mistral.rs:cuda128-sm89-0.9.0",
+        LocalDevice::Cuda,
+        1234,
+    )
+    .expect("a versioned CUDA image should be accepted");
+    let arguments = runtime
+        .docker_arguments()
+        .into_iter()
+        .map(|value| value.to_string_lossy().into_owned())
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    assert!(arguments.contains("--gpus all"));
+    assert!(arguments.contains("--paged-attn on"));
+    assert!(!arguments.contains("--cpu"));
+}
+
+/// Rejects a managed runtime whose published port does not match the HTTP endpoint.
+#[test]
+fn managed_local_runtime_must_match_the_provider_endpoint() {
+    let provider = LocalHttpProvider::new(
+        LocalHttpConfig::new(
+            "http://127.0.0.1:1234/v1",
+            "default",
+            Duration::from_secs(30),
+            Duration::from_secs(10 * 60),
+            200,
+        )
+        .expect("the local endpoint should be valid"),
+    )
+    .expect("the HTTP client should build");
+    let runtime = LocalRuntimeConfig::new(
+        PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+        "gemma-4-12b-it-qat-q4_0.gguf",
+        "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+        LocalDevice::Cpu,
+        4321,
+    )
+    .expect("the pinned runtime should be valid");
+
+    assert!(provider.with_runtime(runtime).is_err());
+}
+
+/// Rejects IPv6 managed endpoints because the hardened Docker publish address is IPv4 loopback.
+#[test]
+fn managed_local_runtime_requires_its_exact_publish_host() {
+    let provider = LocalHttpProvider::new(
+        LocalHttpConfig::new(
+            "http://[::1]:1234/v1",
+            "default",
+            Duration::from_secs(30),
+            Duration::from_secs(10 * 60),
+            200,
+        )
+        .expect("numeric IPv6 loopback remains valid for an unmanaged HTTP adapter"),
+    )
+    .expect("the HTTP client should build");
+    let runtime = LocalRuntimeConfig::new(
+        PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+        "gemma-4-12b-it-qat-q4_0.gguf",
+        "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+        LocalDevice::Cpu,
+        1234,
+    )
+    .expect("the pinned runtime should be valid");
+
+    assert!(provider.with_runtime(runtime).is_err());
 }

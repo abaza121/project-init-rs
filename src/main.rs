@@ -1,5 +1,6 @@
 //! Command-line entry point for Project Init.
 
+use std::ffi::OsString;
 use std::fs;
 use std::io::{self, IsTerminal};
 use std::path::{Path, PathBuf};
@@ -10,7 +11,8 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use project_init::agents::{
     ActivityEvent, ActivityKind, AgentClient, AnalysisRequest, CancellationToken, CodexCliClient,
-    CodexCliConfig, resolve_codex_executable,
+    CodexCliConfig, ConfiguredProvider, DocumentationClient, DocumentationRequest, LocalDevice,
+    LocalHttpConfig, LocalHttpProvider, LocalRuntimeConfig, ProviderKind, resolve_codex_executable,
 };
 use project_init::documents::PackageRenderer;
 use project_init::domain::{ApprovalPolicy, EvidenceReliability, ProjectId, WorkflowStep};
@@ -22,8 +24,12 @@ use project_init::workflow::{
 use tokio::sync::{mpsc, oneshot};
 
 const ANALYSIS_TIMEOUT: Duration = Duration::from_secs(5 * 60);
+const LOCAL_INACTIVITY_TIMEOUT: Duration = Duration::from_secs(60);
+const LOCAL_HARD_TIMEOUT: Duration = Duration::from_secs(10 * 60);
 const ACTIVITY_HISTORY_CAPACITY: usize = 200;
 const ACTIVITY_CHANNEL_CAPACITY: usize = 256;
+const DEFAULT_LOCAL_MODEL_FILE: &str = "gemma-4-12b-it-qat-q4_0.gguf";
+const DEFAULT_LOCAL_PORT: u16 = 1234;
 
 /// Parses global storage configuration and one project workflow command.
 #[derive(Debug, Parser)]
@@ -32,6 +38,30 @@ struct Cli {
     /// Directory containing the authoritative database and generated packages.
     #[arg(long, default_value = ".project-init")]
     data_dir: PathBuf,
+    /// Selects Codex or the explicitly configured local HTTP provider.
+    #[arg(long, global = true, value_enum)]
+    provider: Option<ProviderKind>,
+    /// Overrides the managed local provider base URL; it must remain on loopback.
+    #[arg(long, global = true)]
+    local_endpoint: Option<String>,
+    /// Absolute dedicated directory containing the pinned local GGUF.
+    #[arg(long, global = true)]
+    local_model_dir: Option<PathBuf>,
+    /// Exact GGUF filename; defaults to the pinned Gemma file for local inference.
+    #[arg(long, global = true)]
+    local_model_file: Option<String>,
+    /// Versioned mistral.rs image tag or immutable digest.
+    #[arg(long, global = true)]
+    local_image: Option<String>,
+    /// Selects the CPU or NVIDIA CUDA container profile.
+    #[arg(long, global = true, value_enum)]
+    local_device: Option<LocalDevice>,
+    /// Loopback host and container port; defaults to 1234 for local inference.
+    #[arg(long, global = true)]
+    local_port: Option<u16>,
+    /// Overrides the Docker executable used to launch the managed runtime.
+    #[arg(long, global = true)]
+    local_docker_bin: Option<OsString>,
     /// Enable configured Codex skills for this invocation.
     #[arg(long, global = true, conflicts_with = "no_skills")]
     skills: bool,
@@ -48,6 +78,137 @@ impl Cli {
     const fn skills_disabled(&self) -> bool {
         self.no_skills || !self.skills
     }
+
+    /// Returns the effective provider while preserving Codex as the compatible default.
+    const fn provider_kind(&self) -> ProviderKind {
+        match self.provider {
+            Some(provider) => provider,
+            None => ProviderKind::Codex,
+        }
+    }
+
+    /// Validates provider-specific options before any workflow mutation or process launch.
+    fn provider_selection(&self) -> Result<ProviderSelection> {
+        let offline = matches!(
+            &self.command,
+            Command::New { offline: true, .. }
+                | Command::Run { offline: true, .. }
+                | Command::Step { offline: true, .. }
+        );
+        if offline && self.provider.is_some() {
+            anyhow::bail!("--offline cannot be combined with an explicit --provider");
+        }
+        match self.provider_kind() {
+            ProviderKind::Codex => {
+                if self.local_endpoint.is_some()
+                    || self.local_model_dir.is_some()
+                    || self.local_model_file.is_some()
+                    || self.local_image.is_some()
+                    || self.local_device.is_some()
+                    || self.local_port.is_some()
+                    || self.local_docker_bin.is_some()
+                {
+                    anyhow::bail!("local runtime options require --provider local");
+                }
+                Ok(ProviderSelection::Codex {
+                    disable_skills: self.skills_disabled(),
+                })
+            }
+            ProviderKind::Local => {
+                let model_directory = self.local_model_dir.clone().ok_or_else(|| {
+                    anyhow::anyhow!("--provider local requires --local-model-dir")
+                })?;
+                let image = self
+                    .local_image
+                    .as_deref()
+                    .ok_or_else(|| anyhow::anyhow!("--provider local requires --local-image"))?;
+                let device = self
+                    .local_device
+                    .ok_or_else(|| anyhow::anyhow!("--provider local requires --local-device"))?;
+                let port = self.local_port.unwrap_or(DEFAULT_LOCAL_PORT);
+                let endpoint = self
+                    .local_endpoint
+                    .clone()
+                    .unwrap_or_else(|| format!("http://127.0.0.1:{port}/v1"));
+                let http = LocalHttpConfig::new(
+                    &endpoint,
+                    "default",
+                    LOCAL_INACTIVITY_TIMEOUT,
+                    LOCAL_HARD_TIMEOUT,
+                    ACTIVITY_HISTORY_CAPACITY,
+                )?;
+                let mut runtime = LocalRuntimeConfig::new(
+                    model_directory,
+                    self.local_model_file
+                        .as_deref()
+                        .unwrap_or(DEFAULT_LOCAL_MODEL_FILE),
+                    image,
+                    device,
+                    port,
+                )?;
+                if let Some(executable) = &self.local_docker_bin {
+                    runtime = runtime.with_docker_executable(executable.clone())?;
+                }
+                Ok(ProviderSelection::Local(Box::new(LocalProviderSettings {
+                    http,
+                    runtime,
+                })))
+            }
+        }
+    }
+}
+
+/// Retains validated provider configuration while constructing clients in scoped directories.
+#[derive(Debug, Clone)]
+enum ProviderSelection {
+    /// Defers Codex executable discovery until one provider-backed operation needs it.
+    Codex { disable_skills: bool },
+    /// Reuses immutable loopback and managed-runtime settings across workflow operations.
+    Local(Box<LocalProviderSettings>),
+}
+
+/// Groups the immutable HTTP and managed-runtime settings behind a small enum variant.
+#[derive(Debug, Clone)]
+struct LocalProviderSettings {
+    http: LocalHttpConfig,
+    runtime: LocalRuntimeConfig,
+}
+
+impl ProviderSelection {
+    /// Builds one capability-complete provider for a scoped operation directory.
+    fn client(&self, working_directory: &Path) -> Result<ConfiguredProvider> {
+        match self {
+            Self::Codex { disable_skills } => {
+                let executable = resolve_codex_executable(std::env::var_os("CODEX_BIN"))?;
+                Ok(ConfiguredProvider::Codex(
+                    CodexCliClient::new(CodexCliConfig {
+                        executable,
+                        working_directory: working_directory.to_path_buf(),
+                        timeout: ANALYSIS_TIMEOUT,
+                        history_capacity: ACTIVITY_HISTORY_CAPACITY,
+                    })
+                    .with_skills_disabled(*disable_skills),
+                ))
+            }
+            Self::Local(settings) => Ok(ConfiguredProvider::Local(
+                LocalHttpProvider::new(settings.http.clone())?
+                    .with_runtime(settings.runtime.clone())?,
+            )),
+        }
+    }
+
+    /// Returns whether this selection uses local HTTP rather than Codex CLI.
+    const fn is_local(&self) -> bool {
+        matches!(self, Self::Local(_))
+    }
+
+    /// Returns whether Codex skill loading is suppressed for this selection.
+    const fn skills_disabled(&self) -> bool {
+        match self {
+            Self::Codex { disable_skills } => *disable_skills,
+            Self::Local(_) => true,
+        }
+    }
 }
 
 /// Defines the stable user-facing project workflow commands.
@@ -60,7 +221,7 @@ enum Command {
         #[arg(long)]
         name: Option<String>,
         /// Use the deterministic local analyzer instead of Codex CLI.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "provider")]
         offline: bool,
         /// Continue through generation and validation after creation.
         #[arg(long)]
@@ -79,7 +240,7 @@ enum Command {
         brief: Option<PathBuf>,
         #[arg(long)]
         name: Option<String>,
-        #[arg(long)]
+        #[arg(long, conflicts_with = "provider")]
         offline: bool,
         /// Research and answer blocking questions without opening interactive terminal UI.
         #[arg(long, conflicts_with = "offline")]
@@ -90,7 +251,7 @@ enum Command {
     /// Execute at most one deterministic workflow mutation.
     Step {
         project_id: String,
-        #[arg(long)]
+        #[arg(long, conflicts_with = "provider")]
         offline: bool,
         #[arg(long)]
         json: bool,
@@ -186,10 +347,10 @@ async fn main() -> Result<()> {
 
 /// Dispatches one command against the configured authoritative database.
 async fn run(cli: Cli) -> Result<()> {
+    let provider = cli.provider_selection()?;
     fs::create_dir_all(&cli.data_dir)
         .with_context(|| format!("failed to create {}", cli.data_dir.display()))?;
     let store = SqliteStore::open(&cli.data_dir.join("project-init.sqlite3"))?;
-    let no_skills = cli.skills_disabled();
     match cli.command {
         Command::New {
             brief,
@@ -205,7 +366,7 @@ async fn run(cli: Cli) -> Result<()> {
                 &brief,
                 name.as_deref(),
                 offline,
-                no_skills,
+                &provider,
                 !auto_answer,
             )
             .await?;
@@ -217,7 +378,7 @@ async fn run(cli: Cli) -> Result<()> {
                     &project_id,
                     Some(approval),
                     offline,
-                    no_skills,
+                    &provider,
                     auto_answer,
                 )
                 .await?;
@@ -241,7 +402,7 @@ async fn run(cli: Cli) -> Result<()> {
                         &brief,
                         name.as_deref(),
                         offline,
-                        no_skills,
+                        &provider,
                         !auto_answer,
                     )
                     .await?
@@ -258,7 +419,7 @@ async fn run(cli: Cli) -> Result<()> {
                 &project_id,
                 approval,
                 offline,
-                no_skills,
+                &provider,
                 auto_answer,
             )
             .await
@@ -274,7 +435,7 @@ async fn run(cli: Cli) -> Result<()> {
                 &ProjectId::from_cli(&project_id),
                 json,
                 offline,
-                no_skills,
+                &provider,
             )
             .await
         }
@@ -336,7 +497,7 @@ async fn run(cli: Cli) -> Result<()> {
             reason,
         } => resolve_decision(store, &decision_id, &reason, false),
         Command::List => list_projects(store),
-        Command::Open { project_id } => open_project(store, &cli.data_dir, &project_id, no_skills),
+        Command::Open { project_id } => open_project(store, &cli.data_dir, &project_id, &provider),
         Command::Inspect { project_id } => inspect_project(store, &project_id),
         Command::Answer {
             question_id,
@@ -376,7 +537,7 @@ async fn create_project(
     brief_path: &Path,
     name: Option<&str>,
     offline: bool,
-    no_skills: bool,
+    provider: &ProviderSelection,
     allow_interactive_ui: bool,
 ) -> Result<ProjectId> {
     let brief = fs::read_to_string(brief_path)
@@ -392,20 +553,13 @@ async fn create_project(
             data_dir,
             project_name,
             &brief,
-            no_skills,
+            provider,
             allow_interactive_ui,
         );
     }
     let request = AnalysisRequest::new(project_name, &brief)?;
-    let executable = resolve_codex_executable(std::env::var_os("CODEX_BIN"))?;
-    let client = CodexCliClient::new(CodexCliConfig {
-        executable,
-        working_directory: std::env::current_dir()
-            .context("failed to resolve working directory")?,
-        timeout: ANALYSIS_TIMEOUT,
-        history_capacity: ACTIVITY_HISTORY_CAPACITY,
-    })
-    .with_skills_disabled(no_skills);
+    let client = provider
+        .client(&std::env::current_dir().context("failed to resolve working directory")?)?;
     let (activity_sender, activity_receiver) = mpsc::channel(ACTIVITY_CHANNEL_CAPACITY);
     let (result_sender, result_receiver) = oneshot::channel();
     let cancellation = CancellationToken::new();
@@ -428,25 +582,25 @@ async fn create_project(
         )? {
             CreationRunResult::Completed(execution) => execution,
             CreationRunResult::Cancelled => {
-                task.await.context("Codex cancellation task failed")?;
-                anyhow::bail!("Codex analysis was cancelled");
+                task.await.context("provider cancellation task failed")?;
+                anyhow::bail!("provider analysis was cancelled");
             }
             CreationRunResult::Failed(message) => {
-                task.await.context("Codex analysis task failed")?;
+                task.await.context("provider analysis task failed")?;
                 anyhow::bail!(message);
             }
         }
     } else {
         result_receiver
             .await
-            .context("Codex analysis task ended without a result")??
+            .context("provider analysis task ended without a result")??
     };
-    task.await.context("Codex analysis task failed")?;
+    task.await.context("provider analysis task failed")?;
     append_commit_activity(&mut execution)?;
     let mut service = ProjectService::new(store);
     let project = service.initialize_from_agent_execution(project_name, &brief, execution)?;
     let project_id = project.id().clone();
-    report_created_project(&mut service, data_dir, &project, interactive, no_skills)?;
+    report_created_project(&mut service, data_dir, &project, interactive, provider)?;
     Ok(project_id)
 }
 
@@ -456,7 +610,7 @@ fn create_offline_project(
     data_dir: &Path,
     name: &str,
     brief: &str,
-    no_skills: bool,
+    provider: &ProviderSelection,
     allow_interactive_ui: bool,
 ) -> Result<ProjectId> {
     let mut service = ProjectService::new(store);
@@ -464,7 +618,7 @@ fn create_offline_project(
     let interactive =
         allow_interactive_ui && io::stdout().is_terminal() && io::stdin().is_terminal();
     let project_id = project.id().clone();
-    report_created_project(&mut service, data_dir, &project, interactive, no_skills)?;
+    report_created_project(&mut service, data_dir, &project, interactive, provider)?;
     Ok(project_id)
 }
 
@@ -479,7 +633,7 @@ fn append_commit_activity(execution: &mut project_init::agents::AgentExecution) 
         .last()
         .is_some_and(|event| next <= event.sequence)
     {
-        anyhow::bail!("Codex activity sequence is exhausted");
+        anyhow::bail!("provider activity sequence is exhausted");
     }
     execution.activity.push(ActivityEvent::now(
         next,
@@ -495,13 +649,13 @@ fn report_created_project(
     data_dir: &Path,
     project: &project_init::domain::Project,
     interactive: bool,
-    no_skills: bool,
+    provider: &ProviderSelection,
 ) -> Result<()> {
     if interactive {
         project_init::tui::run_workspace(
             service,
             project.id(),
-            workspace_runtime_config(data_dir, no_skills),
+            workspace_runtime_config(data_dir, provider)?,
         )?;
     }
     let snapshot = service.inspect_project(project.id())?;
@@ -546,7 +700,7 @@ fn open_project(
     store: SqliteStore,
     data_dir: &Path,
     project_id: &str,
-    no_skills: bool,
+    provider: &ProviderSelection,
 ) -> Result<()> {
     let project_id = project_init::domain::ProjectId::from_cli(project_id);
     if io::stdout().is_terminal() && io::stdin().is_terminal() {
@@ -554,7 +708,7 @@ fn open_project(
         project_init::tui::run_workspace(
             &mut service,
             &project_id,
-            workspace_runtime_config(data_dir, no_skills),
+            workspace_runtime_config(data_dir, provider)?,
         )?;
     } else {
         let snapshot = store.project_snapshot(&project_id)?;
@@ -563,19 +717,24 @@ fn open_project(
     Ok(())
 }
 
-/// Creates lazy online workbench configuration without requiring Codex until `/resume`.
+/// Creates lazy online workbench configuration without resolving a provider until `/resume`.
 fn workspace_runtime_config(
     data_dir: &Path,
-    no_skills: bool,
-) -> project_init::tui::WorkspaceRuntimeConfig {
-    project_init::tui::WorkspaceRuntimeConfig::new(
+    provider: &ProviderSelection,
+) -> Result<project_init::tui::WorkspaceRuntimeConfig> {
+    let config = project_init::tui::WorkspaceRuntimeConfig::new(
         data_dir,
         std::env::var_os("CODEX_BIN"),
         ANALYSIS_TIMEOUT,
         ACTIVITY_HISTORY_CAPACITY,
         ACTIVITY_CHANNEL_CAPACITY,
     )
-    .with_skills_disabled(no_skills)
+    .with_skills_disabled(provider.skills_disabled());
+    if provider.is_local() {
+        Ok(config.with_provider(provider.client(data_dir)?))
+    } else {
+        Ok(config)
+    }
 }
 
 /// Prints the complete authoritative inspection snapshot as formatted JSON.
@@ -630,7 +789,7 @@ async fn drive_workflow(
     project_id: &ProjectId,
     approval: Option<ApprovalPolicy>,
     offline: bool,
-    no_skills: bool,
+    provider: &ProviderSelection,
     auto_answer: bool,
 ) -> Result<()> {
     let mut service = ProjectService::new(store);
@@ -655,7 +814,7 @@ async fn drive_workflow(
         project_init::tui::run_workspace_auto_answer(
             &mut service,
             project_id,
-            workspace_runtime_config(data_dir, no_skills),
+            workspace_runtime_config(data_dir, provider)?,
         )?;
         let status = service.workflow_status(project_id, &output)?;
         println!("{}", serde_json::to_string_pretty(&status)?);
@@ -669,14 +828,7 @@ async fn drive_workflow(
             .run_until_pause(project_id, None, None, cancellation)
             .await?
     } else {
-        let executable = resolve_codex_executable(std::env::var_os("CODEX_BIN"))?;
-        let client = CodexCliClient::new(CodexCliConfig {
-            executable,
-            working_directory: data_dir.to_path_buf(),
-            timeout: ANALYSIS_TIMEOUT,
-            history_capacity: ACTIVITY_HISTORY_CAPACITY,
-        })
-        .with_skills_disabled(no_skills);
+        let client = provider.client(data_dir)?;
         let mut runner = WorkflowRunner::online(service, &output, &client);
         if auto_answer {
             runner = runner.with_auto_answer_client(Arc::new(client.clone()));
@@ -705,7 +857,7 @@ async fn execute_workflow_step(
     project_id: &ProjectId,
     json: bool,
     offline: bool,
-    no_skills: bool,
+    provider: &ProviderSelection,
 ) -> Result<()> {
     let mut service = ProjectService::new(store);
     let status = execute_selected_step(
@@ -713,19 +865,19 @@ async fn execute_workflow_step(
         project_id,
         &workflow_output(data_dir, project_id),
         offline,
-        no_skills,
+        provider,
     )
     .await?;
     print_workflow_status(&status, json)
 }
 
-/// Uses Codex for generation when enabled and deterministic operations for every other step.
+/// Uses the selected provider for generation and deterministic operations for every other step.
 async fn execute_selected_step(
     service: &mut ProjectService,
     project_id: &ProjectId,
     output: &Path,
     offline: bool,
-    no_skills: bool,
+    provider: &ProviderSelection,
 ) -> Result<project_init::domain::WorkflowStatus> {
     let status = service.workflow_status(project_id, output)?;
     if offline || status.step != WorkflowStep::GeneratePackage {
@@ -735,23 +887,18 @@ async fn execute_selected_step(
     }
     let snapshot = service.inspect_project(project_id)?;
     let staging = tempfile::tempdir().context("failed to create documentation staging")?;
-    let executable = resolve_codex_executable(std::env::var_os("CODEX_BIN"))?;
-    let client = CodexCliClient::new(CodexCliConfig {
-        executable,
-        working_directory: staging.path().to_path_buf(),
-        timeout: ANALYSIS_TIMEOUT,
-        history_capacity: ACTIVITY_HISTORY_CAPACITY,
-    })
-    .with_skills_disabled(no_skills);
-    client
-        .generate_documentation(
-            &serde_json::to_string(&snapshot)?,
-            &PackageRenderer::required_relative_paths(&snapshot),
-            staging.path(),
-            None,
-            CancellationToken::new(),
-        )
-        .await?;
+    let client = provider.client(staging.path())?;
+    DocumentationClient::execute(
+        &client,
+        DocumentationRequest::generation(
+            serde_json::to_string(&snapshot)?,
+            PackageRenderer::required_relative_paths(&snapshot),
+            staging.path().to_path_buf(),
+        ),
+        None,
+        CancellationToken::new(),
+    )
+    .await?;
     service
         .adopt_generated_package(project_id, staging.path(), output)
         .map_err(Into::into)
@@ -876,6 +1023,7 @@ fn print_workflow_status(status: &project_init::domain::WorkflowStatus, json: bo
 mod tests {
     use super::{Cli, Command, format_project_summary, should_show_auto_answer_tui};
     use clap::Parser;
+    use project_init::agents::ProviderKind;
     use project_init::domain::ProjectStatus;
     use project_init::storage::SqliteStore;
     use project_init::workflow::ProjectService;
@@ -887,6 +1035,61 @@ mod tests {
             .expect("the default new command should parse");
 
         assert!(matches!(cli.command, Command::New { offline: false, .. }));
+        assert_eq!(cli.provider_kind(), ProviderKind::Codex);
+    }
+
+    /// Parses the local provider and its explicit reproducible runtime settings globally.
+    #[test]
+    fn local_provider_is_an_explicit_secondary_option() {
+        let cli = Cli::try_parse_from([
+            "project-init",
+            "--provider",
+            "local",
+            "--local-model-dir",
+            r"C:\Models\project-init\gemma-4-12b",
+            "--local-image",
+            "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+            "--local-device",
+            "cpu",
+            "new",
+            "--brief",
+            "brief.md",
+        ])
+        .expect("the explicit local provider should parse");
+
+        assert_eq!(cli.provider_kind(), ProviderKind::Local);
+    }
+
+    /// Rejects explicitly supplied local-only flags when Codex remains selected.
+    #[test]
+    fn codex_provider_rejects_local_only_options() {
+        let cli = Cli::try_parse_from(["project-init", "--local-port", "1234", "list"])
+            .expect("structural parsing should accept the global option");
+
+        let error = cli
+            .provider_selection()
+            .expect_err("a local-only flag must not be silently ignored");
+        assert!(error.to_string().contains("require --provider local"));
+    }
+
+    /// Prevents deterministic offline execution from being combined with a model provider.
+    #[test]
+    fn offline_execution_conflicts_with_an_explicit_provider() {
+        let cli = Cli::try_parse_from([
+            "project-init",
+            "--provider",
+            "local",
+            "new",
+            "--brief",
+            "brief.md",
+            "--offline",
+        ])
+        .expect("mode validation runs after structural argument parsing");
+        let error = cli
+            .provider_selection()
+            .expect_err("offline mode cannot use local HTTP inference");
+
+        assert!(error.to_string().contains("cannot be combined"));
     }
 
     /// Selects deterministic analysis only when the user explicitly passes offline.

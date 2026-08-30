@@ -1,0 +1,29 @@
+1d4d0445-784c-4e22-9db3-a86f45a92e5a	Half-Mech Heroes	AwaitingClarification
+Q-002	priority=125	Please clarify: solo play
+Q-005	priority=125	Which platform should be the primary target for this project?
+Q-006	priority=125	Please clarify: The implementation technology is not specified.
+Q-009	priority=125	Please clarify: It is unclear whether the one city block constitutes the entire single scrolling disaster zone.
+Q-010	priority=125	Please clarify: No measurable success criteria are specified for mastery, comedy, coordination, readability, or restart speed.
+Q-001	priority=75	Please clarify: input remapping
+Q-003	priority=75	Please clarify: difficulty scaling
+Q-004	priority=75	Please clarify: the exact target age
+Q-007	priority=75	Please clarify: The three hazard types are not specified.
+Q-008	priority=75	Please clarify: The civilian type is not specified.
+Q-011	priority=75	Please clarify: No explicit project exclusions are declared.
+{
+  "run": {
+    "id": "bc00b1d5-30c0-415e-a20f-e1503a439ecd",
+    "project_id": "1d4d0445-784c-4e22-9db3-a86f45a92e5a",
+    "policy": "autonomous",
+    "status": "complete",
+    "pause_reason": null,
+    "started_at": "2026-08-30T02:17:08.197514700Z",
+    "updated_at": "2026-08-30T02:42:41.863847200Z",
+    "completed_at": "2026-08-30T02:42:41.863847200Z"
+  },
+  "step": {
+    "kind": "complete"
+  },
+  "project_status": "complete",
+  "latest_validation_passed": true
+}

@@ -1,6 +1,10 @@
-//! Provider-neutral agent execution contracts and the isolated Codex CLI adapter.
+//! Provider-neutral agent contracts plus isolated Codex CLI and local HTTP adapters.
 
 mod codex;
+mod local;
+mod prompts;
+mod provider;
+mod runtime;
 
 use std::collections::VecDeque;
 use std::path::PathBuf;
@@ -20,6 +24,9 @@ use crate::domain::EvidenceReliability;
 pub use codex::{
     CodexCliClient, CodexCliConfig, decode_codex_jsonl_event, resolve_codex_executable,
 };
+pub use local::{LocalHttpConfig, LocalHttpProvider};
+pub use provider::{ConfiguredProvider, ProviderKind};
+pub use runtime::{LocalDevice, LocalRuntimeConfig};
 
 const MAX_ACTIVITY_MESSAGE_CHARS: usize = 512;
 
@@ -982,7 +989,7 @@ pub trait DocumentationClient: Send + Sync {
 }
 
 impl AgentExecution {
-    /// Creates a completed Codex execution for deterministic clients and validated adapters.
+    /// Creates a completed provider execution for deterministic clients and validated adapters.
     pub fn new(response: &str, activity: Vec<ActivityEvent>) -> Self {
         let now = Utc::now();
         Self {
@@ -1003,28 +1010,28 @@ impl AgentExecution {
 #[derive(Debug, Error)]
 pub enum AgentError {
     /// Rejects invalid focused context before an external invocation is attempted.
-    #[error("invalid Codex request: {0}")]
+    #[error("invalid provider request: {0}")]
     InvalidRequest(String),
     /// Rejects malformed, unsupported, or uncited provider output.
-    #[error("invalid Codex response: {0}")]
+    #[error("invalid provider response: {0}")]
     InvalidResponse(String),
     /// Rejects a history buffer that cannot retain any activity.
     #[error("activity history capacity must be greater than zero")]
     InvalidHistoryCapacity,
-    /// Rejects malformed JSONL received from the Codex subprocess.
-    #[error("Codex emitted malformed JSONL: {0}")]
+    /// Rejects a malformed event received from one provider transport.
+    #[error("provider emitted a malformed event: {0}")]
     InvalidEvent(String),
     /// Reports a bounded subprocess or response failure without including credentials.
-    #[error("Codex execution failed: {0}")]
+    #[error("provider execution failed: {0}")]
     Execution(String),
     /// Reports immediate cancellation requested by the terminal user.
-    #[error("Codex execution was cancelled")]
+    #[error("provider execution was cancelled")]
     Cancelled,
     /// Reports the configured analysis deadline being reached.
-    #[error("Codex analysis timed out")]
+    #[error("provider operation timed out")]
     TimedOut,
     /// Reports a documentation operation that stopped emitting observable progress.
-    #[error("Codex produced no output before the inactivity timeout")]
+    #[error("provider produced no output before the inactivity timeout")]
     Inactive,
 }
 

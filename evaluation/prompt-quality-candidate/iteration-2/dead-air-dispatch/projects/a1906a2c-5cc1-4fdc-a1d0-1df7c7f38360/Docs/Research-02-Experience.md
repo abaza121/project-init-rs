@@ -1,0 +1,12 @@
+# Player Experience and Measurement
+
+## Cited Findings
+EVD-001: Microsoft recommends conveying important game information through more than one sensory channel and providing visual equivalents for gameplay-critical audio cues ([Xbox Accessibility Guideline 103](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/103)) supports DEC-013 because the multi-sensory gameplay-information guidance informed the candidate-only accessibility boundary.
+EVD-002: Microsoft recommends subtitles for spoken content and captions for meaningful sounds not otherwise communicated visually, including spatial identification when relevant ([Xbox Accessibility Guideline 104](https://learn.microsoft.com/en-us/gaming/accessibility/xbox-accessibility-guidelines/104)) supports DEC-014 because the caption and spatial-identification guidance informed the candidate-only caption boundary.
+EVD-003: ISO 9241-11:2018 describes usability as an outcome of use and does not prescribe particular design, development, or evaluation methods ([ISO 9241-11:2018](https://www.iso.org/standard/63500.html)) supports DEC-017 because the context-dependent usability framing informed the decision not to invent a hidden-information cutoff.
+EVD-004: NIST explains that practitioners can define success criteria specific to an application and use objective user-performance and subjective-satisfaction measures ([A practical guide to the CIF: usability measurements](https://www.nist.gov/publications/practical-guide-cifusability-measurements)) supports DEC-018 because the application-specific performance and satisfaction measures informed the deferred fairness-measurement design.
+EVD-005: The peer-reviewed GUESS study developed and validated an instrument for assessing video-game satisfaction across multiple game types ([The Development and Validation of the Game User Experience Satisfaction Scale](https://journals.sagepub.com/doi/10.1177/0018720816669646)) supports DEC-019 because the video-game satisfaction instrument informed a candidate post-play measure without supplying a fairness cutoff.
+
+## Application
+
+EVD-001 and EVD-002 support recommendations, not authority to select accessibility scope or defaults. The remaining three canonical findings in this file support later measurement methods, not an acceptable intriguing-versus-unfair value. These authority boundaries are recorded in DEC-013, DEC-014, DEC-017, DEC-018, and DEC-019.
