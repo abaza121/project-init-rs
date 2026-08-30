@@ -80,7 +80,6 @@ const RESEARCH_PLAN_SCHEMA: &str = r#"{
       "type": "array",
       "minItems": 1,
       "maxItems": 3,
-      "uniqueItems": true,
       "items": { "type": "string", "minLength": 1, "maxLength": 256 }
     }
   },
@@ -295,7 +294,7 @@ fn skill_discovery_error(path: &Path, error: std::io::Error) -> AgentError {
 fn disabled_skills_override(skill_paths: &[PathBuf]) -> Result<String, AgentError> {
     if skill_paths.is_empty() {
         return Err(AgentError::Execution(
-            "no skill files were discovered; run Codex once to materialize bundled skills before using --no-skills"
+            "no skill files were discovered; run Codex once to materialize bundled skills, or pass --skills to enable them"
                 .to_owned(),
         ));
     }
@@ -332,11 +331,11 @@ pub struct CodexCliClient {
 }
 
 impl CodexCliClient {
-    /// Creates a client whose process settings remain inspectable by its caller.
+    /// Creates a client that suppresses skills by default and exposes its process settings.
     pub const fn new(config: CodexCliConfig) -> Self {
         Self {
             config,
-            disable_skills: false,
+            disable_skills: true,
         }
     }
 
@@ -1508,6 +1507,32 @@ mod tests {
                 ".",
                 "-",
             ]
+        );
+    }
+
+    /// Disables skill loading when callers use the public client constructor unchanged.
+    #[test]
+    fn codex_client_disables_skills_by_default() {
+        let client = CodexCliClient::new(CodexCliConfig {
+            executable: PathBuf::from("codex"),
+            working_directory: PathBuf::from("workspace"),
+            timeout: Duration::from_secs(300),
+            history_capacity: 200,
+        });
+
+        assert!(client.disable_skills);
+    }
+
+    /// Keeps the coordinator schema within the array keywords accepted by Structured Outputs.
+    #[test]
+    fn research_plan_schema_avoids_unsupported_unique_items_keyword() {
+        let schema: serde_json::Value = serde_json::from_str(super::RESEARCH_PLAN_SCHEMA)
+            .expect("the research-plan schema should remain valid JSON");
+
+        assert!(
+            schema
+                .pointer("/properties/question_ids/uniqueItems")
+                .is_none()
         );
     }
 

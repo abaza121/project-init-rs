@@ -1,31 +1,33 @@
-# Specification: Skill-Free Codex Invocations
+# Specification: Skill-Free Codex Invocations by Default
 
 ## Objective
 
-Add an opt-in `--no-skills` mode to the Rust `project-init` CLI so every Codex subprocess started by that invocation receives no model-visible local, repository, bundled, or installed-plugin skills. This isolates pipeline behavior from reusable skill instructions without changing `AGENTS.md`, available tools, sandboxing, approval policy, or offline execution.
+Make skill suppression the default for the Rust `project-init` CLI so every Codex subprocess receives no model-visible local, repository, bundled, or installed-plugin skills unless the user opts in with `--skills`. This isolates pipeline behavior from reusable skill instructions without changing `AGENTS.md`, available tools, sandboxing, approval policy, or offline execution.
 
 ## Acceptance criteria
 
-1. `--no-skills` is a global option accepted before or after a subcommand.
-2. The option reaches initial analysis, non-interactive generation, resumed workflow generation or repair, and workbench-triggered Codex execution.
-3. When enabled, the adapter discovers every visible `SKILL.md` under repository/user `.agents/skills`, Codex user/system skills, installed plugin caches, and the Unix admin skill root when present.
-4. The adapter passes one deterministic `skills.config` command-line override that marks every discovered skill disabled.
-5. Discovery follows symlinked directories without looping, deduplicates overlapping roots, escapes arbitrary platform paths as valid TOML strings, and fails before the paid Codex run if a present skill root cannot be read.
-6. An empty inventory fails closed because a new Codex installation may not have materialized its bundled skills yet.
-7. When the option is omitted, existing Codex argument lists and behavior remain unchanged.
-8. `--offline` remains deterministic and does not require Codex or skill discovery even when `--no-skills` is also present.
-9. The historical `baseline/` runner remains unchanged.
+1. Skill suppression is enabled when no skill-related option is present.
+2. `--skills` is a global opt-in accepted before or after a subcommand, while the former `--no-skills` spelling remains accepted for compatibility.
+3. The resolved policy reaches initial analysis, non-interactive generation, resumed workflow generation or repair, and workbench-triggered Codex execution.
+4. When suppression is enabled, the adapter discovers every visible `SKILL.md` under repository/user `.agents/skills`, Codex user/system skills, installed plugin caches, and the Unix admin skill root when present.
+5. The adapter passes one deterministic `skills.config` command-line override that marks every discovered skill disabled.
+6. Discovery follows symlinked directories without looping, deduplicates overlapping roots, escapes arbitrary platform paths as valid TOML strings, and fails before the paid Codex run if a present skill root cannot be read.
+7. An empty inventory fails closed because a new Codex installation may not have materialized its bundled skills yet.
+8. With `--skills`, existing skill-enabled Codex argument lists and behavior remain unchanged.
+9. `--offline` remains deterministic and does not require Codex or skill discovery regardless of skill policy.
+10. The historical `baseline/` runner remains unchanged.
 
 ## Architecture and data flow
 
-The command-line `Cli` owns a global boolean and passes it through additive client and TUI runtime builder methods, preserving the existing public configuration constructors. This is similar to applying an optional setting to a C# builder without adding a required property to an existing options record. The Rust adapter borrows the actual subprocess working-directory path, finds skill files, and converts their paths into a TOML array passed with Codex `-c`; no persistent Codex configuration is edited.
+The command-line `Cli` resolves a global skill policy and passes it through additive client and TUI runtime builder methods. The public configuration constructors themselves use the safe skill-free default. This is similar to a C# options object with a conservative default plus an explicit builder override. The Rust adapter borrows the actual subprocess working-directory path, finds skill files, and converts their paths into a TOML array passed with Codex `-c`; no persistent Codex configuration is edited.
 
 Skill roots are derived from the effective `CODEX_HOME`, the user profile, working-directory ancestors, and the platform admin location. A small standard-library directory walker owns a visited-directory set and a sorted skill-file set, keeping output deterministic and preventing symlink cycles. Recoverable filesystem failures use `Result<T, AgentError>` rather than exceptions or partial configuration.
 
 ## Explicit behavior
 
-- Skill suppression is opt-in and invocation-scoped.
-- A no-skills request either disables every discovered skill or returns an error before the main Codex subprocess starts.
+- Skill suppression is the default and remains invocation-scoped.
+- `--skills` restores configured skills only for the current invocation.
+- A skill-free invocation either disables every discovered skill or returns an error before the main Codex subprocess starts.
 - Existing configured tools and project instructions remain available.
 
 ## Policy decisions
@@ -36,7 +38,7 @@ Skill roots are derived from the effective `CODEX_HOME`, the user profile, worki
 
 ## Invariants
 
-- The default argument sequence is unchanged when skill suppression is disabled.
+- The skill-enabled argument sequence is unchanged when suppression is explicitly disabled.
 - Paths are sorted and deduplicated before serialization.
 - A rejected or unreadable discovery operation launches no paid Codex task.
 - User-owned skill files and configuration are never modified.
@@ -65,19 +67,19 @@ Lint:     cargo clippy --all-targets --all-features -- -D warnings
 
 No new dependency is required. The standard library provides directory traversal, path handling, and deterministic sets; existing `serde_json` safely produces TOML-compatible basic-string escaping for path text.
 
-- Always: preserve existing sandbox and approval arguments, fail closed on incomplete enabled discovery, and test default compatibility.
+- Always: preserve existing sandbox and approval arguments, fail closed on incomplete discovery while suppression is active, and test default compatibility.
 - Ask first: changing baseline behavior, persistent Codex configuration, or the meaning of `AGENTS.md`.
 - Never: delete or rewrite skills, copy authentication into another home, bypass sandboxing, or invoke a paid model in tests.
 
 ## Ordered implementation plan
 
-1. Add failing adapter tests for discovery and command serialization.
-2. Add failing CLI tests for global flag placement and default behavior.
-3. Implement adapter discovery and opt-in argument injection.
-4. Propagate the option through CLI, workflow, and TUI configuration.
+1. Add failing adapter and runtime-constructor tests for the skill-free default.
+2. Add failing CLI tests for the default, global `--skills` placement, and compatibility spelling.
+3. Set adapter and workbench constructors to the skill-free default and implement CLI opt-in policy resolution.
+4. Propagate the resolved policy through analysis, workflow, and TUI configuration.
 5. Update user documentation and changelog.
 6. Run targeted, full, and lint verification; review the complete diff and improve only justified findings.
 
 ## Open questions
 
-No unresolved question blocks implementation. If a future Codex release adds a documented global skills switch, the adapter can replace enumeration without changing the public `project-init --no-skills` contract.
+No unresolved question blocks implementation. If a future Codex release adds a documented global skills switch, the adapter can replace enumeration without changing the public default or `project-init --skills` contract.

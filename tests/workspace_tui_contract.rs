@@ -827,6 +827,100 @@ fn auto_answer_execution_renders_structured_progress_lanes() {
     assert!(!rendered.contains('%'));
 }
 
+/// Replaces every prior worker assignment when a newer automatic-answer batch starts.
+#[test]
+fn auto_answer_execution_renders_only_the_current_batch_lanes() {
+    let (service, project_id) = empty_queue_project();
+    let snapshot = service
+        .inspect_project(&project_id)
+        .expect("the snapshot should load");
+    let mut state = WorkspaceState::new(snapshot, Vec::new());
+    state.begin_auto_answer_execution();
+    state.push_auto_answer_progress(AutoAnswerProgress::new(
+        1,
+        AutoAnswerActor::Coordinator,
+        AutoAnswerStage::Accepted,
+        "Selected 3 question(s)",
+        None,
+    ));
+    for (slot, question_display_id) in [(1, "Q-001"), (2, "Q-002"), (3, "Q-003")] {
+        state.push_auto_answer_progress(AutoAnswerProgress::new(
+            1,
+            AutoAnswerActor::Worker {
+                slot,
+                question_display_id: question_display_id.to_owned(),
+            },
+            AutoAnswerStage::Ready,
+            "Cited candidate ready",
+            Some(5),
+        ));
+    }
+    state.push_auto_answer_progress(AutoAnswerProgress::new(
+        1,
+        AutoAnswerActor::Judge,
+        AutoAnswerStage::Accepted,
+        "Accepted 3 judged answer(s)",
+        None,
+    ));
+
+    state.push_auto_answer_progress(AutoAnswerProgress::new(
+        2,
+        AutoAnswerActor::Coordinator,
+        AutoAnswerStage::Accepted,
+        "Selected 2 question(s)",
+        None,
+    ));
+    for (slot, question_display_id) in [(1, "Q-004"), (2, "Q-005")] {
+        state.push_auto_answer_progress(AutoAnswerProgress::new(
+            2,
+            AutoAnswerActor::Worker {
+                slot,
+                question_display_id: question_display_id.to_owned(),
+            },
+            AutoAnswerStage::Researching,
+            "Researching current assignment",
+            None,
+        ));
+    }
+    state.push_auto_answer_progress(AutoAnswerProgress::new(
+        2,
+        AutoAnswerActor::Judge,
+        AutoAnswerStage::Waiting,
+        "Waiting for current workers",
+        None,
+    ));
+    state.push_auto_answer_progress(AutoAnswerProgress::new(
+        1,
+        AutoAnswerActor::Worker {
+            slot: 3,
+            question_display_id: "Q-003".to_owned(),
+        },
+        AutoAnswerStage::Ready,
+        "Late stale update",
+        Some(5),
+    ));
+
+    let mut terminal = Terminal::new(TestBackend::new(100, 28))
+        .expect("the deterministic terminal should initialize");
+    terminal
+        .draw(|frame| render_workspace(frame, &state))
+        .expect("the current automatic-answer batch should render");
+    let rendered = terminal
+        .backend()
+        .buffer()
+        .content()
+        .iter()
+        .map(|cell| cell.symbol())
+        .collect::<String>();
+
+    assert!(rendered.contains("BATCH 2"));
+    assert!(rendered.contains("Q-004"));
+    assert!(rendered.contains("Q-005"));
+    assert!(!rendered.contains("Q-001"));
+    assert!(!rendered.contains("Q-002"));
+    assert!(!rendered.contains("Q-003"));
+}
+
 /// Keeps the newest streamed Codex output visible when a long run exceeds the panel height.
 #[test]
 fn execution_overlay_follows_the_latest_codex_output() {

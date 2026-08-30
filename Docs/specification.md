@@ -25,7 +25,7 @@ The primary user is a developer or product creator who has an idea but not yet a
 15. `new --run`, `run`, `step`, and `status` drive one persisted orchestration loop with a run-scoped approval policy, full fixed artifact graph, protected manual overrides, and machine-readable pause reasons.
 16. Evidence and decisions have explicit capture and authority commands; validation runs, document hashes, and immutable revisions are persisted rather than inferred from files.
 17. First workbench resume requires explicit approval-policy selection with no default. Codex generation and repair remain cancellable and provisional until a complete staging package is adopted.
-18. The global `--no-skills` option disables every discovered Codex skill for initial analysis, CLI-driven generation, and workbench resume without persisting configuration changes; incomplete discovery fails before provider work begins.
+18. Codex skills are disabled by default for initial analysis, CLI-driven generation, and workbench resume without persisting configuration changes; incomplete discovery fails before provider work begins, while the global `--skills` option restores configured skills for one invocation.
 19. `run --auto-answer`, `new --run --auto-answer`, and workbench `/auto-answer` use a fixed three-worker pool to research different dependency-safe consequential questions, require a separate schema-constrained Codex judge, atomically persist still-applicable cited recommendations as imported research rather than user authority, and continue until another workflow boundary or completion. Attached terminals show actor-keyed TUI progress while redirected automation remains headless.
 
 ## Explicit behavior
@@ -50,7 +50,7 @@ The primary user is a developer or product creator who has an idea but not yet a
 - Automatic repair is bounded. Deterministic regeneration handles missing or stale generated artifacts, Codex may assist with document repair inside the configured sandbox, and missing evidence or high-impact user authority always pauses explicitly.
 - Codex-assisted documentation runs with `workspace-write` in an isolated staging package and inherits configured tools without dangerous approval or sandbox bypass flags.
 - Automatic clarification research is opt-in, incompatible with `--offline`, read-only, citation-required, and fail-closed. It does not automatically approve decisions or authorize repairs.
-- Skill suppression is explicit and invocation-scoped. It disables exact discovered `SKILL.md` paths while preserving `AGENTS.md`, tools, sandboxing, approval behavior, and the default skill-enabled path.
+- Skill suppression is the invocation-scoped default. It disables exact discovered `SKILL.md` paths while preserving `AGENTS.md`, tools, sandboxing, and approval behavior; the global `--skills` option explicitly restores the configured skill-enabled path.
 - The initial release uses one Cargo package with a library target and binary target. This keeps reusable boundaries without premature multi-crate coordination; a workspace split remains possible if compile ownership or release boundaries emerge.
 - LanceDB is an optional Cargo feature. This preserves a useful offline binary and makes unavailability behavior testable, while keeping the adapter production-real when enabled.
 

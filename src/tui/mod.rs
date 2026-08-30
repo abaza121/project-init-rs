@@ -63,7 +63,7 @@ pub struct WorkspaceRuntimeConfig {
 }
 
 impl WorkspaceRuntimeConfig {
-    /// Creates explicit background execution configuration without resolving Codex eagerly.
+    /// Creates skill-free background execution configuration without resolving Codex eagerly.
     pub fn new(
         data_dir: &Path,
         codex_override: Option<OsString>,
@@ -77,7 +77,7 @@ impl WorkspaceRuntimeConfig {
             timeout,
             history_capacity,
             activity_capacity,
-            disable_skills: false,
+            disable_skills: true,
         }
     }
 
@@ -897,10 +897,13 @@ fn activity_list_item(event: &ActivityEvent) -> ListItem<'static> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+    use std::time::Duration;
+
     use ratatui::Terminal;
     use ratatui::backend::TestBackend;
 
-    use super::{CreationState, render_creation};
+    use super::{CreationState, WorkspaceRuntimeConfig, render_creation};
     use crate::agents::{ActivityEvent, ActivityKind};
 
     /// Renders project identity, live status, activity, and keyboard help in a compact terminal.
@@ -930,5 +933,19 @@ mod tests {
         assert!(rendered.contains("ANALYZING"));
         assert!(rendered.contains("Analyzing initial brief"));
         assert!(rendered.contains("Esc cancel"));
+    }
+
+    /// Carries skill suppression into workbench-started Codex runs by default.
+    #[test]
+    fn workspace_runtime_disables_skills_by_default() {
+        let config = WorkspaceRuntimeConfig::new(
+            Path::new(".project-init"),
+            None,
+            Duration::from_secs(300),
+            200,
+            256,
+        );
+
+        assert!(config.disable_skills);
     }
 }

@@ -176,19 +176,37 @@ impl WorkspaceExecutionView {
         self.activity.push(event);
     }
 
-    /// Replaces the latest state for one actor while retaining a bounded five-lane board.
+    /// Replaces one current-batch actor lane while retaining a bounded five-lane board.
     fn push_auto_answer(&mut self, progress: AutoAnswerProgress) {
         let Some(lanes) = self.auto_answer.as_mut() else {
             return;
         };
+        match lanes.iter().map(|lane| lane.batch).max() {
+            Some(batch) if progress.batch < batch => return,
+            Some(batch) if progress.batch > batch => lanes.clear(),
+            _ => {}
+        }
         if let Some(existing) = lanes
             .iter_mut()
-            .find(|existing| existing.actor == progress.actor)
+            .find(|existing| same_auto_answer_lane(&existing.actor, &progress.actor))
         {
             *existing = progress;
         } else if lanes.len() < 5 {
             lanes.push(progress);
         }
+    }
+}
+
+/// Matches stable progress lanes without treating a worker's changing question as its identity.
+fn same_auto_answer_lane(existing: &AutoAnswerActor, incoming: &AutoAnswerActor) -> bool {
+    match (existing, incoming) {
+        (AutoAnswerActor::Coordinator, AutoAnswerActor::Coordinator)
+        | (AutoAnswerActor::Judge, AutoAnswerActor::Judge) => true,
+        (
+            AutoAnswerActor::Worker { slot: existing, .. },
+            AutoAnswerActor::Worker { slot: incoming, .. },
+        ) => existing == incoming,
+        _ => false,
     }
 }
 

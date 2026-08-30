@@ -20,7 +20,7 @@ Rust 1.88 or newer is supported; the repository lockfile records the tested depe
 
 ```text
 cargo run -- --data-dir .project-init new --brief baseline/project-prompt.txt --name "Calm Fishing VR"
-cargo run -- --data-dir .project-init --no-skills new --brief baseline/project-prompt.txt --name "Calm Fishing VR"
+cargo run -- --data-dir .project-init --skills new --brief baseline/project-prompt.txt --name "Calm Fishing VR"
 cargo run -- --data-dir .project-init new --brief baseline/project-prompt.txt --name "Calm Fishing VR" --offline
 cargo run -- --data-dir .project-init run --brief baseline/project-prompt.txt --name "Calm Fishing VR" --offline --approval consequential
 cargo run -- --data-dir .project-init run --brief baseline/project-prompt.txt --name "Calm Fishing VR" --auto-answer --approval autonomous
@@ -38,7 +38,7 @@ cargo run -- --data-dir .project-init export <project-id> <output-directory>
 
 `new` runs an isolated, schema-constrained Codex CLI analysis by default. When attached to a terminal it shows a spinner and a rolling, scrollable activity timeline; `Esc` cancels immediately. The run times out after five minutes, and failure, cancellation, or invalid structured output creates no project state. The application resolves a native Codex executable from `PATH`, including the binary bundled by an npm installation. Set `CODEX_BIN` to the full native executable path (`codex.exe` on Windows) to override discovery, or pass `--offline` to use the conservative deterministic analyzer explicitly.
 
-Pass the global `--no-skills` option to disable every materialized repository, user, bundled, and installed-plugin Codex skill for that invocation without editing Codex configuration. The option applies to initial analysis, `run`/`step` generation, and workbench `/resume`; it does not disable `AGENTS.md`, sandbox rules, or ordinary tools. If Codex has never materialized its bundled skill inventory, run Codex once before using the option—the pipeline fails closed instead of risking a partially disabled run.
+Codex runs without any materialized repository, user, bundled, or installed-plugin skills by default, without editing persistent Codex configuration. This applies to initial analysis, `run`/`step` generation, and workbench `/resume`; it does not disable `AGENTS.md`, sandbox rules, or ordinary tools. Pass the global `--skills` option to restore configured skills for one invocation. The former `--no-skills` spelling remains accepted for compatibility. If Codex has never materialized its bundled skill inventory, run Codex once or pass `--skills`—the skill-free default fails closed instead of risking a partially disabled run.
 
 Successful Codex activity is stored atomically with the project and appears in the Ratatui workbench. `open` launches that long-lived workspace when attached to a terminal and emits the project snapshot as JSON when redirected.
 

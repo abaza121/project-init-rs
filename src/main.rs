@@ -32,12 +32,22 @@ struct Cli {
     /// Directory containing the authoritative database and generated packages.
     #[arg(long, default_value = ".project-init")]
     data_dir: PathBuf,
-    /// Disable every discovered Codex skill for this invocation without changing user config.
-    #[arg(long, global = true)]
+    /// Enable configured Codex skills for this invocation.
+    #[arg(long, global = true, conflicts_with = "no_skills")]
+    skills: bool,
+    /// Retains the former explicit spelling for the now-default skill-free mode.
+    #[arg(long, global = true, hide = true, conflicts_with = "skills")]
     no_skills: bool,
     /// Project workflow operation to execute.
     #[command(subcommand)]
     command: Command,
+}
+
+impl Cli {
+    /// Resolves the invocation policy while preserving the former no-skills spelling.
+    const fn skills_disabled(&self) -> bool {
+        self.no_skills || !self.skills
+    }
 }
 
 /// Defines the stable user-facing project workflow commands.
@@ -179,7 +189,7 @@ async fn run(cli: Cli) -> Result<()> {
     fs::create_dir_all(&cli.data_dir)
         .with_context(|| format!("failed to create {}", cli.data_dir.display()))?;
     let store = SqliteStore::open(&cli.data_dir.join("project-init.sqlite3"))?;
-    let no_skills = cli.no_skills;
+    let no_skills = cli.skills_disabled();
     match cli.command {
         Command::New {
             brief,
@@ -888,9 +898,9 @@ mod tests {
         assert!(matches!(cli.command, Command::New { offline: true, .. }));
     }
 
-    /// Accepts invocation-scoped skill suppression on either side of the subcommand boundary.
+    /// Accepts the compatibility spelling for the default skill-free mode globally.
     #[test]
-    fn no_skills_is_a_global_opt_in() {
+    fn no_skills_remains_a_global_compatibility_option() {
         let before =
             Cli::try_parse_from(["project-init", "--no-skills", "new", "--brief", "brief.md"])
                 .expect("the global option should parse before the subcommand");
@@ -900,15 +910,30 @@ mod tests {
 
         assert!(before.no_skills);
         assert!(after.no_skills);
+        assert!(before.skills_disabled());
+        assert!(after.skills_disabled());
     }
 
-    /// Preserves configured Codex skills unless the user explicitly disables them.
+    /// Suppresses configured Codex skills when no skill option is provided.
     #[test]
-    fn skills_remain_enabled_by_default() {
+    fn skills_are_disabled_by_default() {
         let cli = Cli::try_parse_from(["project-init", "new", "--brief", "brief.md"])
             .expect("the default command should parse");
 
-        assert!(!cli.no_skills);
+        assert!(cli.skills_disabled());
+    }
+
+    /// Accepts explicit skill enablement on either side of the subcommand boundary.
+    #[test]
+    fn skills_is_a_global_opt_in() {
+        let before =
+            Cli::try_parse_from(["project-init", "--skills", "new", "--brief", "brief.md"])
+                .expect("the global option should parse before the subcommand");
+        let after = Cli::try_parse_from(["project-init", "new", "--brief", "brief.md", "--skills"])
+            .expect("the global option should parse after the subcommand");
+
+        assert!(!before.skills_disabled());
+        assert!(!after.skills_disabled());
     }
 
     /// Formats the refreshed authoritative lifecycle status after interactive reconciliation.

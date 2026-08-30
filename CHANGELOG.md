@@ -7,16 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-30T00:43:51+01:00
+
 ### Added
 
 - Add fixed three-worker `--auto-answer` and workbench `/auto-answer` research with dependency-aware batching, project-wide Codex judgment, atomic cited-answer adoption, retries, cancellation safety, and actor-keyed TUI progress on interactive terminals.
 - Add explicit in-workbench `/resume`, approval, rejection, and bounded repair flows with mandatory first-run policy selection, cancellable Codex progress, and safe return to contextual guidance.
-- Add a global `--no-skills` option that disables discovered Codex skills across analysis, generation, and workbench resume without changing persistent Codex configuration.
+- Run Codex analysis, generation, and workbench resume without discovered skills by default, with a global `--skills` opt-in and no persistent configuration changes.
 - Add a repository-local build workflow that verifies formatting, linting, tests, and locked release compilation before packaging checksummed binaries.
 - Add repository and portable runners for exercising five end-to-end Codex evaluation cases with per-case logs.
 
 ### Fixed
 
+- Keep auto-answer research-plan schemas compatible with Codex Structured Outputs by omitting an unsupported array uniqueness constraint.
 - Preserve the newest failed validation as a resumable repair boundary instead of allowing an older passing validation to hide it.
 - Stream bounded Codex generation output in the workbench and reset its timeout whenever the provider remains active instead of stopping after five minutes of productive work.
 
