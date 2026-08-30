@@ -1,0 +1,4 @@
+interface:
+  display_name: "Automated Rust Solution Workflow"
+  short_description: "Uninterrupted test-first Rust development"
+  default_prompt: "Use $rust-solution-workflow-auto to build this Rust solution end to end without phase approval gates."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rust Solution Workflow"
+  short_description: "Review-gated, test-first Rust development"
+  default_prompt: "Use $rust-solution-workflow to build this Rust solution with a review gate after every phase."
