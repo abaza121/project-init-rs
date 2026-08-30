@@ -21,23 +21,23 @@ Add `--provider opencode` as a peer to the existing Codex and local providers. T
 
 ### Phase 1: Provider Contract and CLI Boundary
 
-- [ ] Task 1: Define OpenCode provider selection and executable resolution.
-- [ ] Task 2: Implement and test the read-only structured OpenCode execution path.
+- [x] Task 1: Define OpenCode provider selection and executable resolution.
+- [x] Task 2: Implement and test the read-only structured OpenCode execution path.
 
 ### Checkpoint: Structured Operations
 
-- [ ] Focused provider and adapter tests pass.
-- [ ] `cargo check --all-features` succeeds.
+- [x] Focused provider and adapter tests pass.
+- [x] `cargo check --all-features` succeeds.
 
 ### Phase 2: Full Workflow Parity
 
-- [ ] Task 3: Add documentation execution and workbench integration.
-- [ ] Task 4: Document the option and update the changelog.
+- [x] Task 3: Add documentation execution and workbench integration.
+- [x] Task 4: Document the option and update the changelog.
 
 ### Checkpoint: Complete
 
-- [ ] Full formatting, build, test, and lint verification passes.
-- [ ] Security review confirms no automatic permission escalation and no unsanitized model/event data crosses a boundary.
+- [x] Full formatting, build, test, and lint verification passes.
+- [x] Security review confirms no automatic permission escalation and no unsanitized model/event data crosses a boundary.
 - [ ] Manual OpenCode smoke test is attempted with an authenticated, healthy local OpenCode installation.
 
 ## Risks and Mitigations

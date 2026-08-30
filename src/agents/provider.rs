@@ -7,7 +7,7 @@ use tokio::sync::mpsc;
 use super::{
     ActivityEvent, AgentClient, AgentError, AgentExecution, AnalysisRequest, AutoAnswerClient,
     CancellationToken, CodexCliClient, DocumentationClient, DocumentationRequest,
-    JudgedResearchBatch, LocalHttpProvider, ResearchBatchPlan, ResearchClient,
+    JudgedResearchBatch, LocalHttpProvider, OpenCodeCliClient, ResearchBatchPlan, ResearchClient,
     ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer,
 };
 
@@ -16,6 +16,8 @@ use super::{
 pub enum ProviderKind {
     /// Uses the installed Codex CLI and its configured tools.
     Codex,
+    /// Uses the installed OpenCode CLI and its authenticated user profile.
+    Opencode,
     /// Uses a managed loopback OpenAI-compatible inference service.
     Local,
 }
@@ -25,6 +27,8 @@ pub enum ProviderKind {
 pub enum ConfiguredProvider {
     /// Wraps the existing isolated Codex subprocess adapter.
     Codex(CodexCliClient),
+    /// Wraps the isolated OpenCode subprocess adapter.
+    OpenCode(OpenCodeCliClient),
     /// Wraps the local loopback HTTP and managed runtime adapter.
     Local(LocalHttpProvider),
 }
@@ -40,6 +44,7 @@ impl AgentClient for ConfiguredProvider {
     ) -> Result<AgentExecution, AgentError> {
         match self {
             Self::Codex(client) => client.analyze(request, activity, cancellation).await,
+            Self::OpenCode(client) => client.analyze(request, activity, cancellation).await,
             Self::Local(client) => client.analyze(request, activity, cancellation).await,
         }
     }
@@ -48,6 +53,7 @@ impl AgentClient for ConfiguredProvider {
     fn timeout(&self) -> Duration {
         match self {
             Self::Codex(client) => client.timeout(),
+            Self::OpenCode(client) => client.timeout(),
             Self::Local(client) => client.timeout(),
         }
     }
@@ -64,6 +70,9 @@ impl ResearchClient for ConfiguredProvider {
     ) -> Result<ResearchedAnswer, AgentError> {
         match self {
             Self::Codex(client) => {
+                ResearchClient::research(client, request, activity, cancellation).await
+            }
+            Self::OpenCode(client) => {
                 ResearchClient::research(client, request, activity, cancellation).await
             }
             Self::Local(client) => {
@@ -84,6 +93,7 @@ impl AutoAnswerClient for ConfiguredProvider {
     ) -> Result<ResearchBatchPlan, AgentError> {
         match self {
             Self::Codex(client) => client.plan(request, activity, cancellation).await,
+            Self::OpenCode(client) => client.plan(request, activity, cancellation).await,
             Self::Local(client) => client.plan(request, activity, cancellation).await,
         }
     }
@@ -97,6 +107,9 @@ impl AutoAnswerClient for ConfiguredProvider {
     ) -> Result<ResearchedAnswer, AgentError> {
         match self {
             Self::Codex(client) => {
+                AutoAnswerClient::research(client, request, activity, cancellation).await
+            }
+            Self::OpenCode(client) => {
                 AutoAnswerClient::research(client, request, activity, cancellation).await
             }
             Self::Local(client) => {
@@ -114,6 +127,7 @@ impl AutoAnswerClient for ConfiguredProvider {
     ) -> Result<JudgedResearchBatch, AgentError> {
         match self {
             Self::Codex(client) => client.judge(request, activity, cancellation).await,
+            Self::OpenCode(client) => client.judge(request, activity, cancellation).await,
             Self::Local(client) => client.judge(request, activity, cancellation).await,
         }
     }
@@ -130,6 +144,7 @@ impl DocumentationClient for ConfiguredProvider {
     ) -> Result<(), AgentError> {
         match self {
             Self::Codex(client) => client.execute(request, activity, cancellation).await,
+            Self::OpenCode(client) => client.execute(request, activity, cancellation).await,
             Self::Local(client) => client.execute(request, activity, cancellation).await,
         }
     }

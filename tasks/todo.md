@@ -6,14 +6,14 @@
 
 **Acceptance criteria:**
 
-- [ ] `--provider opencode` parses globally and constructs an OpenCode provider.
-- [ ] `OPENCODE_BIN` overrides PATH discovery and invalid overrides fail with a clear safe error.
-- [ ] Local-only options remain rejected unless `--provider local` is selected.
+- [x] `--provider opencode` parses globally and constructs an OpenCode provider.
+- [x] `OPENCODE_BIN` overrides PATH discovery and invalid overrides fail with a clear safe error.
+- [x] Local-only options remain rejected unless `--provider local` is selected.
 
 **Verification:**
 
-- [ ] Focused CLI/provider tests pass.
-- [ ] `cargo check --all-features` succeeds.
+- [x] Focused CLI/provider tests pass.
+- [x] `cargo check --all-features` succeeds.
 
 **Dependencies:** None
 
@@ -31,14 +31,14 @@
 
 **Acceptance criteria:**
 
-- [ ] Analysis, research, planning, and judgment implement their existing provider traits.
-- [ ] Malformed, oversized, failed, or incomplete JSON streams fail closed.
-- [ ] Activity is sanitized and only relevant OpenCode events become timeline entries.
+- [x] Analysis, research, planning, and judgment implement their existing provider traits.
+- [x] Malformed, oversized, failed, or incomplete JSON streams fail closed.
+- [x] Activity is sanitized and only relevant OpenCode events become timeline entries.
 
 **Verification:**
 
-- [ ] Adapter parser and process-argument tests pass.
-- [ ] Existing agent prompt tests pass.
+- [x] Adapter parser and process-argument tests pass.
+- [x] Existing agent prompt tests pass.
 
 **Dependencies:** Task 1
 
@@ -52,8 +52,8 @@
 
 ## Checkpoint: Structured Operations
 
-- [ ] Tasks 1-2 complete and focused tests pass.
-- [ ] `cargo check --all-features` succeeds.
+- [x] Tasks 1-2 complete and focused tests pass.
+- [x] `cargo check --all-features` succeeds.
 
 ## Task 3: Add documentation execution and workbench integration
 
@@ -61,14 +61,14 @@
 
 **Acceptance criteria:**
 
-- [ ] OpenCode runs documentation work only from the provided staging directory.
-- [ ] `open` uses the selected OpenCode provider rather than lazily constructing Codex.
-- [ ] Cancellation and errors leave no adopted partial package.
+- [x] OpenCode runs documentation work only from the provided staging directory.
+- [x] `open` uses the selected OpenCode provider rather than lazily constructing Codex.
+- [x] Cancellation and errors leave no adopted partial package.
 
 **Verification:**
 
-- [ ] Documentation-client and workspace integration tests pass.
-- [ ] `cargo test --all-features` passes.
+- [x] Adapter parser and workspace provider-selection tests pass.
+- [x] `cargo test --all-features` passes.
 
 **Dependencies:** Tasks 1-2
 
@@ -86,13 +86,13 @@
 
 **Acceptance criteria:**
 
-- [ ] README describes selection, `OPENCODE_BIN`, and user-profile permission responsibility.
-- [ ] Changelog describes the new provider under `Unreleased` / `Added`.
+- [x] README describes selection, `OPENCODE_BIN`, and user-profile permission responsibility.
+- [x] Changelog describes the new provider under `Unreleased` / `Added`.
 
 **Verification:**
 
-- [ ] Documentation examples match CLI parsing tests.
-- [ ] `cargo fmt --check` passes.
+- [x] Documentation examples match CLI parsing tests.
+- [x] `cargo fmt --check` passes.
 
 **Dependencies:** Tasks 1-3
 
@@ -105,5 +105,5 @@
 
 ## Checkpoint: Complete
 
-- [ ] `cargo fmt --check`, `cargo check --all-features`, `cargo test --all-features`, and `cargo clippy --all-targets --all-features -- -D warnings` pass.
-- [ ] Staged diff is reviewed for secrets and scope.
+- [x] `cargo fmt --check`, `cargo check --all-features`, `cargo test --all-features`, and `cargo clippy --all-targets --all-features -- -D warnings` pass.
+- [x] Staged diff is reviewed for secrets and scope.

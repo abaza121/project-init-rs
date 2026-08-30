@@ -12,8 +12,8 @@ use clap::{Parser, Subcommand};
 use project_init::agents::{
     ActivityEvent, ActivityKind, AgentClient, AnalysisRequest, CancellationToken, CodexCliClient,
     CodexCliConfig, ConfiguredProvider, DocumentationClient, DocumentationRequest, LocalDevice,
-    LocalHttpConfig, LocalHttpProvider, LocalModelFormat, LocalRuntimeConfig, ProviderKind,
-    resolve_codex_executable,
+    LocalHttpConfig, LocalHttpProvider, LocalModelFormat, LocalRuntimeConfig, OpenCodeCliClient,
+    OpenCodeCliConfig, ProviderKind, resolve_codex_executable, resolve_opencode_executable,
 };
 use project_init::documents::PackageRenderer;
 use project_init::domain::{ApprovalPolicy, EvidenceReliability, ProjectId, WorkflowStep};
@@ -39,7 +39,7 @@ struct Cli {
     /// Directory containing the authoritative database and generated packages.
     #[arg(long, default_value = ".project-init")]
     data_dir: PathBuf,
-    /// Selects Codex or the explicitly configured local HTTP provider.
+    /// Selects Codex, OpenCode, or the explicitly configured local HTTP provider.
     #[arg(long, global = true, value_enum)]
     provider: Option<ProviderKind>,
     /// Overrides the managed local provider base URL; it must remain on loopback.
@@ -119,6 +119,20 @@ impl Cli {
                     disable_skills: self.skills_disabled(),
                 })
             }
+            ProviderKind::Opencode => {
+                if self.local_endpoint.is_some()
+                    || self.local_model_dir.is_some()
+                    || self.local_model_file.is_some()
+                    || self.local_format != LocalModelFormat::Gguf
+                    || self.local_image.is_some()
+                    || self.local_device.is_some()
+                    || self.local_port.is_some()
+                    || self.local_docker_bin.is_some()
+                {
+                    anyhow::bail!("local runtime options require --provider local");
+                }
+                Ok(ProviderSelection::OpenCode)
+            }
             ProviderKind::Local => {
                 let model_directory = self.local_model_dir.clone().ok_or_else(|| {
                     anyhow::anyhow!("--provider local requires --local-model-dir")
@@ -175,6 +189,8 @@ impl Cli {
 enum ProviderSelection {
     /// Defers Codex executable discovery until one provider-backed operation needs it.
     Codex { disable_skills: bool },
+    /// Defers OpenCode executable discovery until one provider-backed operation needs it.
+    OpenCode,
     /// Reuses immutable loopback and managed-runtime settings across workflow operations.
     Local(Box<LocalProviderSettings>),
 }
@@ -202,6 +218,17 @@ impl ProviderSelection {
                     .with_skills_disabled(*disable_skills),
                 ))
             }
+            Self::OpenCode => {
+                let executable = resolve_opencode_executable(std::env::var_os("OPENCODE_BIN"))?;
+                Ok(ConfiguredProvider::OpenCode(OpenCodeCliClient::new(
+                    OpenCodeCliConfig {
+                        executable,
+                        working_directory: working_directory.to_path_buf(),
+                        timeout: ANALYSIS_TIMEOUT,
+                        history_capacity: ACTIVITY_HISTORY_CAPACITY,
+                    },
+                )))
+            }
             Self::Local(settings) => Ok(ConfiguredProvider::Local(
                 LocalHttpProvider::new(settings.http.clone())?
                     .with_runtime(settings.runtime.clone())?,
@@ -209,15 +236,16 @@ impl ProviderSelection {
         }
     }
 
-    /// Returns whether this selection uses local HTTP rather than Codex CLI.
-    const fn is_local(&self) -> bool {
-        matches!(self, Self::Local(_))
+    /// Returns whether Codex remains the lazily constructed default provider.
+    const fn is_codex(&self) -> bool {
+        matches!(self, Self::Codex { .. })
     }
 
     /// Returns whether Codex skill loading is suppressed for this selection.
     const fn skills_disabled(&self) -> bool {
         match self {
             Self::Codex { disable_skills } => *disable_skills,
+            Self::OpenCode => true,
             Self::Local(_) => true,
         }
     }
@@ -742,7 +770,7 @@ fn workspace_runtime_config(
         ACTIVITY_CHANNEL_CAPACITY,
     )
     .with_skills_disabled(provider.skills_disabled());
-    if provider.is_local() {
+    if !provider.is_codex() {
         Ok(config.with_provider(provider.client(data_dir)?))
     } else {
         Ok(config)
@@ -1070,6 +1098,42 @@ mod tests {
         .expect("the explicit local provider should parse");
 
         assert_eq!(cli.provider_kind(), ProviderKind::Local);
+    }
+
+    /// Accepts OpenCode as a global peer provider without local runtime settings.
+    #[test]
+    fn opencode_provider_is_an_explicit_secondary_option() {
+        let cli = Cli::try_parse_from([
+            "project-init",
+            "--provider",
+            "opencode",
+            "new",
+            "--brief",
+            "brief.md",
+        ])
+        .expect("the explicit OpenCode provider should parse");
+
+        assert_eq!(cli.provider_kind(), ProviderKind::Opencode);
+        assert!(cli.provider_selection().is_ok());
+    }
+
+    /// Rejects local-runtime settings when the authenticated OpenCode provider is selected.
+    #[test]
+    fn opencode_provider_rejects_local_only_options() {
+        let cli = Cli::try_parse_from([
+            "project-init",
+            "--provider",
+            "opencode",
+            "--local-port",
+            "1234",
+            "list",
+        ])
+        .expect("structural parsing should accept the global option");
+
+        let error = cli
+            .provider_selection()
+            .expect_err("local runtime settings must not be ignored for OpenCode");
+        assert!(error.to_string().contains("require --provider local"));
     }
 
     /// Accepts the plain and tensor aliases for native safetensors model loading.
