@@ -531,7 +531,8 @@ impl<'client> WorkflowRunner<'client> {
                 &question.id,
                 &question.prompt,
                 &question.rationale,
-            )?;
+            )?
+            .for_delegated_auto_answer();
             let slot = index + 1;
             let actor = AutoAnswerActor::Worker {
                 slot,
@@ -819,7 +820,7 @@ async fn execute_plan_call(
 /// Researches one question with one retry while retaining ownership of its worker lane.
 async fn run_research_worker(
     client: Arc<dyn AutoAnswerClient>,
-    request: ResearchRequest,
+    mut request: ResearchRequest,
     progress: Option<mpsc::Sender<AutoAnswerProgress>>,
     batch: u32,
     actor: AutoAnswerActor,
@@ -878,6 +879,7 @@ async fn run_research_worker(
             }
             Err(AgentError::Cancelled) => return Err(AgentError::Cancelled),
             Err(error) if attempt + 1 < AUTO_ANSWER_ATTEMPTS => {
+                let feedback = crate::agents::sanitize_terminal_text(&error.to_string());
                 send_auto_progress(
                     progress.as_ref(),
                     AutoAnswerProgress::new(
@@ -889,6 +891,7 @@ async fn run_research_worker(
                     ),
                 )
                 .await;
+                request = request.with_retry_feedback(&feedback)?;
             }
             Err(error) => {
                 send_auto_progress(
@@ -914,7 +917,7 @@ async fn run_research_worker(
 /// Reviews the complete candidate set with one retry and exact membership validation.
 async fn execute_judge_with_retry(
     client: Arc<dyn AutoAnswerClient>,
-    request: ResearchJudgmentRequest,
+    mut request: ResearchJudgmentRequest,
     candidate_ids: &[String],
     progress: Option<mpsc::Sender<AutoAnswerProgress>>,
     batch: u32,
@@ -964,6 +967,7 @@ async fn execute_judge_with_retry(
             Ok(judged) => return Ok(judged),
             Err(AgentError::Cancelled) => return Err(AgentError::Cancelled),
             Err(error) if attempt + 1 < AUTO_ANSWER_ATTEMPTS => {
+                let feedback = crate::agents::sanitize_terminal_text(&error.to_string());
                 send_auto_progress(
                     progress.as_ref(),
                     AutoAnswerProgress::new(
@@ -975,6 +979,7 @@ async fn execute_judge_with_retry(
                     ),
                 )
                 .await;
+                request = request.with_retry_feedback(&feedback)?;
             }
             Err(error) => {
                 send_auto_progress(

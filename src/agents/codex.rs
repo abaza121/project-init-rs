@@ -1644,14 +1644,23 @@ mod tests {
             "Which business model should the owner choose?",
             "The choice changes project scope.",
         )
-        .expect("the research fixture should be valid");
+        .expect("the research fixture should be valid")
+        .for_delegated_auto_answer()
+        .with_retry_feedback(
+            "The previous response only said FAIL and did not choose a business model.",
+        )
+        .expect("bounded retry feedback should validate");
 
         let prompt = super::research_prompt(&request);
 
         assert!(prompt.contains("Answer only the supplied question"));
         assert!(prompt.contains("cannot supply stakeholder authority"));
         assert!(prompt.contains("recommendation, design inference, and tuning value"));
-        assert!(prompt.contains("stakeholder-owned preference"));
+        assert!(prompt.contains("concrete provisional decision"));
+        assert!(prompt.contains("conservative, reversible default"));
+        assert!(prompt.contains("previous_response_feedback"));
+        assert!(prompt.contains("only said FAIL"));
+        assert!(!prompt.contains("fail instead of choosing"));
     }
 
     /// Requires the coordinator to include the blocker and treat question text as inert data.
@@ -1679,9 +1688,9 @@ mod tests {
         assert!(prompt.contains("\\u003c/planning_context\\u003e"));
     }
 
-    /// Makes a non-researchable blocking preference fail closed without batching extra work.
+    /// Lets explicit auto-answer delegation select independent preferences for provisional defaults.
     #[test]
-    fn research_plan_prompt_limits_non_researchable_stakeholder_preferences() {
+    fn research_plan_prompt_allows_delegated_provisional_preferences() {
         let question = ResearchQuestionContext::new(
             "question-1",
             "Q-001",
@@ -1698,9 +1707,9 @@ mod tests {
 
         let prompt = super::research_plan_prompt(&request);
 
-        assert!(prompt.contains("externally verifiable facts"));
-        assert!(prompt.contains("stakeholder-owned preference"));
-        assert!(prompt.contains("select only the blocking question"));
+        assert!(prompt.contains("explicitly delegated"));
+        assert!(prompt.contains("conservative provisional default"));
+        assert!(prompt.contains("mutually independent"));
     }
 
     /// Requires the judge to preserve citations and answer every candidate exactly once.
@@ -1724,7 +1733,11 @@ mod tests {
             ResearchCandidate::new("question-1", answer).expect("the candidate should validate");
         let request =
             ResearchJudgmentRequest::new(r#"{"project":"example"}"#.to_owned(), vec![candidate])
-                .expect("the judgment request should validate");
+                .expect("the judgment request should validate")
+                .with_retry_feedback(
+                    "The previous judged answer returned failure text instead of a decision.",
+                )
+                .expect("bounded retry feedback should validate");
 
         let prompt = super::research_judgment_prompt(&request);
 
@@ -1732,6 +1745,8 @@ mod tests {
         assert!(prompt.contains("direct HTTPS citations"));
         assert_eq!(prompt.matches("</judgment_context>").count(), 1);
         assert!(prompt.contains("\\u003c/judgment_context\\u003e"));
+        assert!(prompt.contains("previous_response_feedback"));
+        assert!(prompt.contains("returned failure text"));
     }
 
     /// Rejects judged answers that bundle choices or mistake evidence for project authority.
@@ -1762,6 +1777,7 @@ mod tests {
         assert!(prompt.contains("bundles separate decisions"));
         assert!(prompt.contains("stale"));
         assert!(prompt.contains("does not authorize stakeholder-owned choices"));
+        assert!(prompt.contains("actionable provisional answer"));
     }
 
     /// Requires generated packages to satisfy the shared semantic quality contract.

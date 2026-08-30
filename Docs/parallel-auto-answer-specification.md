@@ -10,20 +10,22 @@ Interactive users activate the feature with `/auto-answer` or by running `projec
 
 1. Automatic answering uses a fixed maximum of three concurrent research workers; the count is not configurable.
 2. A schema-constrained coordinator selects the current blocking question and up to two additional independent consequential open questions.
-3. Each selected question is researched by one isolated Codex invocation. Failed worker research is retried once.
-4. A separate schema-constrained Codex judge reviews every successful candidate together and returns exactly one cited answer for each candidate. Invalid judge output is retried once.
-5. Worker and judge results remain provisional until the complete judged batch validates. Accepted still-open answers are reconciled in one SQLite transaction.
-6. Cancellation terminates coordinator, workers, or judge through the shared cancellation boundary and persists no provisional answer from that batch.
-7. The TUI shows coordinator, three worker, and judge lanes with question identity, stage, latest sanitized activity, and evidence count where available. It does not show invented percentages or chain-of-thought.
-8. `/auto-answer` starts the mode from the workbench. A project without an active run still requires an explicit approval-policy selection.
-9. `run --auto-answer` and `new --run --auto-answer` open the progress TUI only when both standard input and output are terminals. Non-terminal callers retain headless behavior and final structured status output.
-10. Existing `/resume`, single-question `ResearchClient`, offline execution, generation, repair, cancellation, and validation behavior remain compatible.
+3. Each selected question is researched by one isolated Codex invocation. Explicit auto-answer delegation authorizes a concrete, evidence-informed provisional decision; where no unique answer exists, the worker selects the narrowest conservative and reversible default and labels its status in the notes.
+4. A separate schema-constrained Codex judge reviews every successful candidate together and returns exactly one cited answer for each candidate. Refusal-shaped answers such as `FAIL: ...` are invalid rather than authoritative answers.
+5. Failed worker research and invalid judge output are each retried once with the previous validation error included as feedback that the next response must correct.
+6. Worker and judge results remain provisional until the complete judged batch validates. Accepted still-open answers are reconciled in one SQLite transaction.
+7. Cancellation terminates coordinator, workers, or judge through the shared cancellation boundary and persists no provisional answer from that batch.
+8. The TUI shows coordinator, three worker, and judge lanes with question identity, stage, latest sanitized activity, and evidence count where available. It does not show invented percentages or chain-of-thought.
+9. `/auto-answer` starts the mode from the workbench. A project without an active run still requires an explicit approval-policy selection.
+10. `run --auto-answer` and `new --run --auto-answer` open the progress TUI only when both standard input and output are terminals. Non-terminal callers retain headless behavior and final structured status output.
+11. Existing `/resume`, single-question `ResearchClient`, offline execution, generation, repair, cancellation, and validation behavior remain compatible.
 
 ## Policy Decisions
 
 - Three is a fixed concurrency ceiling, not a requirement to fill every slot.
 - The coordinator must include the immediate `QuestionRequired` identity, preventing speculative work from starving the blocking workflow edge.
 - Eligible questions are open questions at or above the project's consequential threshold.
+- Delegated choices remain recommendations rather than user-authored facts, but they must resolve the supplied question instead of restating why it is uncertain.
 - A batch failure records `research_failed`, retains the active run, and commits no answers from that batch.
 - Questions no longer open when a judged batch commits are skipped. All remaining applicable answers commit atomically.
 - Coordinator failure is fail-closed without retry. Worker and judge failures receive one retry as approved in the idea brief.
@@ -38,6 +40,7 @@ Interactive users activate the feature with `/auto-answer` or by running `projec
 - Coordinator plans, worker candidates, judge results, and TUI lanes are provisional derived state.
 - Every selected ID is unique, eligible, and part of the same project.
 - A judged result contains exactly the candidate question IDs once each.
+- A refusal or failure sentinel is not a valid researched answer even when it has structurally valid citations.
 - A rejected, malformed, failed, or cancelled batch leaves authoritative answers and evidence unchanged.
 - Successful batch reconciliation preserves the existing answer/evidence/requirement/trace invariants for every accepted answer.
 - Progress history remains bounded, and worker activity cannot overwrite another worker's lane.
@@ -80,8 +83,8 @@ Rust's `Arc` is comparable to an immutable, thread-safe shared reference with re
 ## Error Handling
 
 - Invalid coordinator IDs, duplicates, or oversized plans return `AgentError::InvalidResponse` before workers start.
-- Worker failures retry only the failed question once. A second failure cancels remaining provisional batch work and returns the error.
-- Judge output with missing, extra, or duplicate question IDs is invalid and retries once.
+- Worker failures retry only the failed question once and receive the first validation error as bounded feedback. A second failure cancels remaining provisional batch work and returns the error.
+- Judge output with refusal text, missing, extra, or duplicate question IDs is invalid and retries once with bounded validation feedback.
 - User cancellation is reported as `WorkflowRunStop::Cancelled`; provider or validation failures pause with `research_failed`.
 - Channel closure never promotes incomplete progress or provider output to authority.
 - Batch storage validates every applicable answer before mutation and rolls back on any persistence error.

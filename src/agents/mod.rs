@@ -191,6 +191,8 @@ pub struct ResearchRequest {
     question_id: String,
     question_prompt: String,
     question_rationale: String,
+    delegated_auto_answer: bool,
+    retry_feedback: Option<String>,
 }
 
 impl ResearchRequest {
@@ -227,7 +229,22 @@ impl ResearchRequest {
             question_id: question_id.to_owned(),
             question_prompt: question_prompt.to_owned(),
             question_rationale: question_rationale.to_owned(),
+            delegated_auto_answer: false,
+            retry_feedback: None,
         })
+    }
+
+    /// Grants an automatic-answer worker authority to choose a labeled provisional default.
+    pub const fn for_delegated_auto_answer(mut self) -> Self {
+        self.delegated_auto_answer = true;
+        self
+    }
+
+    /// Adds bounded validation feedback that the next provider attempt must correct.
+    pub fn with_retry_feedback(mut self, feedback: &str) -> Result<Self, AgentError> {
+        validate_research_text("research retry feedback", feedback, 16_384)?;
+        self.retry_feedback = Some(feedback.trim().to_owned());
+        Ok(self)
     }
 
     /// Returns the serialized authoritative project snapshot supplied as inert context.
@@ -248,6 +265,16 @@ impl ResearchRequest {
     /// Returns why an unsupported answer could materially affect the project.
     pub fn question_rationale(&self) -> &str {
         &self.question_rationale
+    }
+
+    /// Reports whether the user explicitly delegated a provisional project decision.
+    pub const fn is_delegated_auto_answer(&self) -> bool {
+        self.delegated_auto_answer
+    }
+
+    /// Returns validation feedback from the previous failed provider attempt, when present.
+    pub fn retry_feedback(&self) -> Option<&str> {
+        self.retry_feedback.as_deref()
     }
 }
 
@@ -597,6 +624,7 @@ impl ResearchCandidate {
 pub struct ResearchJudgmentRequest {
     snapshot_json: String,
     candidates: Vec<ResearchCandidate>,
+    retry_feedback: Option<String>,
 }
 
 impl ResearchJudgmentRequest {
@@ -623,7 +651,15 @@ impl ResearchJudgmentRequest {
         Ok(Self {
             snapshot_json,
             candidates,
+            retry_feedback: None,
         })
+    }
+
+    /// Adds bounded validation feedback that a repeated judge call must correct.
+    pub fn with_retry_feedback(mut self, feedback: &str) -> Result<Self, AgentError> {
+        validate_research_text("judge retry feedback", feedback, 16_384)?;
+        self.retry_feedback = Some(feedback.trim().to_owned());
+        Ok(self)
     }
 
     /// Returns the inert serialized authoritative project snapshot.
@@ -634,6 +670,11 @@ impl ResearchJudgmentRequest {
     /// Returns every provisional candidate the judge must address exactly once.
     pub fn candidates(&self) -> &[ResearchCandidate] {
         &self.candidates
+    }
+
+    /// Returns validation feedback from the previous failed judge attempt, when present.
+    pub fn retry_feedback(&self) -> Option<&str> {
+        self.retry_feedback.as_deref()
     }
 }
 
@@ -776,6 +817,35 @@ struct UncheckedResearchedAnswer {
 /// Validates the bounded text and citation invariants for one researched answer.
 fn validate_researched_answer(answer: &ResearchedAnswer) -> Result<(), AgentError> {
     validate_research_text("answer", &answer.answer_text, 16_384)?;
+    let normalized_answer = answer.answer_text.trim_start().to_ascii_lowercase();
+    let refusal_prefixes = [
+        "fail:",
+        "failed:",
+        "failure:",
+        "unable to answer",
+        "cannot answer",
+    ];
+    let refusal_phrases = [
+        "batch is rejected",
+        "cannot be responsibly selected",
+        "responsibly selected from",
+        "no responsible answer",
+        "no responsible cited answer",
+        "remains unresolved",
+        "stakeholder clarification is required",
+    ];
+    if refusal_prefixes
+        .iter()
+        .any(|prefix| normalized_answer.starts_with(prefix))
+        || refusal_phrases
+            .iter()
+            .any(|phrase| normalized_answer.contains(phrase))
+    {
+        let previous_response = sanitize_terminal_text(&answer.answer_text);
+        return Err(AgentError::InvalidResponse(format!(
+            "research answer must provide a concrete recommendation instead of failure text; previous response feedback: {previous_response}"
+        )));
+    }
     if let Some(notes) = &answer.notes {
         validate_research_text("answer notes", notes, 16_384)?;
     }
@@ -1081,6 +1151,49 @@ mod tests {
         .expect_err("automatic answers must include external evidence");
 
         assert!(error.to_string().contains("at least one evidence source"));
+    }
+
+    /// Rejects a refusal-shaped response instead of persisting it as an automatic answer.
+    #[test]
+    fn researched_answer_rejects_failure_text() {
+        let error = ResearchedAnswer::from_json(
+            r#"{
+                "answer_text":"FAIL: This remains a stakeholder-owned choice.",
+                "notes":"The provider declined to make a recommendation.",
+                "evidence":[{
+                    "claim":"A source describes the available options.",
+                    "source":"https://example.com/options",
+                    "source_title":"Options",
+                    "reliability":"medium",
+                    "notes":null
+                }]
+            }"#,
+        )
+        .expect_err("refusal text must not become an authoritative answer");
+
+        assert!(error.to_string().contains("concrete recommendation"));
+    }
+
+    /// Rejects polite non-answers that omit a failure sentinel but still leave the choice open.
+    #[test]
+    fn researched_answer_rejects_unresolved_refusal_phrases() {
+        for refusal in [
+            "No primary platform can be responsibly selected from the supplied information.",
+            "The complete batch is rejected because the question bundles separate choices.",
+            "This stakeholder-owned choice remains unresolved.",
+        ] {
+            let evidence = super::ResearchEvidence::new(
+                "A source describes the available options.",
+                "https://example.com/options",
+                "Options",
+                crate::domain::EvidenceReliability::Medium,
+                None,
+            )
+            .expect("the evidence fixture should validate");
+
+            ResearchedAnswer::new(refusal, None, vec![evidence])
+                .expect_err("polite refusal text must not become an authoritative answer");
+        }
     }
 
     /// Rejects insecure citations before any external claim reaches project storage.

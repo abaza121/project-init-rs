@@ -99,6 +99,8 @@ struct ParallelAutoAnswerClient {
     maximum_workers: AtomicUsize,
     research_attempts: AtomicUsize,
     judge_attempts: AtomicUsize,
+    research_feedback_seen: AtomicBool,
+    judge_feedback_seen: AtomicBool,
     fail_first_worker: AtomicBool,
     fail_first_judge: AtomicBool,
     cancel_in_judge: bool,
@@ -112,6 +114,8 @@ impl ParallelAutoAnswerClient {
             maximum_workers: AtomicUsize::new(0),
             research_attempts: AtomicUsize::new(0),
             judge_attempts: AtomicUsize::new(0),
+            research_feedback_seen: AtomicBool::new(false),
+            judge_feedback_seen: AtomicBool::new(false),
             fail_first_worker: AtomicBool::new(fail_first_worker),
             fail_first_judge: AtomicBool::new(fail_first_judge),
             cancel_in_judge,
@@ -151,6 +155,9 @@ impl AutoAnswerClient for ParallelAutoAnswerClient {
         _cancellation: CancellationToken,
     ) -> Result<ResearchedAnswer, AgentError> {
         self.research_attempts.fetch_add(1, Ordering::SeqCst);
+        if request.retry_feedback().is_some() {
+            self.research_feedback_seen.store(true, Ordering::SeqCst);
+        }
         let active = self.active_workers.fetch_add(1, Ordering::SeqCst) + 1;
         self.maximum_workers.fetch_max(active, Ordering::SeqCst);
         tokio::time::sleep(Duration::from_millis(40)).await;
@@ -182,6 +189,9 @@ impl AutoAnswerClient for ParallelAutoAnswerClient {
         cancellation: CancellationToken,
     ) -> Result<JudgedResearchBatch, AgentError> {
         self.judge_attempts.fetch_add(1, Ordering::SeqCst);
+        if request.retry_feedback().is_some() {
+            self.judge_feedback_seen.store(true, Ordering::SeqCst);
+        }
         if self.active_workers.load(Ordering::SeqCst) != 0 {
             return Err(AgentError::Execution(
                 "judge started before workers completed".to_owned(),
@@ -542,6 +552,8 @@ async fn parallel_auto_answer_retries_worker_and_judge_once() {
     assert_eq!(outcome.stop, WorkflowRunStop::Complete);
     assert_eq!(auto_answer.research_attempts.load(Ordering::SeqCst), 2);
     assert_eq!(auto_answer.judge_attempts.load(Ordering::SeqCst), 2);
+    assert!(auto_answer.research_feedback_seen.load(Ordering::SeqCst));
+    assert!(auto_answer.judge_feedback_seen.load(Ordering::SeqCst));
     assert!(progress.iter().any(|event| {
         matches!(event.actor, AutoAnswerActor::Worker { .. })
             && event.stage == AutoAnswerStage::Retrying

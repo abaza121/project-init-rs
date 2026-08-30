@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve project analysis and documentation prompts to preserve literal brief provenance, separate research from stakeholder authority, generate unique evaluator-legible requirement, acceptance, decision, assumption, and evidence records, require concrete implementation structure, and prevent generic platform unknowns from becoming VR-specific questions.
 
+### Fixed
+
+- Prevent auto-answer from persisting `FAIL` responses by requiring evidence-informed provisional decisions and using validation feedback to correct worker and judge retries.
+
 ### Security
 
 - Restrict managed local inference to loopback, pinned model and image identities, hardened model-scoped Docker mounts, bounded streaming/tool loops, and three exact document tools without shell, Python, repository, or home-directory access.
