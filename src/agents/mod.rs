@@ -2,6 +2,7 @@
 
 mod codex;
 mod local;
+mod opencode;
 mod prompts;
 mod provider;
 mod runtime;
@@ -25,6 +26,7 @@ pub use codex::{
     CodexCliClient, CodexCliConfig, decode_codex_jsonl_event, resolve_codex_executable,
 };
 pub use local::{LocalHttpConfig, LocalHttpProvider};
+pub use opencode::{decode_opencode_jsonl_event, resolve_opencode_executable};
 pub use provider::{ConfiguredProvider, ProviderKind};
 pub use runtime::{LocalDevice, LocalModelFormat, LocalRuntimeConfig};
 
