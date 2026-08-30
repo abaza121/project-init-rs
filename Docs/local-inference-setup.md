@@ -1,6 +1,6 @@
 # Local Inference Setup
 
-Project Init can use a managed `mistral.rs` HTTP server as an explicit secondary provider. The default remains Codex. Deterministic `--offline` mode remains separate and performs no provider or network work.
+Project Init can use a managed `mistral.rs` HTTP server as an explicit secondary provider. The default remains Codex. Deterministic `--offline` mode remains separate and performs no provider or network work. GGUF remains the default compatibility format; native safetensors/plain loading is available with `--local-format plain` or its `tensor` alias.
 
 ## Supported starting profiles
 
@@ -9,7 +9,36 @@ Project Init can use a managed `mistral.rs` HTTP server as an explicit secondary
 
 The 12 GB figure is a minimum starting point, not a guarantee of 32K context. KV cache, driver/runtime versions, compute capability, and concurrent sequences affect actual fit. Run the runtime estimator and an application smoke test on each machine.
 
-## 1. Download and verify the pinned model
+## Recommended CUDA tensor/plain profile
+
+The currently verified Windows CUDA profile uses the instruction-tuned `Qwen/Qwen3-4B-Instruct-2507` model with native safetensors. It completed the Project Init smoke test and produced valid clarification questions. Use a separate model directory; do not mix its files with a GGUF model.
+
+```powershell
+$modelRoot = 'C:\Models\project-init\qwen3-4b-instruct-2507'
+New-Item -ItemType Directory -Path $modelRoot -Force | Out-Null
+hf download Qwen/Qwen3-4B-Instruct-2507 --local-dir $modelRoot
+```
+
+The downloaded directory must contain `config.json`, one or more `.safetensors` shards, and the tokenizer assets. Project Init verifies the manifest and weight-shard presence before launching Docker.
+
+### Authorize the optional search embedding model
+
+Project Init enables mistral.rs web search, which downloads the gated `google/embeddinggemma-300m` model to rank search results. This is separate from the Qwen model download.
+
+1. Sign in to <https://huggingface.co/google/embeddinggemma-300m>, review Google's terms, and select **Agree and access repository**.
+2. Create a Hugging Face Read token at <https://huggingface.co/settings/tokens>.
+3. Store it interactively in the Docker-owned cache volume used by Project Init. Do not put the token in a command line or commit it to the repository.
+
+```powershell
+docker run --rm -it --gpus all `
+  --mount type=volume,source=project-init-mistralrs-cache,target=/data `
+  ghcr.io/ericlbuehler/mistral.rs@sha256:0f9ef9babfc452dc46d3dde8d99cbac1c54cd798adb6775f28d3388a140e4f9e `
+  login
+```
+
+The CUDA image needs `--gpus all` even for `login`, because it links to `libcuda.so.1`. The token is saved as `/data/token` in the named Docker volume, not in the repository. If Hugging Face returns HTTP 403 after login, the token is valid but the account has not yet accepted the model terms.
+
+## Alternative pinned GGUF profile
 
 Install the current Hugging Face CLI, accept the Gemma license if prompted, and authenticate only for the download step. Keep models outside the repository and user home directories exposed to the container.
 
@@ -30,9 +59,9 @@ Expected identity:
 | Bytes | `6,975,879,296` |
 | SHA-256 | `93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b` |
 
-Project Init repeats the byte-length and SHA-256 check before it launches a new container. A healthy already-running endpoint is checked through `/health` and `/v1/models` instead.
+Project Init repeats the byte-length and SHA-256 check before it launches a new GGUF container. Plain mode instead requires a model directory containing `config.json` and at least one regular `.safetensors` file. A healthy already-running endpoint is checked through `/health` and `/v1/models` instead.
 
-## 2. Choose and pull a versioned runtime image
+## Choose and pull a versioned runtime image
 
 Project Init rejects floating `latest` tags and runs Docker with `--pull never`, so setup must pull the selected image explicitly.
 
@@ -50,7 +79,7 @@ docker pull ghcr.io/ericlbuehler/mistral.rs:cuda128-sm89-0.9.0
 
 Do not copy that CUDA tag blindly. Use `nvidia-smi`, the mistral.rs Docker tag table, and NVIDIA's WSL guidance to select the correct lane. Prefer an image digest when your deployment process records one.
 
-## 3. Estimate fit on the actual host
+## Estimate fit on the actual host
 
 `mistralrs tune` is an estimator, not a benchmark. Run the versioned image selected above against the base model configuration and inspect the recommended context/device map before the smoke test.
 
@@ -60,7 +89,19 @@ docker run --rm ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0 tune --profile balance
 
 For CUDA, add `--gpus all` and use the selected CUDA image. Project Init requests a 32K model and paged-attention context in CUDA mode. If the actual machine cannot load that configuration, treat the profile as unsupported until the configured context policy is deliberately revised and retested; do not assume the weight file's size proves fit.
 
-## 4. Run Project Init with the local provider
+## Run Project Init with the local provider
+
+### Recommended Qwen tensor/plain smoke test
+
+Use the exact image digest already loaded on the tested RTX 50-series CUDA host. Replace the model directory only if you deliberately select another native model.
+
+```powershell
+cargo run -- --data-dir .project-init-local-smoke --provider local --local-format tensor --local-model-dir C:\Models\project-init\qwen3-4b-instruct-2507 --local-image ghcr.io/ericlbuehler/mistral.rs@sha256:0f9ef9babfc452dc46d3dde8d99cbac1c54cd798adb6775f28d3388a140e4f9e --local-device cuda new --brief baseline/project-prompt.txt --name "Local instruct tensor smoke"
+```
+
+On a 12 GB GPU, mistral.rs can place most of this model on CUDA while offloading a small portion to CPU. This is supported but generation is slower than a full-GPU fit.
+
+### GGUF examples
 
 CPU:
 
@@ -83,6 +124,16 @@ cargo run -- --data-dir .project-init --provider local --local-model-dir C:\Mode
 ```
 
 Use `--local-port` when 1234 is unavailable. If `--local-endpoint` is supplied, its loopback port must match `--local-port`. Use `--local-docker-bin` only when Docker is not discoverable as `docker`.
+
+### Native safetensors/plain mode
+
+To load tensor weights rather than the pinned GGUF, place the native model directory outside the repository. It must contain `config.json` and one or more `.safetensors` files, along with any tokenizer or processor assets required by the model. Omit `--local-model-file` and select plain mode:
+
+```powershell
+cargo run -- --data-dir .project-init --provider local --local-format plain --local-model-dir C:\Models\project-init\gemma-4-plain --local-image <versioned-image-or-digest> --local-device cuda new --brief baseline/project-prompt.txt --name "Local plain smoke"
+```
+
+The `tensor` value is accepted as an alias for `plain`. The selected mistral.rs image must support the model architecture in the directory; changing from GGUF to plain does not add architecture support to an older image.
 
 ## Capabilities and failure behavior
 
@@ -110,8 +161,13 @@ The repository, project data directory, generated staging directory, and user ho
 
 ## Troubleshooting
 
-- `local model file must be ... exactly 6975879296 bytes`: repeat the pinned `hf download` and checksum verification.
-- `local model file checksum does not match`: remove the corrupt model copy and download the pinned revision again.
+- `local model file must be ... exactly 6975879296 bytes`: repeat the pinned GGUF `hf download` and checksum verification.
+- `local model file checksum does not match`: remove the corrupt GGUF model copy and download the pinned revision again.
+- `local plain model directory must contain config.json` or `safetensors file`: add the native model manifest and weight shards, then retry with `--local-format plain`.
+- `Could not access ... embeddinggemma-300m ... HTTP 401`: run the interactive Docker `login` command above to save a Hugging Face token in `project-init-mistralrs-cache`.
+- `Could not access ... embeddinggemma-300m ... HTTP 403`: accept the EmbeddingGemma repository terms with the same Hugging Face account that owns the token, then retry.
+- `Device cuda[0] can fit 0 layers` while loading the embedding model: the primary model has consumed available VRAM, so the optional search embedding model runs on CPU. This warning is expected on the verified 12 GB profile and does not prevent local analysis.
+- `structured analysis is invalid: duplicate findings are not allowed`: use the recommended instruction-tuned Qwen profile instead of the reasoning-default `Qwen/Qwen3-4B`, then retry from a fresh data directory.
 - `Docker launch failed ... No such image`: pull the exact versioned CPU/CUDA image used by `--local-image`.
 - CUDA startup failure: confirm Docker Desktop GPU support, the NVIDIA driver, WSL2 visibility, compute capability, and the selected image lane.
 - A stopped or stale named container can be inspected with `docker logs project-init-mistralrs-1234`. Remove it deliberately before retrying; Project Init will not blindly restart an unverified old container configuration.
@@ -126,5 +182,7 @@ The repository, project data directory, generated staging directory, and user ho
 - <https://docs.mistralrs.dev/reference/cli/serve/>
 - <https://docs.mistralrs.dev/guides/quantization/quantize-a-model/>
 - <https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf>
+- <https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507>
+- <https://huggingface.co/google/embeddinggemma-300m>
 - <https://huggingface.co/docs/huggingface_hub/en/package_reference/cli>
 - <https://docs.nvidia.com/cuda/wsl-user-guide/index.html>

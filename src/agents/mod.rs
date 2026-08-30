@@ -26,7 +26,7 @@ pub use codex::{
 };
 pub use local::{LocalHttpConfig, LocalHttpProvider};
 pub use provider::{ConfiguredProvider, ProviderKind};
-pub use runtime::{LocalDevice, LocalRuntimeConfig};
+pub use runtime::{LocalDevice, LocalModelFormat, LocalRuntimeConfig};
 
 const MAX_ACTIVITY_MESSAGE_CHARS: usize = 512;
 

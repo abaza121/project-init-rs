@@ -293,6 +293,47 @@ fn question_navigation_is_bounded_and_changes_the_composer_target() {
     );
 }
 
+/// Keeps the active clarification visible when navigation passes the panel's first viewport.
+#[test]
+fn question_navigation_scrolls_the_active_question_into_view() {
+    let (mut service, project_id) = empty_queue_project();
+    for index in 1..=12 {
+        service
+            .ask_question(
+                &project_id,
+                AskQuestionRequest::conservative(&format!(
+                    "Which option is preferred for item {index}?"
+                )),
+            )
+            .expect("each question should persist");
+    }
+    let snapshot = service
+        .inspect_project(&project_id)
+        .expect("the snapshot should load");
+    let mut state = WorkspaceState::new(snapshot, Vec::new());
+
+    for _ in 1..12 {
+        state
+            .handle_key(KeyEvent::new(KeyCode::Down, KeyModifiers::NONE))
+            .expect("down should select the next open question");
+    }
+
+    let mut terminal = Terminal::new(TestBackend::new(90, 18))
+        .expect("the deterministic terminal should initialize");
+    terminal
+        .draw(|frame| render_workspace(frame, &state))
+        .expect("the selected question should render");
+    let rendered = terminal
+        .backend()
+        .buffer()
+        .content()
+        .iter()
+        .map(|cell| cell.symbol())
+        .collect::<String>();
+
+    assert!(rendered.contains("item 12"));
+}
+
 /// Rejects an invalid threshold before emitting a command or consuming correctable input.
 #[test]
 fn invalid_threshold_command_preserves_the_composer_for_correction() {

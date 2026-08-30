@@ -12,7 +12,8 @@ use clap::{Parser, Subcommand};
 use project_init::agents::{
     ActivityEvent, ActivityKind, AgentClient, AnalysisRequest, CancellationToken, CodexCliClient,
     CodexCliConfig, ConfiguredProvider, DocumentationClient, DocumentationRequest, LocalDevice,
-    LocalHttpConfig, LocalHttpProvider, LocalRuntimeConfig, ProviderKind, resolve_codex_executable,
+    LocalHttpConfig, LocalHttpProvider, LocalModelFormat, LocalRuntimeConfig, ProviderKind,
+    resolve_codex_executable,
 };
 use project_init::documents::PackageRenderer;
 use project_init::domain::{ApprovalPolicy, EvidenceReliability, ProjectId, WorkflowStep};
@@ -44,12 +45,15 @@ struct Cli {
     /// Overrides the managed local provider base URL; it must remain on loopback.
     #[arg(long, global = true)]
     local_endpoint: Option<String>,
-    /// Absolute dedicated directory containing the pinned local GGUF.
+    /// Absolute dedicated directory containing the local model assets.
     #[arg(long, global = true)]
     local_model_dir: Option<PathBuf>,
-    /// Exact GGUF filename; defaults to the pinned Gemma file for local inference.
+    /// Exact GGUF filename; required only for GGUF mode and defaults to the pinned Gemma file.
     #[arg(long, global = true)]
     local_model_file: Option<String>,
+    /// Selects GGUF or native safetensors/plain model loading; tensor is an alias for plain.
+    #[arg(long, global = true, value_enum, default_value_t = LocalModelFormat::Gguf)]
+    local_format: LocalModelFormat,
     /// Versioned mistral.rs image tag or immutable digest.
     #[arg(long, global = true)]
     local_image: Option<String>,
@@ -103,6 +107,7 @@ impl Cli {
                 if self.local_endpoint.is_some()
                     || self.local_model_dir.is_some()
                     || self.local_model_file.is_some()
+                    || self.local_format != LocalModelFormat::Gguf
                     || self.local_image.is_some()
                     || self.local_device.is_some()
                     || self.local_port.is_some()
@@ -137,13 +142,20 @@ impl Cli {
                     LOCAL_HARD_TIMEOUT,
                     ACTIVITY_HISTORY_CAPACITY,
                 )?;
-                let mut runtime = LocalRuntimeConfig::new(
+                let model_file = match self.local_format {
+                    LocalModelFormat::Gguf => Some(
+                        self.local_model_file
+                            .as_deref()
+                            .unwrap_or(DEFAULT_LOCAL_MODEL_FILE),
+                    ),
+                    LocalModelFormat::Plain => self.local_model_file.as_deref(),
+                };
+                let mut runtime = LocalRuntimeConfig::new_with_format(
                     model_directory,
-                    self.local_model_file
-                        .as_deref()
-                        .unwrap_or(DEFAULT_LOCAL_MODEL_FILE),
+                    model_file,
                     image,
                     device,
+                    self.local_format,
                     port,
                 )?;
                 if let Some(executable) = &self.local_docker_bin {
@@ -1023,7 +1035,7 @@ fn print_workflow_status(status: &project_init::domain::WorkflowStatus, json: bo
 mod tests {
     use super::{Cli, Command, format_project_summary, should_show_auto_answer_tui};
     use clap::Parser;
-    use project_init::agents::ProviderKind;
+    use project_init::agents::{LocalModelFormat, ProviderKind};
     use project_init::domain::ProjectStatus;
     use project_init::storage::SqliteStore;
     use project_init::workflow::ProjectService;
@@ -1058,6 +1070,31 @@ mod tests {
         .expect("the explicit local provider should parse");
 
         assert_eq!(cli.provider_kind(), ProviderKind::Local);
+    }
+
+    /// Accepts the plain and tensor aliases for native safetensors model loading.
+    #[test]
+    fn local_provider_accepts_plain_tensor_model_format() {
+        let cli = Cli::try_parse_from([
+            "project-init",
+            "--provider",
+            "local",
+            "--local-model-dir",
+            r"C:\Models\project-init\gemma-4-12b",
+            "--local-format",
+            "tensor",
+            "--local-image",
+            "ghcr.io/ericlbuehler/mistral.rs:cuda128-sm89-0.9.0",
+            "--local-device",
+            "cuda",
+            "new",
+            "--brief",
+            "brief.md",
+        ])
+        .expect("the tensor alias should parse as plain model format");
+
+        assert_eq!(cli.local_format, LocalModelFormat::Plain);
+        assert!(cli.provider_selection().is_ok());
     }
 
     /// Rejects explicitly supplied local-only flags when Codex remains selected.

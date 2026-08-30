@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add an explicit `--provider local` option for authoritative loopback HTTP analysis, DuckDuckGo-backed cited research, automatic clarification, and allowlisted staged documentation through a managed CPU or NVIDIA CUDA mistral.rs container.
+- Add `--local-format plain` (also accepted as `tensor`) for managed local safetensors model directories while retaining pinned GGUF as the default.
 
 ### Changed
 
@@ -17,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Keep the selected clarification question visible while navigating a queue that exceeds the workbench viewport.
 - Prevent auto-answer from persisting `FAIL` responses by requiring evidence-informed provisional decisions and using validation feedback to correct worker and judge retries.
+- Use the current mistral.rs `--max-seq-len` runtime option so managed local CUDA and CPU containers reach readiness with supported images.
 
 ### Security
 

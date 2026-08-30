@@ -3,7 +3,7 @@
 //! <https://docs.mistralrs.dev/reference/cli/serve/>.
 
 use std::ffi::OsString;
-use std::fs::File;
+use std::fs::{self, File};
 use std::io::Read;
 use std::path::{Component, PathBuf};
 
@@ -28,13 +28,24 @@ pub enum LocalDevice {
     Cuda,
 }
 
+/// Selects native safetensors/plain weights or an exact GGUF artifact.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum LocalModelFormat {
+    /// Loads a model directory containing config and safetensors files.
+    #[value(alias = "tensor")]
+    Plain,
+    /// Loads one exact GGUF file with the pinned Gemma identity check.
+    Gguf,
+}
+
 /// Holds validated inputs used to build a hardened local mistral.rs container command.
 #[derive(Debug, Clone)]
 pub struct LocalRuntimeConfig {
     model_directory: PathBuf,
-    model_file: String,
+    model_file: Option<String>,
     image: String,
     device: LocalDevice,
+    format: LocalModelFormat,
     port: u16,
     docker_executable: OsString,
 }
@@ -46,6 +57,25 @@ impl LocalRuntimeConfig {
         model_file: &str,
         image: &str,
         device: LocalDevice,
+        port: u16,
+    ) -> Result<Self, AgentError> {
+        Self::new_with_format(
+            model_directory,
+            Some(model_file),
+            image,
+            device,
+            LocalModelFormat::Gguf,
+            port,
+        )
+    }
+
+    /// Creates a runtime configuration for either a plain model directory or a GGUF file.
+    pub fn new_with_format(
+        model_directory: PathBuf,
+        model_file: Option<&str>,
+        image: &str,
+        device: LocalDevice,
+        format: LocalModelFormat,
         port: u16,
     ) -> Result<Self, AgentError> {
         if !model_directory.is_absolute() {
@@ -63,10 +93,19 @@ impl LocalRuntimeConfig {
                 "local model directory must not contain a comma".to_owned(),
             ));
         }
-        if !is_file_name(model_file) {
-            return Err(AgentError::InvalidRequest(
-                "local model file must be one GGUF filename without path components".to_owned(),
-            ));
+        match (format, model_file) {
+            (LocalModelFormat::Gguf, Some(file)) if is_file_name(file) => {}
+            (LocalModelFormat::Gguf, _) => {
+                return Err(AgentError::InvalidRequest(
+                    "local GGUF model file must be one filename without path components".to_owned(),
+                ));
+            }
+            (LocalModelFormat::Plain, Some(_)) => {
+                return Err(AgentError::InvalidRequest(
+                    "plain local model format does not accept --local-model-file".to_owned(),
+                ));
+            }
+            (LocalModelFormat::Plain, None) => {}
         }
         let image = image.trim();
         if !is_pinned_image(image) {
@@ -81,9 +120,10 @@ impl LocalRuntimeConfig {
         }
         Ok(Self {
             model_directory,
-            model_file: model_file.to_owned(),
+            model_file: model_file.map(str::to_owned),
             image: image.to_owned(),
             device,
+            format,
             port,
             docker_executable: "docker".into(),
         })
@@ -140,16 +180,29 @@ impl LocalRuntimeConfig {
             "--port".into(),
             self.port.to_string().into(),
             "--no-ui".into(),
-            "--max-model-len".into(),
+            "--max-seq-len".into(),
             DEFAULT_CONTEXT_LENGTH.into(),
             "--max-tool-rounds".into(),
             "16".into(),
             "--enable-search".into(),
             "--search-embedding-model".into(),
             "embedding-gemma".into(),
-            "-f".into(),
-            format!("{CONTAINER_MODEL_DIRECTORY}/{}", self.model_file).into(),
         ]);
+        arguments.extend([
+            "--model-id".into(),
+            CONTAINER_MODEL_DIRECTORY.into(),
+            "--format".into(),
+            match self.format {
+                LocalModelFormat::Plain => "plain".into(),
+                LocalModelFormat::Gguf => "gguf".into(),
+            },
+        ]);
+        if let (LocalModelFormat::Gguf, Some(model_file)) = (self.format, &self.model_file) {
+            arguments.extend([
+                "-f".into(),
+                format!("{CONTAINER_MODEL_DIRECTORY}/{model_file}").into(),
+            ]);
+        }
         match self.device {
             LocalDevice::Cpu => arguments.push("--cpu".into()),
             LocalDevice::Cuda => arguments.extend([
@@ -162,9 +215,12 @@ impl LocalRuntimeConfig {
         arguments
     }
 
-    /// Returns the absolute model file expected to exist before Docker starts.
+    /// Returns the absolute model file or directory expected before Docker starts.
     pub fn model_path(&self) -> PathBuf {
-        self.model_directory.join(&self.model_file)
+        self.model_file.as_deref().map_or_else(
+            || self.model_directory.clone(),
+            |file| self.model_directory.join(file),
+        )
     }
 
     /// Returns the loopback host port exposed by the runtime.
@@ -183,9 +239,17 @@ impl LocalRuntimeConfig {
         cancellation: &CancellationToken,
         deadline: Instant,
     ) -> Result<(), AgentError> {
-        let model_path = self.model_path();
+        let model_directory = self.model_directory.clone();
+        let model_file = self.model_file.clone();
+        let format = self.format;
         let verification = tokio::task::spawn_blocking(move || {
-            verify_file_identity(&model_path, GEMMA_MODEL_BYTES, GEMMA_MODEL_SHA256)
+            verify_model_identity(
+                &model_directory,
+                model_file.as_deref(),
+                format,
+                GEMMA_MODEL_BYTES,
+                GEMMA_MODEL_SHA256,
+            )
         });
         tokio::select! {
             result = verification => result.map_err(|error| {
@@ -258,6 +322,71 @@ fn is_pinned_image(value: &str) -> bool {
         && tag.chars().any(|character| character.is_ascii_digit())
 }
 
+/// Validates either the pinned GGUF identity or the required plain-model asset manifest.
+fn verify_model_identity(
+    model_directory: &std::path::Path,
+    model_file: Option<&str>,
+    format: LocalModelFormat,
+    expected_bytes: u64,
+    expected_sha256: &str,
+) -> Result<(), AgentError> {
+    match format {
+        LocalModelFormat::Gguf => {
+            let model_file = model_file.ok_or_else(|| {
+                AgentError::InvalidRequest(
+                    "local GGUF model file is required for GGUF format".to_owned(),
+                )
+            })?;
+            verify_file_identity(
+                &model_directory.join(model_file),
+                expected_bytes,
+                expected_sha256,
+            )
+        }
+        LocalModelFormat::Plain => verify_plain_model_directory(model_directory),
+    }
+}
+
+/// Verifies the minimum local asset manifest needed to load native safetensors weights.
+fn verify_plain_model_directory(path: &std::path::Path) -> Result<(), AgentError> {
+    let metadata = path.metadata().map_err(|error| {
+        AgentError::Execution(format!(
+            "could not inspect local plain model directory: {error}"
+        ))
+    })?;
+    if !metadata.is_dir() {
+        return Err(AgentError::InvalidRequest(
+            "local plain model path must be a directory".to_owned(),
+        ));
+    }
+    let config = path.join("config.json");
+    if !config.is_file() {
+        return Err(AgentError::InvalidRequest(
+            "local plain model directory must contain config.json".to_owned(),
+        ));
+    }
+    let has_safetensors = fs::read_dir(path)
+        .map_err(|error| {
+            AgentError::Execution(format!(
+                "could not inspect local plain model directory: {error}"
+            ))
+        })?
+        .filter_map(Result::ok)
+        .any(|entry| {
+            entry.file_type().is_ok_and(|file_type| file_type.is_file())
+                && entry
+                    .path()
+                    .extension()
+                    .is_some_and(|extension| extension.eq_ignore_ascii_case("safetensors"))
+        });
+    if !has_safetensors {
+        return Err(AgentError::InvalidRequest(
+            "local plain model directory must contain a safetensors file".to_owned(),
+        ));
+    }
+    Ok(())
+}
+
 /// Streams one file through SHA-256 and validates both pinned identity dimensions.
 fn verify_file_identity(
     path: &std::path::Path,
@@ -299,7 +428,7 @@ fn verify_file_identity(
 mod tests {
     use std::fs;
 
-    use super::{is_pinned_image, verify_file_identity};
+    use super::{is_pinned_image, verify_file_identity, verify_plain_model_directory};
 
     /// Accepts exact digests and versioned tags while rejecting mutable or malformed references.
     #[test]
@@ -340,5 +469,25 @@ mod tests {
             .is_err()
         );
         assert!(verify_file_identity(&path, 3, &"0".repeat(64)).is_err());
+    }
+
+    /// Requires config metadata and at least one safetensors shard for plain mode.
+    #[test]
+    fn plain_model_identity_requires_native_assets() {
+        let directory = tempfile::tempdir().expect("the fixture directory should exist");
+        let error = verify_plain_model_directory(directory.path())
+            .expect_err("plain models need a config manifest");
+        assert!(error.to_string().contains("config.json"));
+
+        fs::write(directory.path().join("config.json"), "{}")
+            .expect("the config fixture should be written");
+        let error = verify_plain_model_directory(directory.path())
+            .expect_err("plain models need at least one safetensors shard");
+        assert!(error.to_string().contains("safetensors"));
+
+        fs::write(directory.path().join("model.safetensors"), b"fixture")
+            .expect("the tensor fixture should be written");
+        verify_plain_model_directory(directory.path())
+            .expect("the minimum plain model manifest should pass");
     }
 }

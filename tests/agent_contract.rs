@@ -1,6 +1,6 @@
 use project_init::agents::{
     ActivityEvent, ActivityHistory, ActivityKind, JudgedResearchBatch, LocalDevice,
-    LocalHttpConfig, LocalHttpProvider, LocalRuntimeConfig, ResearchBatchPlan,
+    LocalHttpConfig, LocalHttpProvider, LocalModelFormat, LocalRuntimeConfig, ResearchBatchPlan,
     decode_codex_jsonl_event,
 };
 use std::path::PathBuf;
@@ -197,11 +197,39 @@ fn local_runtime_arguments_are_hardened_and_model_scoped() {
     assert!(joined.contains("no-new-privileges"));
     assert!(joined.contains("--read-only"));
     assert!(joined.contains("--enable-search"));
+    assert!(joined.contains("--max-seq-len 32768"));
+    assert!(joined.contains("--model-id /models"));
+    assert!(joined.contains("--format gguf"));
     assert!(joined.contains("--cpu"));
     assert!(!joined.contains("--gpus"));
     assert!(!joined.contains("--agent"));
     assert!(!joined.contains("--enable-code-execution"));
     assert!(!joined.contains("--enable-shell"));
+}
+
+/// Builds a plain safetensors runtime without adding GGUF-only file arguments.
+#[test]
+fn plain_runtime_arguments_select_the_tensor_model_directory() {
+    let runtime = LocalRuntimeConfig::new_with_format(
+        PathBuf::from(r"C:\Models\project-init\gemma-4-12b"),
+        None,
+        "ghcr.io/ericlbuehler/mistral.rs:cuda128-sm89-0.9.0",
+        LocalDevice::Cuda,
+        LocalModelFormat::Plain,
+        1234,
+    )
+    .expect("a pinned plain runtime should be accepted");
+    let arguments = runtime
+        .docker_arguments()
+        .into_iter()
+        .map(|value| value.to_string_lossy().into_owned())
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    assert!(arguments.contains("--model-id /models"));
+    assert!(arguments.contains("--format plain"));
+    assert!(!arguments.contains("-f /models/"));
+    assert!(arguments.contains("--gpus all"));
 }
 
 /// Rejects floating images and adds only the explicit GPU capability in CUDA mode.

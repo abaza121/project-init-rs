@@ -1240,6 +1240,7 @@ fn render_content(frame: &mut Frame<'_>, state: &WorkspaceState, area: Rect) {
     if !lines.is_empty() {
         lines.push(Line::from(""));
     }
+    let guidance_line_count = lines.len();
     lines.extend(match state.section {
         WorkspaceSection::Overview => overview_lines(state),
         WorkspaceSection::Questions => question_lines(state),
@@ -1275,15 +1276,33 @@ fn render_content(frame: &mut Frame<'_>, state: &WorkspaceState, area: Rect) {
             .collect(),
     });
     let border = focus_style(state.focus == WorkspaceFocus::Content);
+    let scroll = question_scroll_offset(state, area, guidance_line_count);
     frame.render_widget(
-        Paragraph::new(lines).wrap(Wrap { trim: false }).block(
-            Block::default()
-                .title(format!(" {} ", state.section.title()))
-                .borders(Borders::ALL)
-                .border_style(border),
-        ),
+        Paragraph::new(lines)
+            .scroll((scroll, 0))
+            .wrap(Wrap { trim: false })
+            .block(
+                Block::default()
+                    .title(format!(" {} ", state.section.title()))
+                    .borders(Borders::ALL)
+                    .border_style(border),
+            ),
         area,
     );
+}
+
+/// Offsets the question panel only enough to keep its two-line active row in view.
+fn question_scroll_offset(state: &WorkspaceState, area: Rect, guidance_line_count: usize) -> u16 {
+    if state.section != WorkspaceSection::Questions {
+        return 0;
+    }
+    let Some(selected_question) = state.selected_question else {
+        return 0;
+    };
+    let visible_rows = usize::from(area.height.saturating_sub(2));
+    let active_row_start = guidance_line_count.saturating_add(selected_question.saturating_mul(2));
+    let maximum_start_row = visible_rows.saturating_sub(2);
+    u16::try_from(active_row_start.saturating_sub(maximum_start_row)).unwrap_or(u16::MAX)
 }
 
 /// Builds contextual next-action copy from persisted workflow status without mutating it.
