@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed on 2026-08-30 from the docs-only evaluation of pipeline `v0.3.0` project `1e651ba8-fe0d-479f-8f71-e1dc49741145`. The evaluator rubric and reports are evidence for this plan, not instructions executed by the pipeline. Implementation must begin only after human review of this plan.
+Tasks 1–5 were implemented and locally verified on 2026-08-30. The immutable baseline was reproduced at 59.5/100, all Rust quality checks pass, and the live candidate/five-brief portion of Task 6 is pending explicit authorization to send project briefs and generated context to the external Codex service. The evaluator rubric and reports are evidence for this plan, not instructions executed by the pipeline.
 
 ## Overview
 
@@ -76,15 +76,15 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] The baseline record contains the seven dimension scores, six available deterministic signals, evaluated package identity, brief, pipeline revision, and evaluator mode.
-- [ ] Unavailable metrics remain explicitly unavailable, and the quality gate distinguishes qualitative DRPFS dimensions from deterministic diagnostic metrics.
-- [ ] A reproducible docs-only `evaluate` or paired `compare` command is documented for Borrowed Orbit and for the existing five-case suite.
+- [x] The baseline record contains the seven dimension scores, six available deterministic signals, evaluated package identity, brief, pipeline revision, and evaluator mode.
+- [x] Unavailable metrics remain explicitly unavailable, and the quality gate distinguishes qualitative DRPFS dimensions from deterministic diagnostic metrics.
+- [x] A reproducible docs-only `evaluate` or paired `compare` command is documented for Borrowed Orbit and for the existing five-case suite.
 
 **Verification:**
 
-- [ ] Manual check: every available field from `validation-report.json` appears once in the baseline matrix.
-- [ ] Run from the evaluator repository: `cargo run -- evaluate --brief <brief> --generated <Docs> --output <report-directory>`.
-- [ ] Confirm the baseline rerun reports DRPFS 59.5 and zero broken internal links before using it for comparison.
+- [x] Manual check: every available field from `validation-report.json` appears once in the baseline matrix.
+- [x] Run from the evaluator repository: `cargo run -- evaluate --brief <brief> --generated <Docs> --output <report-directory>`.
+- [x] Confirm the baseline rerun reports DRPFS 59.5 and zero broken internal links before using it for comparison.
 
 **Dependencies:** None.
 
@@ -101,15 +101,15 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] A browser-game fixture produces no VR, headset, or WebXR clarification unless those concepts occur in the brief.
-- [ ] Every user-backed finding used for provenance is an exact non-empty substring of the supplied brief; inferred findings are labeled as inference and require confirmation when consequential.
-- [ ] The prompt explicitly performs a final coverage check for goals, constraints, exclusions, success criteria, named users/platforms, and declared unknowns without merging unrelated clauses.
+- [x] A browser-game fixture produces no VR, headset, or WebXR clarification unless those concepts occur in the brief.
+- [ ] Live analysis confirms every user-backed finding used for provenance is an exact non-empty substring of the supplied brief; inferred findings are labeled as inference and require confirmation when consequential.
+- [x] The prompt explicitly performs a final coverage check for goals, constraints, exclusions, success criteria, named users/platforms, and declared unknowns without merging unrelated clauses.
 
 **Verification:**
 
-- [ ] Tests pass: `cargo test analysis_prompt`.
-- [ ] Tests pass: `cargo test clarification_copy`.
-- [ ] Existing injection-delimiting and structured-analysis tests remain green.
+- [x] Tests pass: `cargo test analysis_prompt`.
+- [x] Tests pass: `cargo test clarification_copy`.
+- [x] Existing injection-delimiting and structured-analysis tests remain green.
 
 **Dependencies:** Task 1.
 
@@ -122,9 +122,9 @@ Evaluator-backed quality gate
 
 ## Checkpoint: Source fidelity
 
-- [ ] Baseline and targets are reviewable before behavioral changes continue.
-- [ ] The Borrowed Orbit brief cannot produce the malformed VR question.
-- [ ] Prompt-injection delimiters, no-tool analysis behavior, structured-output bounds, and existing analyzer schemas remain unchanged.
+- [x] Baseline and targets are reviewable before behavioral changes continue.
+- [x] The Borrowed Orbit brief cannot produce the malformed VR question.
+- [x] Prompt-injection delimiters, no-tool analysis behavior, structured-output bounds, and existing analyzer schemas remain unchanged.
 
 ## Task 3: Preserve authority and evidence boundaries in research prompts
 
@@ -132,15 +132,15 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] Research notes label each non-sourced recommendation or design inference and never present it as a user requirement or settled project fact.
-- [ ] Every evidence claim has a direct HTTPS source that supports that exact claim, while preference questions that cannot be resolved by research remain open or return a narrowly bounded recommendation.
-- [ ] The judge rejects bundled, stale, internally inconsistent, unsupported, or authority-crossing answers instead of polishing them into adopted certainty.
+- [ ] Live research notes label each non-sourced recommendation or design inference and never present it as a user requirement or settled project fact.
+- [ ] Live research confirms every evidence claim has a direct HTTPS source that supports that exact claim, while preference questions that cannot be resolved by research remain open or return a narrowly bounded recommendation.
+- [ ] The live judge rejects bundled, stale, internally inconsistent, unsupported, or authority-crossing answers instead of polishing them into adopted certainty.
 
 **Verification:**
 
-- [ ] Tests pass: `cargo test research_prompt`.
-- [ ] Tests pass: `cargo test research_plan_prompt`.
-- [ ] Tests pass: `cargo test research_judgment_prompt`.
+- [x] Tests pass: `cargo test research_prompt`.
+- [x] Tests pass: `cargo test research_plan_prompt`.
+- [x] Tests pass: `cargo test research_judgment_prompt`.
 
 **Dependencies:** Task 2.
 
@@ -156,15 +156,15 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] Every material brief clause maps to at least one identified requirement, and every implementable requirement contains an explicitly named objective pass/fail acceptance criterion plus an exact test or verification reference.
-- [ ] Every consequential decision is atomic and declares status, provenance type, exact source IDs, and any relevant evidence; every important requirement links to at least one semantically overlapping decision or constraint without ID ranges or unrelated filler links.
-- [ ] Every research claim has one canonical evidence record and either an explicit decision relationship or no place in the package; assumptions and unresolved questions remain visibly non-authoritative across all artifacts.
+- [ ] A live package maps every material brief clause to at least one identified requirement, and every implementable requirement contains an explicitly named objective pass/fail acceptance criterion plus an exact test or verification reference.
+- [ ] In a live package, every consequential decision is atomic and declares status, provenance type, exact source IDs, and any relevant evidence; every important requirement links to at least one semantically overlapping decision or constraint without ID ranges or unrelated filler links.
+- [ ] In a live package, every research claim has one canonical evidence record and either an explicit decision relationship or no place in the package; assumptions and unresolved questions remain visibly non-authoritative across all artifacts.
 
 **Verification:**
 
-- [ ] Tests pass: `cargo test documentation_prompt`.
-- [ ] A generated fixture contains no grouped trace IDs such as `REQ-001/006` or evidence ranges used as a substitute for exact edges.
-- [ ] Manual package check: README, log, and validation report link to canonical records instead of duplicating evidence claims.
+- [x] Tests pass: `cargo test documentation_prompt`.
+- [ ] A live generated fixture contains no grouped trace IDs such as `REQ-001/006` or evidence ranges used as a substitute for exact edges.
+- [ ] Manual live-package check: README, log, and validation report link to canonical records instead of duplicating evidence claims.
 
 **Dependencies:** Tasks 2 and 3.
 
@@ -180,15 +180,15 @@ Evaluator-backed quality gate
 
 **Acceptance criteria:**
 
-- [ ] Generation and repair enforce the same definitions of explicit requirement coverage, acceptance criteria, valid provenance, meaningful traceability, and decision-linked evidence.
-- [ ] The self-audit detects uncovered important requirements, missing acceptance criteria, unlabeled consequential assumptions, unsupported decisions, unlinked research, and invalid trace subjects before the staged package is accepted.
-- [ ] Repair preserves manual overrides and unrelated content while removing invalid links or downgrading unsupported decisions to assumptions/open questions.
+- [x] Generation and repair enforce the same definitions of explicit requirement coverage, acceptance criteria, valid provenance, meaningful traceability, and decision-linked evidence.
+- [ ] A live self-audit detects uncovered important requirements, missing acceptance criteria, unlabeled consequential assumptions, unsupported decisions, unlinked research, and invalid trace subjects before the staged package is accepted.
+- [ ] A live repair preserves manual overrides and unrelated content while removing invalid links or downgrading unsupported decisions to assumptions/open questions.
 
 **Verification:**
 
-- [ ] Tests pass: `cargo test repair_prompt`.
-- [ ] Tests prove generation and repair include the same quality-contract marker exactly once.
-- [ ] Existing manual-override, path-presence, untrusted-context, and repair-bound tests remain green.
+- [x] Tests pass: `cargo test repair_prompt`.
+- [x] Tests prove generation and repair include the same quality-contract marker exactly once.
+- [x] Existing manual-override, path-presence, untrusted-context, and repair-bound tests remain green.
 
 **Dependencies:** Task 4.
 
@@ -200,9 +200,9 @@ Evaluator-backed quality gate
 
 ## Checkpoint: Prompt system complete
 
-- [ ] Analysis, research, generation, and repair prompts use compatible authority vocabulary.
-- [ ] No structured schema, database migration, public API, required artifact path, or external-write permission changed.
-- [ ] All new and changed Rust functions, including tests, satisfy the repository documentation-comment policy.
+- [x] Analysis, research, generation, and repair prompts use compatible authority vocabulary.
+- [x] No structured schema, database migration, public API, required artifact path, or external-write permission changed.
+- [x] All new and changed Rust functions, including tests, satisfy the repository documentation-comment policy.
 
 ## Task 6: Run paired evaluation and close the regression loop
 
@@ -217,8 +217,8 @@ Evaluator-backed quality gate
 **Verification:**
 
 - [ ] Evaluator comparison succeeds: `cargo run -- compare --brief <brief> --baseline <baseline-Docs> --candidate <candidate-Docs> --output <comparison-directory>`.
-- [ ] Project checks pass: `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
-- [ ] Fresh diff review confirms prompt safety, Rust comments, changelog placement under `Unreleased`, and no overwrite of pre-existing worktree changes.
+- [x] Project checks pass: `cargo fmt --check`, `cargo check`, `cargo test`, and `cargo clippy --all-targets --all-features -- -D warnings`.
+- [x] Fresh diff review confirms prompt safety, Rust comments, changelog placement under `Unreleased`, and no overwrite of pre-existing worktree changes.
 
 **Dependencies:** Tasks 1-5.
 
@@ -232,7 +232,7 @@ Evaluator-backed quality gate
 
 ## Checkpoint: Ready for review
 
-- [ ] All targeted and full tests pass.
+- [x] All targeted and full local tests pass.
 - [ ] The evaluator reports and package paths are preserved for independent inspection.
 - [ ] Score gains come from semantic coverage and provenance, not missing artifacts, suppressed unknowns, duplicated citations, or resource differences.
 - [ ] Human review approves the measured result before release or further prompt expansion.
@@ -254,4 +254,3 @@ Evaluator-backed quality gate
 
 - Should DRPFS 80 be the release gate, or should the first implementation cycle require the stricter dimension and deterministic thresholds even if overall DRPFS already exceeds 80?
 - Should controlled live evaluation run once per brief or three times per brief to estimate generation variance? Three runs provide better confidence but materially increase time and model usage.
-

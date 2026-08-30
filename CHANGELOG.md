@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improve project analysis and documentation prompts to preserve literal brief provenance, separate research from stakeholder authority, require semantic traceability and explicit acceptance criteria, and prevent generic platform unknowns from becoming VR-specific questions.
+
 ## [0.3.0] - 2026-08-30T00:43:51+01:00
 
 ### Added

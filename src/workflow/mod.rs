@@ -991,8 +991,8 @@ fn clarification_copy(statement: &str) -> (String, String) {
     let lower = statement.to_ascii_lowercase();
     if lower.contains("platform") {
         return (
-            "Which VR platform should be the primary target?".to_owned(),
-            "Platform choice changes SDKs, input APIs, performance budgets, and distribution."
+            "Which platform should be the primary target for this project?".to_owned(),
+            "Platform choice can change implementation constraints, performance budgets, testing, and distribution."
                 .to_owned(),
         );
     }
@@ -1066,5 +1066,19 @@ pub fn validate_snapshot(snapshot: &ProjectSnapshot, output: &Path) -> Validatio
     ValidationReport {
         passed: findings.is_empty(),
         findings,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    /// Keeps platform clarification scoped to the supplied project domain.
+    #[test]
+    fn clarification_copy_does_not_invent_vr_for_a_browser_project() {
+        let (prompt, rationale) =
+            super::clarification_copy("The primary target browser platform is not specified.");
+
+        assert!(prompt.contains("platform"));
+        assert!(!prompt.to_ascii_lowercase().contains("vr"));
+        assert!(!rationale.to_ascii_lowercase().contains("sdk"));
     }
 }
