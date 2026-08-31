@@ -59,28 +59,41 @@ fn invalid_agent_execution_cannot_mutate_authoritative_state() {
     );
 }
 
-/// Rejects duplicate model findings before stable identifiers or project state are allocated.
+/// Retains the first duplicate model finding and persists the remaining unique analysis.
 #[test]
-fn duplicate_agent_findings_cannot_mutate_authoritative_state() {
+fn duplicate_agent_findings_are_deduplicated_before_persistence() {
     let store = SqliteStore::open_in_memory().expect("the database should open");
     let mut service = ProjectService::new(store);
     let execution = AgentExecution::new(
-        r#"{"findings":[{"kind":"requirement","statement":"The tool runs locally.","impact":"medium","source_type":"user_brief"},{"kind":"requirement","statement":"the tool runs locally.","impact":"high","source_type":"agent_inference"}]}"#,
+        r#"{"findings":[{"kind":"requirement","statement":"The tool runs locally.","impact":"medium","source_type":"user_brief"},{"kind":"requirement","statement":"the tool runs locally.","impact":"high","source_type":"agent_inference"},{"kind":"confirmed_fact","statement":"The tool creates a project package.","impact":"low","source_type":"user_brief"}]}"#,
         Vec::new(),
     );
 
-    let result = service.initialize_from_agent_execution(
-        "Duplicate response",
-        "The tool runs locally.",
-        execution,
-    );
+    let project = service
+        .initialize_from_agent_execution("Duplicate response", "The tool runs locally.", execution)
+        .expect("duplicate findings should not stop project initialization");
+    let snapshot = service
+        .inspect_project(project.id())
+        .expect("the deduplicated project should be inspectable");
 
-    assert!(result.is_err());
     assert_eq!(
         service
             .project_count()
             .expect("projects should remain countable"),
-        0
+        1
+    );
+    assert_eq!(snapshot.findings.len(), 2);
+    let retained = snapshot
+        .findings
+        .iter()
+        .find(|finding| finding.statement() == "The tool runs locally.")
+        .expect("the first duplicate should be retained");
+    assert_eq!(retained.impact(), Impact::Medium);
+    assert!(
+        snapshot
+            .findings
+            .iter()
+            .any(|finding| finding.statement() == "The tool creates a project package.")
     );
 }
 

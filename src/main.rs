@@ -24,9 +24,7 @@ use project_init::workflow::{
 };
 use tokio::sync::{mpsc, oneshot};
 
-const ANALYSIS_TIMEOUT: Duration = Duration::from_secs(5 * 60);
-const LOCAL_INACTIVITY_TIMEOUT: Duration = Duration::from_secs(60);
-const LOCAL_HARD_TIMEOUT: Duration = Duration::from_secs(20 * 60);
+const DEFAULT_PROVIDER_TIMEOUT: Duration = Duration::from_secs(20 * 60);
 const ACTIVITY_HISTORY_CAPACITY: usize = 200;
 const ACTIVITY_CHANNEL_CAPACITY: usize = 256;
 const DEFAULT_LOCAL_MODEL_FILE: &str = "gemma-4-12b-it-qat-q4_0.gguf";
@@ -66,8 +64,8 @@ struct Cli {
     /// Overrides the Docker executable used to launch the managed runtime.
     #[arg(long, global = true)]
     local_docker_bin: Option<OsString>,
-    /// Seconds allowed without local inference activity (1-600; defaults to 60).
-    #[arg(long, global = true, value_parser = clap::value_parser!(u64).range(1..=600))]
+    /// Seconds allowed without local inference activity (1-1200; defaults to 1200).
+    #[arg(long, global = true, value_parser = clap::value_parser!(u64).range(1..=1200))]
     local_inactivity_timeout_secs: Option<u64>,
     /// Enable configured Codex skills for this invocation.
     #[arg(long, global = true, conflicts_with = "no_skills")]
@@ -159,8 +157,8 @@ impl Cli {
                     "default",
                     self.local_inactivity_timeout_secs
                         .map(Duration::from_secs)
-                        .unwrap_or(LOCAL_INACTIVITY_TIMEOUT),
-                    LOCAL_HARD_TIMEOUT,
+                        .unwrap_or(DEFAULT_PROVIDER_TIMEOUT),
+                    DEFAULT_PROVIDER_TIMEOUT,
                     ACTIVITY_HISTORY_CAPACITY,
                 )?;
                 let model_file = match self.local_format {
@@ -219,7 +217,7 @@ impl ProviderSelection {
                     CodexCliClient::new(CodexCliConfig {
                         executable,
                         working_directory: working_directory.to_path_buf(),
-                        timeout: ANALYSIS_TIMEOUT,
+                        timeout: DEFAULT_PROVIDER_TIMEOUT,
                         history_capacity: ACTIVITY_HISTORY_CAPACITY,
                     })
                     .with_skills_disabled(*disable_skills),
@@ -231,7 +229,7 @@ impl ProviderSelection {
                     OpenCodeCliConfig {
                         executable,
                         working_directory: working_directory.to_path_buf(),
-                        timeout: ANALYSIS_TIMEOUT,
+                        timeout: DEFAULT_PROVIDER_TIMEOUT,
                         history_capacity: ACTIVITY_HISTORY_CAPACITY,
                     },
                 )))
@@ -772,7 +770,7 @@ fn workspace_runtime_config(
     let config = project_init::tui::WorkspaceRuntimeConfig::new(
         data_dir,
         std::env::var_os("CODEX_BIN"),
-        ANALYSIS_TIMEOUT,
+        DEFAULT_PROVIDER_TIMEOUT,
         ACTIVITY_HISTORY_CAPACITY,
         ACTIVITY_CHANNEL_CAPACITY,
     )
@@ -1110,7 +1108,7 @@ mod tests {
     /// Propagates inactivity settings while retaining the default twenty-minute hard limit.
     #[test]
     fn local_inactivity_timeout_reaches_provider_configuration() {
-        for seconds in [None, Some("300"), Some("600")] {
+        for seconds in [None, Some("1"), Some("300"), Some("600"), Some("1200")] {
             let mut arguments = vec![
                 "project-init",
                 "--provider",
@@ -1133,16 +1131,16 @@ mod tests {
             };
             assert_eq!(
                 settings.http.inactivity_timeout().as_secs(),
-                seconds.unwrap_or("60").parse::<u64>().unwrap()
+                seconds.unwrap_or("1200").parse::<u64>().unwrap()
             );
-            assert_eq!(settings.http.hard_timeout(), super::LOCAL_HARD_TIMEOUT);
+            assert_eq!(settings.http.hard_timeout().as_secs(), 1200);
         }
     }
 
     /// Rejects zero, excessive, and non-local timeout overrides before starting provider work.
     #[test]
     fn local_inactivity_timeout_rejects_invalid_or_non_local_options() {
-        for seconds in ["0", "601", "-1"] {
+        for seconds in ["0", "1201", "-1"] {
             assert!(
                 Cli::try_parse_from([
                     "project-init",

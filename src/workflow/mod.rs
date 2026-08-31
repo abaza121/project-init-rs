@@ -113,7 +113,7 @@ impl AskQuestionRequest {
 }
 
 impl StructuredAnalysis {
-    /// Parses JSON and rejects unsafe, excessive, or duplicate findings before persistence begins.
+    /// Parses JSON, retains the first of matching findings, and rejects unsafe or excessive input.
     pub fn from_json(json: &str) -> Result<Self, WorkflowError> {
         let parsed: Self = serde_json::from_str(json)
             .map_err(|error| WorkflowError::InvalidStructuredAnalysis(error.to_string()))?;
@@ -128,7 +128,8 @@ impl StructuredAnalysis {
             )));
         }
         let mut identities = HashSet::with_capacity(parsed.findings.len());
-        for finding in &parsed.findings {
+        let mut findings = Vec::with_capacity(parsed.findings.len());
+        for finding in parsed.findings {
             let statement = finding.statement.trim();
             if statement.is_empty() {
                 return Err(WorkflowError::InvalidStructuredAnalysis(
@@ -141,13 +142,11 @@ impl StructuredAnalysis {
                 )));
             }
             let identity = (finding.kind.as_db_str(), statement.to_lowercase());
-            if !identities.insert(identity) {
-                return Err(WorkflowError::InvalidStructuredAnalysis(
-                    "duplicate findings are not allowed".to_owned(),
-                ));
+            if identities.insert(identity) {
+                findings.push(finding);
             }
         }
-        Ok(parsed)
+        Ok(Self { findings })
     }
 }
 

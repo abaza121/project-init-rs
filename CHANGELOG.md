@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Standardize Codex, OpenCode, and local provider operation timeout defaults at twenty minutes, including startup, analysis, and inactivity windows; retain explicit local inactivity overrides with an expanded 1–1200 second range.
+- Migrate the OpenCode provider from one-shot `run --format json` subprocess calls to a managed loopback `opencode serve` session API, including native JSON Schema requests, scoped directory routing, bounded SSE activity, and shared server reuse across cloned clients.
+
+### Fixed
+
+- Prevent analysis output from treating `agent_inference` as a finding `kind`; the prompt now explicitly assigns it to `source_type`, while local validation remains authoritative.
+- Continue project analysis when a provider repeats a finding by retaining the first matching kind and statement.
+
 ## [0.4.0] - 2026-08-31T02:18:11+01:00
 
 ### Added

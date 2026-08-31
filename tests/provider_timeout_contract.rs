@@ -49,12 +49,7 @@ fn provider(codex: bool, mode: &str, response: &str) -> (tempfile::TempDir, Conf
     let executable = fixture_executable();
     let directory = tempfile::tempdir().unwrap();
     std::fs::write(directory.path().join("mode"), mode).unwrap();
-    let wire_response = if codex {
-        response.to_owned()
-    } else {
-        serde_json::json!({"type":"text","part":{"type":"text","text":response,"time":{"end":1}}})
-            .to_string()
-    };
+    let wire_response = response.to_owned();
     std::fs::write(directory.path().join("response"), wire_response).unwrap();
     let client = if codex {
         ConfiguredProvider::Codex(

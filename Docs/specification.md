@@ -41,7 +41,7 @@ The primary user is a developer or product creator who has an idea but not yet a
 
 ## Policy decisions
 
-- Codex CLI is the default initial-brief analyzer. It runs ephemerally with a read-only sandbox, structured output, bounded activity, immediate cancellation, and a five-minute timeout. The conservative deterministic analyzer remains available through `--offline`; failures never trigger it automatically.
+- Codex CLI is the default initial-brief analyzer. It runs ephemerally with a read-only sandbox, structured output, bounded activity, immediate cancellation, and a twenty-minute timeout. The conservative deterministic analyzer remains available through `--offline`; failures never trigger it automatically.
 - Low-priority questions remain visible but do not interrupt the user until they meet the configured threshold.
 - `new --brief` launches live analysis and the durable workbench only when standard input/output are terminals; non-interactive use completes the same Codex and persistence flow without terminal rendering.
 - Workbench plain text answers only the selected open question in the Questions section. `/answer` targets explicitly, `/ask` opens structured capture with visible conservative defaults, and `/threshold` persists a value from 1 through 125.

@@ -141,7 +141,7 @@ The `tensor` value is accepted as an alias for `plain`. The selected mistral.rs 
 - Research and automatic-answer workers use mistral.rs built-in web search, which uses DuckDuckGo. Direct HTTPS evidence must still pass Project Init's validators.
 - Documentation uses only `list_expected_documents`, `read_document`, and `write_document`. Tool path arguments are exact enums derived from the expected package.
 - Web research requires network access. Local analysis can remain useful without it, but research must fail closed rather than fabricate citations.
-- Valid streaming model events reset an inactivity timer that defaults to 60 seconds. Use the global `--local-inactivity-timeout-secs 300` option for slower models; accepted values are 1–600 seconds. This also controls waiting for response headers and gaps between network reads; heartbeat-only traffic does not reset the valid-event timer.
+- Valid streaming model events reset an inactivity timer that defaults to twenty minutes (1200 seconds). Use the global `--local-inactivity-timeout-secs 300` option for a shorter window; accepted values are 1–1200 seconds. This also controls waiting for response headers and gaps between network reads; heartbeat-only traffic does not reset the valid-event timer.
 - Research and automatic-answer planning, workers, and judgment have no total inference deadline while valid activity continues. Runtime verification and startup still have a twenty-minute hard limit. Initial analysis and documentation retain their twenty-minute total limit, including startup and tool rounds. Cancellation, response-size limits, and tool-round bounds remain enforced.
 - There is no automatic Codex/local/offline fallback. Select the intended authority explicitly.
 
@@ -168,7 +168,7 @@ The repository, project data directory, generated staging directory, and user ho
 - `Could not access ... embeddinggemma-300m ... HTTP 401`: run the interactive Docker `login` command above to save a Hugging Face token in `project-init-mistralrs-cache`.
 - `Could not access ... embeddinggemma-300m ... HTTP 403`: accept the EmbeddingGemma repository terms with the same Hugging Face account that owns the token, then retry.
 - `Device cuda[0] can fit 0 layers` while loading the embedding model: the primary model has consumed available VRAM, so the optional search embedding model runs on CPU. This warning is expected on the verified 12 GB profile and does not prevent local analysis.
-- `structured analysis is invalid: duplicate findings are not allowed`: use the recommended instruction-tuned Qwen profile instead of the reasoning-default `Qwen/Qwen3-4B`, then retry from a fresh data directory.
+- Repeated analysis findings: Project Init retains the first matching kind and case-insensitive statement, then continues with the remaining unique findings.
 - `Docker launch failed ... No such image`: pull the exact versioned CPU/CUDA image used by `--local-image`.
 - CUDA startup failure: confirm Docker Desktop GPU support, the NVIDIA driver, WSL2 visibility, compute capability, and the selected image lane.
 - A stopped or stale named container can be inspected with `docker logs project-init-mistralrs-1234`. Remove it deliberately before retrying; Project Init will not blindly restart an unverified old container configuration.
