@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-31T02:18:11+01:00
+
 ### Added
 
 - Add `--local-inactivity-timeout-secs` (1–600, default 60) to accommodate slower local models without disabling silence detection.
@@ -16,12 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increase the default local startup, initial analysis, and documentation hard timeout from ten to twenty minutes; retain the 60-second inactivity default and activity-based research/auto-answer behavior.
 - Improve project analysis and documentation prompts to preserve literal brief provenance, separate research from stakeholder authority, generate unique evaluator-legible requirement, acceptance, decision, assumption, and evidence records, require concrete implementation structure, and prevent generic platform unknowns from becoming VR-specific questions.
 
 ### Fixed
 
 - Make Overview, Findings, Requirements, and Activity scrollable with Up/Down, Page Up/Page Down, and Home/End, preserving independent positions through section changes and supporting wrapped text and viewport changes; expose the complete Overview timeline instead of only its latest twelve entries.
-- Allow local research and auto-answer planning, workers, and judgment to continue beyond ten minutes while valid model activity arrives, preserving cancellation, bounded startup, and existing analysis/documentation limits.
+- Allow local research and auto-answer planning, workers, and judgment to run without a total inference deadline while valid model activity arrives, preserving cancellation, bounded startup, and separate analysis/documentation limits.
 - Keep Codex and OpenCode research and auto-answer planning, workers, and judgment running while provider output remains active, retaining cancellation and five-minute inactivity limits instead of cutting off productive work after five minutes.
 - Keep the selected clarification question visible while navigating a queue that exceeds the workbench viewport.
 - Prevent auto-answer from persisting `FAIL` responses by requiring evidence-informed provisional decisions and using validation feedback to correct worker and judge retries.

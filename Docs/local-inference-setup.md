@@ -115,7 +115,7 @@ CUDA example after selecting the correct image:
 cargo run -- --data-dir .project-init --provider local --local-model-dir C:\Models\project-init\gemma-4-12b --local-image ghcr.io/ericlbuehler/mistral.rs:cuda128-sm89-0.9.0 --local-device cuda new --brief baseline/project-prompt.txt --name "Local CUDA smoke"
 ```
 
-The provider first checks `http://127.0.0.1:1234/health` and `http://127.0.0.1:1234/v1/models`. If the expected `default` model is not ready, it verifies the model file, starts `project-init-mistralrs-1234`, and polls until ready or the ten-minute absolute limit expires. The named container remains available for later commands.
+The provider first checks `http://127.0.0.1:1234/health` and `http://127.0.0.1:1234/v1/models`. If the expected `default` model is not ready, it verifies the model file, starts `project-init-mistralrs-1234`, and polls until ready or the twenty-minute absolute limit expires. The named container remains available for later commands.
 
 The same global settings work with `run`, `step`, and `open`. For example:
 
@@ -142,7 +142,7 @@ The `tensor` value is accepted as an alias for `plain`. The selected mistral.rs 
 - Documentation uses only `list_expected_documents`, `read_document`, and `write_document`. Tool path arguments are exact enums derived from the expected package.
 - Web research requires network access. Local analysis can remain useful without it, but research must fail closed rather than fabricate citations.
 - Valid streaming model events reset an inactivity timer that defaults to 60 seconds. Use the global `--local-inactivity-timeout-secs 300` option for slower models; accepted values are 1–600 seconds. This also controls waiting for response headers and gaps between network reads; heartbeat-only traffic does not reset the valid-event timer.
-- Research and automatic-answer planning, workers, and judgment have no total inference deadline while valid activity continues. Runtime verification and startup still have a ten-minute hard limit. Initial analysis and documentation retain their ten-minute total limit, including startup and tool rounds. Cancellation, response-size limits, and tool-round bounds remain enforced.
+- Research and automatic-answer planning, workers, and judgment have no total inference deadline while valid activity continues. Runtime verification and startup still have a twenty-minute hard limit. Initial analysis and documentation retain their twenty-minute total limit, including startup and tool rounds. Cancellation, response-size limits, and tool-round bounds remain enforced.
 - There is no automatic Codex/local/offline fallback. Select the intended authority explicitly.
 
 ## Container security boundary

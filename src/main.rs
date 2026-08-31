@@ -26,7 +26,7 @@ use tokio::sync::{mpsc, oneshot};
 
 const ANALYSIS_TIMEOUT: Duration = Duration::from_secs(5 * 60);
 const LOCAL_INACTIVITY_TIMEOUT: Duration = Duration::from_secs(60);
-const LOCAL_HARD_TIMEOUT: Duration = Duration::from_secs(10 * 60);
+const LOCAL_HARD_TIMEOUT: Duration = Duration::from_secs(20 * 60);
 const ACTIVITY_HISTORY_CAPACITY: usize = 200;
 const ACTIVITY_CHANNEL_CAPACITY: usize = 256;
 const DEFAULT_LOCAL_MODEL_FILE: &str = "gemma-4-12b-it-qat-q4_0.gguf";
@@ -1107,7 +1107,7 @@ mod tests {
         assert_eq!(cli.provider_kind(), ProviderKind::Local);
     }
 
-    /// Propagates default and custom inactivity windows to the reusable local provider settings.
+    /// Propagates inactivity settings while retaining the default twenty-minute hard limit.
     #[test]
     fn local_inactivity_timeout_reaches_provider_configuration() {
         for seconds in [None, Some("300"), Some("600")] {
