@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-08-31T12:32:21+01:00
+
+### Fixed
+
+- Allow Codex analysis and research from extracted builds and fresh data directories by skipping the Git repository check from the first invocation, while preserving filesystem sandboxing and user configuration.
+- Include bounded, sanitized Codex diagnostics in structured-task failure messages instead of reporting only the process exit code.
+
 ## [0.5.0] - 2026-08-31T12:15:57+01:00
 
 ### Changed

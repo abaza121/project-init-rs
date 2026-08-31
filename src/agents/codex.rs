@@ -28,6 +28,7 @@ use super::{
 
 const MAX_JSONL_LINE_BYTES: usize = 64 * 1024;
 const MAX_FINAL_RESPONSE_BYTES: u64 = 1024 * 1024;
+const MAX_DIAGNOSTIC_BYTES: usize = 4 * 1024;
 /// Resolves the native Codex CLI program used by child processes on the current host.
 pub fn resolve_codex_executable(configured: Option<OsString>) -> Result<PathBuf, AgentError> {
     if let Some(configured) = configured {
@@ -261,7 +262,7 @@ impl CodexCliClient {
         self
     }
 
-    /// Builds direct process arguments without including the untrusted project brief.
+    /// Allows structured tasks outside Git while keeping the brief in stdin and the sandbox read-only.
     fn command_arguments(
         &self,
         schema_path: &Path,
@@ -282,6 +283,7 @@ impl CodexCliClient {
             OsString::from("--ephemeral"),
             OsString::from("--sandbox"),
             OsString::from("read-only"),
+            OsString::from("--skip-git-repo-check"),
             OsString::from("--color"),
             OsString::from("never"),
             OsString::from("-C"),
@@ -390,7 +392,7 @@ impl CodexCliClient {
             initial,
             Some(progress_sender.clone()),
         ));
-        let stderr_task = tokio::spawn(drain_reader(stderr, Some(progress_sender)));
+        let stderr_task = tokio::spawn(read_diagnostics(stderr, Some(progress_sender)));
         let wait = match timeout_policy {
             TimeoutPolicy::Hard => tokio::select! {
                 status = child.wait() => ProcessOutcome::Exited(status),
@@ -437,13 +439,16 @@ impl CodexCliClient {
         let mut read = activity_task.await.map_err(|error| {
             AgentError::Execution(format!("activity reader stopped: {error}"))
         })??;
-        stderr_task.await.map_err(|error| {
+        let diagnostics = stderr_task.await.map_err(|error| {
             AgentError::Execution(format!("diagnostic reader stopped: {error}"))
         })??;
         if !status.success() {
-            return Err(AgentError::Execution(format!(
-                "Codex exited unsuccessfully with {status}"
-            )));
+            let mut message = format!("Codex exited unsuccessfully with {status}");
+            if !diagnostics.is_empty() {
+                message.push_str(": ");
+                message.push_str(&diagnostics);
+            }
+            return Err(AgentError::Execution(message));
         }
         let response = read_final_response(&output_path)?;
         let final_event = ActivityEvent::now(
@@ -781,9 +786,9 @@ impl AutoAnswerClient for CodexCliClient {
 }
 
 /// Stops pipe readers after a cancelled or failed child wait so no task remains detached.
-async fn stop_reader_tasks(
+async fn stop_reader_tasks<T>(
     activity_task: tokio::task::JoinHandle<Result<ActivityRead, AgentError>>,
-    stderr_task: tokio::task::JoinHandle<Result<(), AgentError>>,
+    stderr_task: tokio::task::JoinHandle<Result<T, AgentError>>,
 ) {
     activity_task.abort();
     stderr_task.abort();
@@ -980,19 +985,24 @@ fn push_activity_warning(
     history.push(warning);
 }
 
-/// Drains provider diagnostics so a full stderr pipe cannot deadlock the child.
-async fn drain_reader(
+/// Retains a bounded sanitized stderr prefix while draining all output and preserving liveness.
+async fn read_diagnostics(
     mut reader: impl AsyncRead + Unpin,
     progress: Option<mpsc::Sender<()>>,
-) -> Result<(), AgentError> {
+) -> Result<String, AgentError> {
+    let mut diagnostics = Vec::with_capacity(MAX_DIAGNOSTIC_BYTES);
     let mut buffer = [0_u8; 4_096];
     loop {
         let count = reader.read(&mut buffer).await.map_err(|error| {
             AgentError::Execution(format!("could not read diagnostics: {error}"))
         })?;
         if count == 0 {
-            return Ok(());
+            return Ok(super::sanitize_terminal_text(&String::from_utf8_lossy(
+                &diagnostics,
+            )));
         }
+        let retained = count.min(MAX_DIAGNOSTIC_BYTES - diagnostics.len());
+        diagnostics.extend_from_slice(&buffer[..retained]);
         if let Some(progress) = &progress {
             let _ = progress.try_send(());
         }
@@ -1325,6 +1335,7 @@ mod tests {
                 "--ephemeral",
                 "--sandbox",
                 "read-only",
+                "--skip-git-repo-check",
                 "--color",
                 "never",
                 "-C",

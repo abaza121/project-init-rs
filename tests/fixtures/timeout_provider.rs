@@ -15,6 +15,25 @@ fn main() {
         std::io::stdin().read_to_string(&mut prompt).unwrap();
     }
     let mode = std::fs::read_to_string("mode").unwrap();
+    if codex && mode == "codex-startup" {
+        if !args.iter().any(|arg| arg == "--skip-git-repo-check") {
+            eprintln!("Not inside a trusted directory and --skip-git-repo-check was not specified.");
+            std::process::exit(1);
+        }
+        assert!(args.windows(2).any(|pair| pair == ["--sandbox", "read-only"]));
+        assert!(args.iter().any(|arg| arg == "--ephemeral"));
+        let output = args
+            .windows(2)
+            .find(|pair| pair[0] == "--output-last-message")
+            .unwrap();
+        std::fs::copy("response", &output[1]).unwrap();
+        return;
+    }
+    if codex && mode == "codex-failure" {
+        let diagnostics = std::fs::read("response").unwrap();
+        std::io::stderr().write_all(&diagnostics).unwrap();
+        std::process::exit(1);
+    }
     for _ in 0..12 {
         match mode.as_str() {
             "stdout" => {

@@ -90,6 +90,78 @@ fn plan_request() -> ResearchPlanRequest {
     .unwrap()
 }
 
+/// Starts initial analysis and later planning in fresh program directories without a Git checkout.
+#[tokio::test]
+async fn codex_starts_without_a_git_repository_on_the_first_invocation() {
+    let (directory, client) = provider(true, "codex-startup", r#"{"findings":[]}"#);
+    assert!(
+        !directory
+            .path()
+            .ancestors()
+            .any(|path| path.join(".git").exists())
+    );
+    let (activity, _receiver) = mpsc::channel(4);
+    let result = client
+        .analyze(
+            AnalysisRequest::new("Test", "Build a tool.").unwrap(),
+            activity,
+            CancellationToken::new(),
+        )
+        .await;
+    assert!(result.is_ok(), "first analysis failed: {result:?}");
+
+    std::fs::write(
+        directory.path().join("response"),
+        r#"{"question_ids":["q1"]}"#,
+    )
+    .unwrap();
+    let (activity, _receiver) = mpsc::channel(4);
+    let plan = client
+        .plan(plan_request(), activity, CancellationToken::new())
+        .await;
+    assert!(plan.is_ok(), "planning failed: {plan:?}");
+    assert!(!directory.path().join(".git").exists());
+}
+
+/// Retains useful failure details without passing terminal controls or unbounded stderr to callers.
+#[tokio::test]
+async fn codex_failures_report_bounded_sanitized_diagnostics() {
+    let detail = "Codex startup failed: unavailable configuration café.";
+    for diagnostics in [
+        format!("\u{1b}[31m{detail}\u{1b}[0m\r\n"),
+        format!("{detail}\n{}", "x".repeat(128 * 1024)),
+    ] {
+        let (_directory, client) = provider(true, "codex-failure", &diagnostics);
+        let (activity, _receiver) = mpsc::channel(1);
+        let error = client
+            .plan(plan_request(), activity, CancellationToken::new())
+            .await
+            .expect_err("the child exits unsuccessfully");
+        let message = error.to_string();
+        assert!(message.contains("Codex exited unsuccessfully"), "{message}");
+        assert!(message.contains(detail), "{message}");
+        assert!(!message.chars().any(char::is_control), "{message:?}");
+        assert!(
+            message.chars().count() < 650,
+            "diagnostics must stay bounded"
+        );
+    }
+}
+
+/// Keeps the original status-only error when a failing Codex process has no readable diagnostics.
+#[tokio::test]
+async fn codex_failures_without_diagnostics_keep_the_exit_status() {
+    let (_directory, client) = provider(true, "codex-failure", "\r\n\u{0}");
+    let (activity, _receiver) = mpsc::channel(1);
+    let error = client
+        .plan(plan_request(), activity, CancellationToken::new())
+        .await
+        .unwrap_err();
+    let message = error.to_string();
+    assert!(message.contains("Codex exited unsuccessfully"), "{message}");
+    assert!(message.ends_with('1'), "{message}");
+}
+
 /// Preserves caller-relative data and staging directories after the server changes its cwd.
 #[tokio::test]
 async fn opencode_resolves_relative_directories_before_server_routing() {
