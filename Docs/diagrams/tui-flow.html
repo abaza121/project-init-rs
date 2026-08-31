@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Init — TUI flow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --paper:#f5f5f5; --ink:#2d3142; --muted:#4f5d75; --accent:#eb6c36; --rule:rgba(45,49,66,.12); --sans:'Geist',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif; --mono:'Geist Mono',ui-monospace,monospace; }
+    html { scroll-behavior:auto; }
+    body { margin:0; padding:48px 32px; background:var(--paper); color:var(--ink); font-family:var(--sans); }
+    main { max-width:1280px; margin:auto; }
+    .eyebrow { margin:0 0 12px; font:500 12px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+    h1 { font:400 48px/1.1 var(--serif); letter-spacing:-.02em; margin:0 0 16px; }
+    .intro { font-size:16px; line-height:1.6; color:var(--muted); max-width:800px; margin:0; }
+    nav { display:flex; gap:24px; flex-wrap:wrap; margin:24px 0 40px; font-size:12px; }
+    a { color:var(--muted); text-underline-offset:4px; }
+    a:hover { color:var(--ink); }
+    a:focus-visible, summary:focus-visible, .canvas:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+    section { border-top:1px solid var(--rule); padding-top:24px; margin-top:32px; }
+    .section-head { display:flex; gap:24px; align-items:baseline; justify-content:space-between; }
+    h2 { margin:0; font:600 20px/1.4 var(--sans); }
+    .section-head p { margin:0; color:var(--muted); font-size:12px; }
+    .canvas { overflow-x:auto; }
+    svg { width:100%; min-width:960px; display:block; }
+    svg text { fill:var(--ink); font-family:var(--sans); }
+    .node-title { font-size:16px; font-weight:600; }
+    .body, .legend { font-size:12px; fill:var(--muted); }
+    .tech { font:12px var(--mono); fill:var(--muted); }
+    .tag { font:500 8px var(--mono); letter-spacing:.12em; fill:var(--muted); }
+    .edge-label { font:12px var(--mono); fill:var(--muted); }
+    .aside { font:italic 24px var(--serif); }
+    .box { fill:#fff; stroke:var(--ink); stroke-width:1; }
+    .input { fill:#e4e6e8; stroke:var(--muted); }
+    .focal { fill:#f4eae6; stroke:var(--accent); stroke-width:1.2; }
+    .terminal { fill:#ececec; stroke:var(--muted); }
+    .connector { fill:none; stroke:var(--muted); stroke-width:1.2; }
+    .return { stroke-dasharray:5 4; }
+    .mask { fill:var(--paper); }
+    .rule { stroke:var(--rule); stroke-width:1; }
+    .notes { display:grid; grid-template-columns:1.2fr 1fr; gap:32px; margin:0 40px 32px; }
+    .notes article { border-top:1px solid var(--rule); padding-top:16px; }
+    h3 { font-size:16px; margin:0 0 8px; }
+    .notes p, details p, details li { margin:0; color:var(--muted); font-size:16px; line-height:1.7; }
+    code, kbd { font:12px var(--mono); color:var(--ink); }
+    .commands { width:100%; border-collapse:collapse; font-size:16px; margin:24px 0 40px; }
+    .commands th, .commands td { text-align:left; border-bottom:1px solid var(--rule); padding:12px 16px; vertical-align:top; line-height:1.6; }
+    .commands th { font-size:12px; color:var(--muted); }
+    .commands td:first-child { width:32%; }
+    details { border-top:1px solid var(--rule); padding:20px 0; }
+    summary { cursor:pointer; font-size:16px; font-weight:600; margin-bottom:12px; }
+    details ul { padding-left:20px; }
+    footer { border-top:1px solid var(--rule); display:flex; justify-content:space-between; gap:16px; padding-top:20px; margin-top:24px; font:12px/1.6 var(--mono); color:var(--muted); }
+    @media(max-width:700px) { body { padding:24px 16px; } h1 { font-size:40px; } .section-head { display:block; } .section-head p { margin-top:8px; } .notes { grid-template-columns:1fr; margin:0 0 24px; gap:20px; } footer { display:block; } .commands td,.commands th { padding:12px 8px; } }
+    @media print { body { padding:0; } nav { display:none; } section { break-inside:avoid; } svg { min-width:0; } .canvas { overflow:visible; } .notes { margin:0 0 20px; } footer { font-size:8px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Project Init / Program flow / 31 Aug 2026</p>
+    <h1>From a brief to a validated project.</h1>
+    <p class="intro">The terminal workbench is the hub. It saves project knowledge, starts background work, and brings you back whenever the workflow needs an answer, a decision, or permission to repair.</p>
+    <nav aria-label="Diagram sections"><a href="#overview">01 · Enter the workbench</a><a href="#workflow">02 · Follow the workflow</a><a href="#controls">03 · Commands &amp; controls</a></nav>
+  </header>
+
+  <section id="overview" aria-labelledby="overview-heading">
+    <div class="section-head"><h2 id="overview-heading">01 / Enter the workbench</h2><p>Interactive terminal · ordinary new / open path</p></div>
+    <div class="canvas" tabindex="0" aria-label="Workbench overview diagram; scroll horizontally on small screens">
+      <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tui-flow-overview-title tui-flow-overview-desc">
+        <title id="tui-flow-overview-title">Entering and running the Project Init workbench</title>
+        <desc id="tui-flow-overview-desc">A new brief is analyzed and committed only after validation, or an existing project is opened; the workbench starts a background workflow after policy selection and receives control again when that work pauses, completes, is cancelled, or fails.</desc>
+        <defs>
+          <marker id="overview-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+          <marker id="overview-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#eb6c36"/></marker>
+          <marker id="overview-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+        </defs>
+        <rect width="1280" height="720" fill="#f5f5f5"/>
+        <!-- Connections precede nodes. Each return has a separate attachment point. -->
+        <g class="connector" marker-end="url(#overview-arrow)">
+          <path d="M180 160 V232"/>
+          <path d="M640 160 V232"/>
+          <path d="M320 304 H440"/>
+          <path d="M180 376 V456"/>
+          <path d="M640 376 V456"/>
+          <path d="M840 520 H960"/>
+          <path class="return" d="M1100 456 V424 Q1100 416 1092 416 H792 Q784 416 784 408 V376"/>
+        </g>
+        <g class="edge-label" text-anchor="middle">
+          <rect class="mask" x="324" y="276" width="112" height="20"/><text x="380" y="292">VALID + COMMIT</text>
+          <rect class="mask" x="188" y="400" width="136" height="20"/><text x="256" y="416">CANCEL / ERROR</text>
+          <rect class="mask" x="648" y="392" width="120" height="40"/><text x="708" y="408">/RESUME</text><text x="708" y="428">/AUTO-ANSWER</text>
+          <rect class="mask" x="852" y="492" width="96" height="20"/><text x="900" y="508">START WORK</text>
+          <rect class="mask" x="904" y="388" width="112" height="20"/><text x="960" y="404">RESULT</text>
+        </g>
+        <g data-node="new">
+          <rect class="input" x="40" y="80" width="280" height="80" rx="20"/>
+          <text class="node-title" x="64" y="112">Start with a brief</text><text class="tech" x="64" y="140">new --brief &lt;file&gt;</text>
+        </g>
+        <g data-node="open">
+          <rect class="input" x="480" y="80" width="320" height="80" rx="20"/>
+          <text class="node-title" x="504" y="112">Reopen a saved project</text><text class="tech" x="504" y="140">open &lt;project-id&gt;</text>
+        </g>
+        <g data-node="analysis">
+          <rect class="box" x="40" y="232" width="280" height="144" rx="8"/>
+          <text class="tag" x="64" y="256">CREATION VIEW</text>
+          <text class="node-title" x="64" y="284">Analyze → validate → save</text>
+          <text class="body" x="64" y="308">Live activity while the provider works.</text>
+          <text class="body" x="64" y="332">Valid output commits atomically.</text>
+          <text class="tech" x="64" y="356">Esc cancels analysis</text>
+        </g>
+        <g data-node="workbench">
+          <rect class="focal" x="440" y="232" width="400" height="144" rx="8"/>
+          <text class="tag" x="464" y="256">PERSISTENT WORKSPACE</text>
+          <text class="node-title" x="464" y="284">Inspect, answer, and decide</text>
+          <text class="body" x="464" y="308">Overview · Questions · Findings</text>
+          <text class="body" x="464" y="332">Requirements · Activity</text>
+          <text class="body" x="464" y="356">Accepted edits save, then refresh the snapshot.</text>
+        </g>
+        <g data-node="creation-stop">
+          <rect class="terminal" x="40" y="456" width="280" height="128" rx="20"/>
+          <text class="node-title" x="64" y="492">No project saved</text>
+          <text class="body" x="64" y="520">Cancelled, failed, or invalid analysis</text>
+          <text class="body" x="64" y="544">stops before the creation commit.</text>
+          <text class="body" x="64" y="568">Failed view: Enter / Esc to close.</text>
+        </g>
+        <g data-node="policy">
+          <rect class="box" x="440" y="456" width="400" height="128" rx="8"/>
+          <text class="tag" x="464" y="480">FIRST RUN ONLY: CHOOSE POLICY</text>
+          <text class="node-title" x="464" y="508">Strict · Consequential · Autonomous</text>
+          <text class="body" x="464" y="536">No default selection; choose and press Enter.</text>
+          <text class="body" x="464" y="560">An active or paused run keeps its saved policy.</text>
+        </g>
+        <g data-node="worker">
+          <rect class="box" x="960" y="456" width="280" height="128" rx="8"/>
+          <text class="tag" x="984" y="480">BACKGROUND RUNNER</text>
+          <text class="node-title" x="984" y="508">Advance until a boundary</text>
+          <text class="body" x="984" y="536">Progress appears during provider work.</text>
+          <text class="body" x="984" y="560">Esc requests safe cancellation.</text>
+        </g>
+        <text class="aside" x="960" y="260">Back to the workbench.</text>
+        <text class="body" x="960" y="292">The runner returns on pause, completion,</text>
+        <text class="body" x="960" y="312">cancellation, or error. The TUI reloads</text>
+        <text class="body" x="960" y="332">saved state and shows the next action.</text>
+        <line class="rule" x1="40" y1="660" x2="1240" y2="660"/>
+        <text class="tag" x="40" y="688">READING THE FLOW</text>
+        <rect class="focal" x="224" y="676" width="16" height="16" rx="4"/><text class="legend" x="252" y="688">Workbench hub</text>
+        <path class="connector" d="M452 684 H492" marker-end="url(#overview-arrow)"/><text class="legend" x="508" y="688">Forward action</text>
+        <path class="connector return" d="M696 684 H736" marker-end="url(#overview-arrow)"/><text class="legend" x="752" y="688">Return to saved state</text>
+        <text class="legend" x="1020" y="688">Detail of the runner below ↓</text>
+      </svg>
+    </div>
+    <div class="notes">
+      <article><h3>SQLite owns project state</h3><p>The TUI holds a disposable snapshot. Answers, findings, requirements, decisions, and workflow status persist through service operations. Returning from a worker reloads the project; reopening a project does not restart its analysis.</p></article>
+      <article><h3>Provider work is provisional</h3><p>The selected Codex, OpenCode, or local provider works behind the same workflow boundary. Activity is progress, not acceptance. Initial structured output must validate; documentation is staged before adoption.</p></article>
+    </div>
+  </section>
+
+  <section id="workflow" aria-labelledby="workflow-heading">
+    <div class="section-head"><h2 id="workflow-heading">02 / Follow the workflow</h2><p>The runner replans from saved state after each accepted step</p></div>
+    <div class="canvas" tabindex="0" aria-label="Workflow decision diagram; scroll horizontally on small screens">
+      <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tui-flow-workflow-title tui-flow-workflow-desc">
+        <title id="tui-flow-workflow-title">Questions, approvals, generation, and repair</title>
+        <desc id="tui-flow-workflow-desc">The runner handles blocking questions before policy-required approvals, prepares current documents, and checks validation; manual answers and decisions need resume, automatic research returns after accepted answers, failed validation requires authorized repair, and a passing package completes the run.</desc>
+        <defs>
+          <marker id="workflow-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker>
+          <marker id="workflow-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#eb6c36"/></marker>
+          <marker id="workflow-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e5aa8"/></marker>
+        </defs>
+        <rect width="1280" height="720" fill="#f5f5f5"/>
+        <g class="connector" marker-end="url(#workflow-arrow)">
+          <path d="M528 192 H368"/>
+          <path d="M752 192 H912"/>
+          <path class="return" d="M208 144 V96 Q208 88 216 88 H604 Q612 88 612 96 V144"/>
+          <path class="return" d="M1072 144 V96 Q1072 88 1064 88 H676 Q668 88 668 96 V144"/>
+          <path d="M640 256 V312"/>
+          <path d="M640 408 V448"/>
+          <path d="M752 496 H912"/>
+          <path class="return" d="M1072 440 V432 Q1072 424 1064 424 H696 Q688 424 688 432 V472"/>
+          <path d="M640 544 V600"/>
+        </g>
+        <g class="edge-label" text-anchor="middle">
+          <rect class="mask" x="392" y="164" width="112" height="20"/><text x="448" y="180">QUESTION</text>
+          <rect class="mask" x="776" y="164" width="112" height="20"/><text x="832" y="180">APPROVAL</text>
+          <rect class="mask" x="352" y="60" width="112" height="20"/><text x="408" y="76">RECHECK</text>
+          <rect class="mask" x="816" y="60" width="112" height="20"/><text x="872" y="76">/RESUME</text>
+          <rect class="mask" x="648" y="272" width="64" height="20"/><text x="680" y="288">CLEAR</text>
+          <rect class="mask" x="784" y="468" width="96" height="20"/><text x="832" y="484">NO</text>
+          <rect class="mask" x="900" y="396" width="136" height="20"/><text x="968" y="412">AFTER REPAIR</text>
+          <rect class="mask" x="648" y="564" width="48" height="20"/><text x="672" y="580">YES</text>
+        </g>
+        <g data-node="input-gate">
+          <path class="focal" d="M640 128 L752 192 L640 256 L528 192 Z"/>
+          <text class="node-title" x="640" y="180" text-anchor="middle">Blocking</text><text class="node-title" x="640" y="200" text-anchor="middle">input?</text>
+          <text class="body" x="640" y="224" text-anchor="middle">Question first</text>
+        </g>
+        <g data-node="question">
+          <rect class="box" x="48" y="144" width="320" height="112" rx="8"/>
+          <text class="node-title" x="72" y="176">Answer the question</text>
+          <text class="body" x="72" y="200">Manual answer, then /resume.</text>
+          <text class="body" x="72" y="220">Or /auto-answer: research + judge.</text>
+          <text class="body" x="72" y="240">Accepted automatic batches continue.</text>
+        </g>
+        <g data-node="approval">
+          <rect class="box" x="912" y="144" width="320" height="112" rx="8"/>
+          <text class="node-title" x="936" y="176">Resolve the decision</text>
+          <text class="tech" x="936" y="200">/approve &lt;id&gt; &lt;reason&gt;</text>
+          <text class="tech" x="936" y="220">/reject &lt;id&gt; &lt;reason&gt;</text>
+          <text class="body" x="936" y="240">Saved policy determines when to pause.</text>
+        </g>
+        <g data-node="documents">
+          <rect class="box" x="480" y="312" width="320" height="96" rx="8"/>
+          <text class="node-title" x="504" y="344">Prepare current documents</text>
+          <text class="body" x="504" y="368">Generate only if missing or stale.</text>
+          <text class="body" x="504" y="392">Adopt a complete staged package.</text>
+        </g>
+        <g data-node="validation">
+          <path class="box" d="M640 448 L752 496 L640 544 L528 496 Z"/>
+          <text class="node-title" x="640" y="492" text-anchor="middle">Validation</text><text class="node-title" x="640" y="512" text-anchor="middle">passes?</text>
+        </g>
+        <g data-node="repair">
+          <rect class="box" x="912" y="440" width="320" height="112" rx="8"/>
+          <text class="node-title" x="936" y="472">Review findings; authorize repair</text>
+          <text class="tech" x="936" y="496">/repair → /resume</text>
+          <text class="body" x="936" y="520">One bounded provider attempt.</text>
+          <text class="body" x="936" y="540">Revalidate; limits still apply.</text>
+        </g>
+        <g data-node="complete">
+          <rect class="terminal" x="480" y="600" width="320" height="48" rx="20"/>
+          <text class="node-title" x="640" y="628" text-anchor="middle">Complete · validated Docs package</text>
+        </g>
+        <text class="aside" x="48" y="336">Automation stops at authority.</text>
+        <text class="body" x="48" y="368">/auto-answer uses up to three workers</text>
+        <text class="body" x="48" y="388">on independent questions, then one judge.</text>
+        <text class="body" x="48" y="412">Accepted answers and evidence commit</text>
+        <text class="body" x="48" y="432">together. Approval and repair gates remain.</text>
+        <text class="body" x="48" y="480">A failed or cancelled batch does not commit</text>
+        <text class="body" x="48" y="500">its provisional answers. Existing accepted</text>
+        <text class="body" x="48" y="520">project knowledge is preserved.</text>
+        <line class="rule" x1="40" y1="660" x2="1240" y2="660"/>
+        <text class="tag" x="40" y="688">READING THE FLOW</text>
+        <path class="focal" d="M232 672 L244 684 L232 696 L220 684 Z"/><text class="legend" x="256" y="688">Decision / gate</text>
+        <rect class="box" x="456" y="676" width="20" height="16" rx="4"/><text class="legend" x="492" y="688">Action</text>
+        <path class="connector return" d="M640 684 H680" marker-end="url(#workflow-arrow)"/><text class="legend" x="696" y="688">Recheck after accepted work</text>
+        <text class="legend" x="1020" y="688">Passing validation ends the run.</text>
+      </svg>
+    </div>
+    <div class="notes">
+      <article><h3>Questions and decisions are separate gates</h3><p>A question blocks only when its priority meets the clarification threshold. Approval depends on the chosen policy. <code>/auto-answer</code> can research questions; it does not grant decision authority or authorize repairs.</p></article>
+      <article><h3>Completion is checked, not assumed</h3><p>Validation checks stored relationships and document outputs. Mechanically safe fixes may be local; remaining repair findings pause the run. Provider repair needs authorization, obeys the repair limit, and preserves document overrides.</p></article>
+    </div>
+  </section>
+
+  <section id="controls" aria-labelledby="controls-heading">
+    <div class="section-head"><h2 id="controls-heading">03 / Commands &amp; controls</h2><p>What changes state, and what starts work</p></div>
+    <table class="commands">
+      <thead><tr><th scope="col">Input</th><th scope="col">Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Answer text + <kbd>Enter</kbd></td><td>Answers the selected open question; saves the result and advances the question selection. Use <code>/answer &lt;question-id&gt; &lt;text&gt;</code> to target one explicitly.</td></tr>
+        <tr><td><code>/ask [prompt]</code></td><td>Opens the structured question form. Enter creates the question; Esc discards the draft.</td></tr>
+        <tr><td><code>/threshold &lt;1-125&gt;</code></td><td>Changes which question priorities block the workflow.</td></tr>
+        <tr><td><code>/resume</code></td><td>Starts or resumes work until the next boundary. The first run opens a policy selector with no default.</td></tr>
+        <tr><td><code>/auto-answer</code></td><td>Starts the same runner with automatic clarification and a coordinator / workers / judge progress board. The first run still requires a policy choice.</td></tr>
+        <tr><td><code>/approve</code> / <code>/reject</code></td><td>Requires a decision ID and reason. Saves the decision, then waits for <code>/resume</code>.</td></tr>
+        <tr><td><code>/repair</code></td><td>Authorizes one repair attempt. It does not execute the repair until <code>/resume</code>.</td></tr>
+        <tr><td><kbd>Tab</kbd> · <kbd>← →</kbd> · <kbd>↑ ↓</kbd></td><td>Tab moves focus. Outside the composer, Left/Right changes section; Up/Down selects questions or scrolls read-only content. Page Up/Down and Home/End scroll read-only panels.</td></tr>
+        <tr><td><kbd>Esc</kbd> / <kbd>q</kbd></td><td>While a worker runs, Esc requests cancellation and waits for acknowledgement. In the composer, Esc returns to content. In navigation/content, Esc or q closes the workbench. Cancellation keeps previously accepted work resumable.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <details>
+    <summary>Source map, scope, and diagram assumptions</summary>
+    <p>Based on the current working-tree source on 31 August 2026, including uncommitted code. These two 1280 × 720 flowcharts describe the interactive workbench at a balanced level of detail. The overview combines analysis, validation, and atomic creation into one stage; the workflow combines package freshness checks and generation into one stage. Provider transport internals, the legacy inspection view, and headless CLI branches are outside the diagrams.</p>
+    <ul>
+      <li><code>src/main.rs</code> — <code>create_project</code>, <code>report_created_project</code>, and <code>open_project</code> route creation and reopening into the terminal workbench. Redirected <code>open</code> emits JSON. Explicit <code>new --offline</code> uses deterministic analysis and skips the live provider creation view.</li>
+      <li><code>src/tui/mod.rs</code> — <code>run_workspace_with_initial_mode</code> drains worker events, renders, handles keys, and reloads results; <code>apply_interactive_workspace_command</code> distinguishes saved edits from background execution.</li>
+      <li><code>src/tui/workspace.rs</code> — <code>submit_composer</code>, focus-specific key handlers, and <code>workflow_guidance_lines</code> define commands, policy selection, next-action prompts, and progress overlays.</li>
+      <li><code>src/workflow/runner.rs</code> — <code>run_until_pause_with_auto_answer_progress</code> runs steps until a boundary, completion, cancellation, or error, and coordinates automatic question research.</li>
+      <li><code>src/workflow/mod.rs</code> — <code>workflow_status</code> prioritizes blocking questions, pending approval, a missing/stale package, open repair findings, a prior passing validation, then validation. The visual groups these checks for readability; it does not imply regeneration or repeated validation on every resume.</li>
+    </ul>
+    <p>Default Diagram Design palette used with permission. Google Fonts supplies Instrument Serif, Geist, and Geist Mono; offline viewing falls back to Georgia, system sans-serif, and system monospace. The diagram remains fully readable without JavaScript.</p>
+  </details>
+  <footer><span>PROJECT INIT · SOURCE-GROUNDED TUI MAP</span><span>Default light · Static HTML + inline SVG · 2026-08-31</span></footer>
+</main>
+</body>
+</html>

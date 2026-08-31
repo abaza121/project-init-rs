@@ -95,6 +95,8 @@ impl ResearchClient for UnavailableResearchClient {
 
 /// Records concurrent worker occupancy and optionally cancels immediately before adoption.
 struct ParallelAutoAnswerClient {
+    plan_attempts: AtomicUsize,
+    add_ineligible_question: bool,
     active_workers: AtomicUsize,
     maximum_workers: AtomicUsize,
     research_attempts: AtomicUsize,
@@ -110,6 +112,8 @@ impl ParallelAutoAnswerClient {
     /// Creates a deterministic concurrent client for runner behavior tests.
     const fn new(cancel_in_judge: bool, fail_first_worker: bool, fail_first_judge: bool) -> Self {
         Self {
+            plan_attempts: AtomicUsize::new(0),
+            add_ineligible_question: false,
             active_workers: AtomicUsize::new(0),
             maximum_workers: AtomicUsize::new(0),
             research_attempts: AtomicUsize::new(0),
@@ -130,21 +134,24 @@ impl ParallelAutoAnswerClient {
 
 #[async_trait]
 impl AutoAnswerClient for ParallelAutoAnswerClient {
-    /// Selects the immediate blocker and the next two eligible questions in stable order.
+    /// Selects eligible questions or injects an invalid extra ID to exercise plan rejection.
     async fn plan(
         &self,
         request: ResearchPlanRequest,
         _activity: tokio::sync::mpsc::Sender<project_init::agents::ActivityEvent>,
         _cancellation: CancellationToken,
     ) -> Result<ResearchBatchPlan, AgentError> {
-        ResearchBatchPlan::new(
-            request
-                .questions()
-                .iter()
-                .take(3)
-                .map(|question| question.question_id().to_owned())
-                .collect(),
-        )
+        self.plan_attempts.fetch_add(1, Ordering::SeqCst);
+        let mut ids = request
+            .questions()
+            .iter()
+            .take(3)
+            .map(|question| question.question_id().to_owned())
+            .collect::<Vec<_>>();
+        if self.add_ineligible_question {
+            ids.push("ineligible-question".to_owned());
+        }
+        ResearchBatchPlan::new(ids)
     }
 
     /// Holds each worker briefly so the test can observe genuine overlap.
@@ -430,6 +437,107 @@ async fn research_enabled_runner_answers_questions_and_completes() {
             .all(|answer| answer.source == AnswerSource::Imported)
     );
     assert_eq!(snapshot.evidence.len(), snapshot.answers.len());
+}
+
+/// Researches the sole question without a provider plan, while retaining judgment and cancellation.
+#[tokio::test]
+async fn single_question_auto_answer_skips_provider_selection() {
+    for cancel_in_judge in [false, true] {
+        let (mut service, project_id) = initialized_service();
+        service
+            .ask_question(
+                &project_id,
+                AskQuestionRequest::conservative("Which platform ships first?"),
+            )
+            .unwrap();
+        let before = service.inspect_project(&project_id).unwrap();
+        assert_eq!(before.questions.len(), 1);
+        let question_id = before.questions[0].id.clone();
+        let output = tempfile::tempdir().unwrap();
+        let documentation = CompleteDocumentationClient;
+        let mut client = ParallelAutoAnswerClient::new(cancel_in_judge, false, false);
+        client.add_ineligible_question = true;
+        let client = Arc::new(client);
+        let mut runner = WorkflowRunner::online(service, output.path(), &documentation)
+            .with_auto_answer_client(client.clone());
+
+        // An unreliable selector must never be consulted when the only choice is the blocker.
+        let outcome = runner
+            .run_until_pause(
+                &project_id,
+                Some(ApprovalPolicy::Autonomous),
+                None,
+                CancellationToken::new(),
+            )
+            .await
+            .expect("one eligible question must not fail provider selection");
+        let after = runner.service().inspect_project(&project_id).unwrap();
+        assert_eq!(client.plan_attempts.load(Ordering::SeqCst), 0);
+        assert_eq!(client.research_attempts.load(Ordering::SeqCst), 1);
+        assert_eq!(client.judge_attempts.load(Ordering::SeqCst), 1);
+        if cancel_in_judge {
+            assert_eq!(outcome.stop, WorkflowRunStop::Cancelled);
+            assert!(after.answers.is_empty());
+            assert!(after.evidence.is_empty());
+        } else {
+            assert_eq!(outcome.stop, WorkflowRunStop::Complete);
+            assert_eq!(after.answers.len(), 1);
+            assert_eq!(after.answers[0].question_id, question_id);
+        }
+    }
+}
+
+/// Rejects invented IDs for real multi-question selection before research or authoritative writes.
+#[tokio::test]
+async fn multi_question_auto_answer_rejects_ineligible_provider_selection() {
+    let (mut service, project_id) = initialized_service();
+    for prompt in [
+        "Which platform ships first?",
+        "Which accessibility standard applies?",
+    ] {
+        service
+            .ask_question(&project_id, AskQuestionRequest::conservative(prompt))
+            .unwrap();
+    }
+    let output = tempfile::tempdir().unwrap();
+    let documentation = CompleteDocumentationClient;
+    let mut client = ParallelAutoAnswerClient::new(false, false, false);
+    client.add_ineligible_question = true;
+    let client = Arc::new(client);
+    let mut runner = WorkflowRunner::online(service, output.path(), &documentation)
+        .with_auto_answer_client(client.clone());
+
+    // Local single-question selection must not become a fallback that accepts an invalid batch.
+    let error = runner
+        .run_until_pause(
+            &project_id,
+            Some(ApprovalPolicy::Autonomous),
+            None,
+            CancellationToken::new(),
+        )
+        .await
+        .unwrap_err();
+    assert!(
+        error
+            .to_string()
+            .contains("research plan selected an ineligible question")
+    );
+    assert_eq!(client.plan_attempts.load(Ordering::SeqCst), 1);
+    assert_eq!(client.research_attempts.load(Ordering::SeqCst), 0);
+    assert_eq!(client.judge_attempts.load(Ordering::SeqCst), 0);
+    let snapshot = runner.service().inspect_project(&project_id).unwrap();
+    assert!(snapshot.answers.is_empty());
+    assert!(snapshot.evidence.is_empty());
+    assert_eq!(
+        runner
+            .service()
+            .active_run(&project_id)
+            .unwrap()
+            .unwrap()
+            .pause_reason
+            .as_deref(),
+        Some("research_failed")
+    );
 }
 
 /// Researches three distinct questions concurrently before judging and adopting their answers.

@@ -9,7 +9,7 @@ Interactive users activate the feature with `/auto-answer` or by running `projec
 ## Acceptance Criteria
 
 1. Automatic answering uses a fixed maximum of three concurrent research workers; the count is not configurable.
-2. A schema-constrained coordinator selects the current blocking question and up to two additional independent consequential open questions.
+2. When exactly one consequential open question is eligible, the runner selects that blocker directly without a provider coordinator call. Otherwise, a coordinator constrained to the current eligible durable IDs selects the blocker and up to two additional independent consequential open questions.
 3. Each selected question is researched by one isolated Codex invocation. Explicit auto-answer delegation authorizes a concrete, evidence-informed provisional decision; where no unique answer exists, the worker selects the narrowest conservative and reversible default and labels its status in the notes.
 4. A separate schema-constrained Codex judge reviews every successful candidate together and returns exactly one cited answer for each candidate. Refusal-shaped answers such as `FAIL: ...` are invalid rather than authoritative answers.
 5. Failed worker research and invalid judge output are each retried once with the previous validation error included as feedback that the next response must correct.
@@ -23,6 +23,8 @@ Interactive users activate the feature with `/auto-answer` or by running `projec
 ## Policy Decisions
 
 - Three is a fixed concurrency ceiling, not a requirement to fill every slot.
+- A single eligible question has one legal plan and bypasses provider selection; its research worker, separate judge, cancellation checks, and atomic adoption remain mandatory.
+- Coordinator schemas enumerate only current eligible durable IDs and cap the batch size at the smaller of three and the eligible count. Display IDs and other questions in the project snapshot are not selection candidates.
 - The coordinator must include the immediate `QuestionRequired` identity, preventing speculative work from starving the blocking workflow edge.
 - Eligible questions are open questions at or above the project's consequential threshold.
 - Delegated choices remain recommendations rather than user-authored facts, but they must resolve the supplied question instead of restating why it is uncertain.
@@ -53,7 +55,7 @@ Interactive users activate the feature with `/auto-answer` or by running `projec
 ```text
 WorkflowRunner
   -> collect eligible consequential questions
-  -> AutoAnswerClient::plan
+  -> select sole eligible blocker locally, otherwise AutoAnswerClient::plan
   -> up to three AutoAnswerClient::research futures
   -> AutoAnswerClient::judge
   -> validate current question state
@@ -119,6 +121,7 @@ Every Rust function, struct, and enum receives a behavior-focused `///` document
 
 - Pure contract tests validate bounded plans, exact judge membership, duplicates, and malformed JSON.
 - Runner tests use deterministic fake clients to prove concurrency, fixed capacity, retry limits, judge ordering, cancellation, and no partial adoption.
+- Single-question tests bypass an unreliable selector but still require research and judgment, including cancellation before adoption. Multi-question tests reject extra ineligible IDs before research or persistence.
 - Storage/workflow tests prove atomic multi-answer reconciliation and recovery after rejection.
 - Ratatui `TestBackend` tests prove `/auto-answer` parsing and lane rendering without a real terminal.
 - CLI parser and routing helpers prove interactive versus non-interactive selection without launching Codex.

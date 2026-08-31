@@ -67,6 +67,14 @@ fn handle_opencode_connection(mut stream: TcpStream) {
         .and_then(|line| line.split_whitespace().nth(1))
         .unwrap_or_default();
     let mode = std::fs::read_to_string("mode").unwrap();
+    if mode.trim() == "directory" && path != "/global/health" && !valid_directory_header(&request) {
+        write_http_json(
+            &mut stream,
+            "500 Internal Server Error",
+            r#"{"name":"UnknownError"}"#,
+        );
+        return;
+    }
     if path == "/global/health" {
         write_json(&mut stream, r#"{"healthy":true,"version":"fixture"}"#);
     } else if path == "/session" {
@@ -93,21 +101,40 @@ fn handle_opencode_connection(mut stream: TcpStream) {
             }
         }
     } else if path.ends_with("/message") {
-        if mode.trim() != "silent" {
+        if !matches!(mode.trim(), "silent" | "directory") {
             for _ in 0..12 {
                 std::thread::sleep(Duration::from_millis(100));
             }
-        } else {
+        } else if mode.trim() == "silent" {
             std::thread::sleep(Duration::from_secs(2));
         }
         let response = std::fs::read_to_string("response").unwrap();
-        let body = format!(r#"{{"info":{{"structured_output":{response}}},"parts":[]}}"#);
+        let body = format!(r#"{{"info":{{"structured":{response}}},"parts":[]}}"#);
         write_json(&mut stream, &body);
-    } else if path.ends_with("/abort") || (path.starts_with("/session/") && path != "/session/session-1") {
+    } else if path.ends_with("/abort")
+        || (path.starts_with("/session/") && path != "/session/session-1")
+    {
         write_json(&mut stream, "true");
     } else {
         write_json(&mut stream, "{}");
     }
+}
+
+/// Rejects directory routing that would resolve against the child process instead of the caller.
+fn valid_directory_header(request: &str) -> bool {
+    let directory = request
+        .lines()
+        .filter_map(|line| line.split_once(':'))
+        .find_map(|(name, value)| {
+            name.eq_ignore_ascii_case("x-opencode-directory")
+                .then(|| std::path::Path::new(value.trim()))
+        });
+    let expected = std::fs::read_to_string("expected-directory").unwrap();
+    directory.is_some_and(|directory| {
+        directory.is_absolute()
+            && directory.is_dir()
+            && std::fs::canonicalize(directory).unwrap() == std::fs::canonicalize(expected).unwrap()
+    })
 }
 
 /// Reads one HTTP request through its declared content length without waiting for connection close.
@@ -154,9 +181,14 @@ fn read_http_request(stream: &mut TcpStream) -> Option<String> {
 
 /// Writes a small JSON response and closes the fixture connection.
 fn write_json(stream: &mut TcpStream, body: &str) {
+    write_http_json(stream, "200 OK", body);
+}
+
+/// Writes a bounded fixture response with an explicit success or failure status.
+fn write_http_json(stream: &mut TcpStream, status: &str, body: &str) {
     let body = body.as_bytes();
     let header = format!(
-        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+        "HTTP/1.1 {status}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
         body.len()
     );
     stream.write_all(header.as_bytes()).unwrap();

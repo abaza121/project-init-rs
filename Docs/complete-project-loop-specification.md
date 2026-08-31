@@ -9,7 +9,7 @@ Extend `project-init` so a developer, product creator, or automation can start w
 1. `new --run`, `run --brief`, and `run <project-id>` can enter the same resumable workflow without removing existing commands.
 2. Each run records its selected `strict`, `consequential`, or `autonomous` approval policy. Resumption retains that policy.
 3. `step --json` executes at most one planned mutation and `status --json` reports the same deterministic next action without mutation.
-4. Open consequential questions and policy-required decision approvals pause with stable machine-readable reasons.
+4. Open consequential questions and policy-required decision approvals pause with stable machine-readable reasons. Once those boundaries clear, generation advances an `awaiting_clarification` project through `planning` without resolving its remaining below-threshold questions; this applies to offline rendering and provider-package adoption, including saved projects resumed after answers or threshold changes.
 5. A fixed artifact graph generates the full baseline package in dependency order and marks dependants stale when an input or manual override changes.
 6. Generation never silently overwrites a file whose content differs from its recorded generated hash. The edit is registered as a manual override and downstream artifacts become stale.
 7. Document metadata, evidence, decisions, workflow runs, validation runs, validation findings, and revisions survive database reopen.

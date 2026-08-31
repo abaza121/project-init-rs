@@ -90,6 +90,67 @@ fn plan_request() -> ResearchPlanRequest {
     .unwrap()
 }
 
+/// Preserves caller-relative data and staging directories after the server changes its cwd.
+#[tokio::test]
+async fn opencode_resolves_relative_directories_before_server_routing() {
+    use project_init::agents::{DocumentationClient, DocumentationRequest};
+
+    let directory = tempfile::Builder::new()
+        .prefix("opencode routing ")
+        .tempdir_in(".")
+        .unwrap();
+    let data_dir = PathBuf::from(".").join(directory.path().file_name().unwrap());
+    assert!(data_dir.is_relative());
+    let absolute = std::fs::canonicalize(directory.path()).unwrap();
+    std::fs::write(directory.path().join("mode"), "directory").unwrap();
+    std::fs::write(
+        directory.path().join("response"),
+        r#"{"question_ids":["q1"]}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        directory.path().join("expected-directory"),
+        absolute.to_str().unwrap(),
+    )
+    .unwrap();
+    let client = OpenCodeCliClient::new(OpenCodeCliConfig {
+        executable: fixture_executable(),
+        working_directory: data_dir.clone(),
+        timeout: Duration::from_secs(5),
+        history_capacity: 4,
+    });
+    let (activity, _receiver) = mpsc::channel(4);
+    let plan = client
+        .plan(plan_request(), activity, CancellationToken::new())
+        .await;
+    assert!(plan.is_ok(), "relative data directory failed: {plan:?}");
+
+    // The shared server must route later documentation to staging, not its own cwd.
+    let staging = data_dir.join("staging output");
+    std::fs::create_dir(&staging).unwrap();
+    let expected_staging = std::fs::canonicalize(&staging).unwrap();
+    std::fs::write(
+        directory.path().join("expected-directory"),
+        expected_staging.to_str().unwrap(),
+    )
+    .unwrap();
+    let result = client
+        .execute(
+            DocumentationRequest::generation(
+                "{}".to_owned(),
+                vec!["README.md".to_owned()],
+                staging,
+            ),
+            None,
+            CancellationToken::new(),
+        )
+        .await;
+    assert!(
+        result.is_ok(),
+        "relative staging directory failed: {result:?}"
+    );
+}
+
 /// Proves that coordinator, worker, and judge survive the old hard limit on either output stream.
 #[tokio::test]
 async fn auto_answer_stages_survive_active_provider_beyond_timeout() {

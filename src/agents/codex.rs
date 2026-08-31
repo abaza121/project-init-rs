@@ -15,9 +15,9 @@ use tokio::process::Command;
 use tokio::sync::mpsc;
 
 use super::prompts::{
-    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, RESEARCH_PLAN_SCHEMA,
-    analysis_prompt, documentation_prompt, repair_prompt, research_judgment_prompt,
-    research_plan_prompt, research_prompt,
+    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, analysis_prompt,
+    documentation_prompt, repair_prompt, research_judgment_prompt, research_plan_prompt,
+    research_plan_schema, research_prompt,
 };
 use super::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentClient, AgentError, AgentExecution,
@@ -719,7 +719,7 @@ impl AutoAnswerClient for CodexCliClient {
         let execution = self
             .execute_structured_prompt(
                 StructuredTask {
-                    schema: RESEARCH_PLAN_SCHEMA,
+                    schema: &research_plan_schema(&request),
                     file_stem: "research-plan",
                     prompt: &research_plan_prompt(&request),
                     validation_message: "Validating automatic-answer plan",
@@ -1350,8 +1350,23 @@ mod tests {
     /// Keeps the coordinator schema within the array keywords accepted by Structured Outputs.
     #[test]
     fn research_plan_schema_avoids_unsupported_unique_items_keyword() {
-        let schema: serde_json::Value = serde_json::from_str(super::RESEARCH_PLAN_SCHEMA)
-            .expect("the research-plan schema should remain valid JSON");
+        let request = ResearchPlanRequest::new(
+            "{}".to_owned(),
+            "question-1",
+            vec![
+                ResearchQuestionContext::new(
+                    "question-1",
+                    "Q-001",
+                    "Which platform?",
+                    "Architecture.",
+                )
+                .unwrap(),
+            ],
+        )
+        .unwrap();
+        let schema: serde_json::Value =
+            serde_json::from_str(&super::research_plan_schema(&request))
+                .expect("the research-plan schema should remain valid JSON");
 
         assert!(
             schema

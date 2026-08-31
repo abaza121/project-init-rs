@@ -18,9 +18,9 @@ use tokio::time::Instant;
 use url::{Host, Url};
 
 use super::prompts::{
-    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, RESEARCH_PLAN_SCHEMA,
-    analysis_prompt, documentation_prompt, repair_prompt, research_judgment_prompt,
-    research_plan_prompt, research_prompt,
+    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, analysis_prompt,
+    documentation_prompt, repair_prompt, research_judgment_prompt, research_plan_prompt,
+    research_plan_schema, research_prompt,
 };
 use super::runtime::LocalRuntimeConfig;
 use super::{
@@ -427,7 +427,7 @@ impl AutoAnswerClient for LocalHttpProvider {
             .execute_structured_prompt(
                 StructuredTask {
                     schema_name: "research_plan",
-                    schema: RESEARCH_PLAN_SCHEMA,
+                    schema: &research_plan_schema(&request),
                     prompt: &research_plan_prompt(&request),
                     web_search: false,
                     timeout_policy: TimeoutPolicy::Inactivity,

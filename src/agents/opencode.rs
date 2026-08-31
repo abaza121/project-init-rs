@@ -19,9 +19,9 @@ use tokio::time::Instant;
 use url::Url;
 
 use super::prompts::{
-    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, RESEARCH_PLAN_SCHEMA,
-    analysis_prompt, documentation_prompt, repair_prompt, research_judgment_prompt,
-    research_plan_prompt, research_prompt,
+    ANALYSIS_SCHEMA, RESEARCH_ANSWER_SCHEMA, RESEARCH_JUDGMENT_SCHEMA, analysis_prompt,
+    documentation_prompt, repair_prompt, research_judgment_prompt, research_plan_prompt,
+    research_plan_schema, research_prompt,
 };
 use super::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentClient, AgentError, AgentExecution,
@@ -273,6 +273,12 @@ impl OpenCodeCliClient {
         activity: mpsc::Sender<ActivityEvent>,
         cancellation: CancellationToken,
     ) -> Result<(Option<String>, ActivityHistory), AgentError> {
+        // OpenCode resolves routing paths from its own cwd, which may already be the data directory.
+        let working_directory = std::path::absolute(spec.working_directory).map_err(|error| {
+            AgentError::Execution(format!(
+                "could not resolve OpenCode working directory: {error}"
+            ))
+        })?;
         let mut history = ActivityHistory::new(self.state.config.history_capacity)?;
         let mut sequence = 1_u32;
         record_activity(
@@ -291,7 +297,7 @@ impl OpenCodeCliClient {
             "OpenCode server is ready",
         );
         let session_id = tokio::select! {
-            result = self.create_session(&base_url, spec.working_directory) => result?,
+            result = self.create_session(&base_url, &working_directory) => result?,
             () = cancellation.cancelled() => return Err(AgentError::Cancelled),
             () = tokio::time::sleep(self.state.config.timeout) => return Err(AgentError::TimedOut),
         };
@@ -311,12 +317,11 @@ impl OpenCodeCliClient {
         let event_task = tokio::spawn(self.clone().stream_events(
             base_url.clone(),
             session_id.clone(),
-            spec.working_directory.to_path_buf(),
+            working_directory.clone(),
             event_sender,
             stop_receiver,
         ));
-        let message =
-            self.post_message(&base_url, &session_id, spec.working_directory, request_body);
+        let message = self.post_message(&base_url, &session_id, &working_directory, request_body);
         let result = self
             .monitor_message(
                 message,
@@ -334,10 +339,10 @@ impl OpenCodeCliClient {
         event_task.abort();
         let _ = event_task.await;
         if result.is_err() {
-            self.abort_session(&base_url, &session_id, spec.working_directory)
+            self.abort_session(&base_url, &session_id, &working_directory)
                 .await;
         }
-        self.delete_session(&base_url, &session_id, spec.working_directory)
+        self.delete_session(&base_url, &session_id, &working_directory)
             .await;
         let response = result?;
         let response = if spec.schema.is_some() {
@@ -737,7 +742,7 @@ impl AutoAnswerClient for OpenCodeCliClient {
     ) -> Result<ResearchBatchPlan, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                RESEARCH_PLAN_SCHEMA,
+                &research_plan_schema(&request),
                 &research_plan_prompt(&request),
                 activity,
                 cancellation,
@@ -1008,7 +1013,7 @@ fn build_plain_message(prompt: &str) -> Value {
     serde_json::json!({"parts": [{"type": "text", "text": prompt}]})
 }
 
-/// Extracts OpenCode's validated structured output and bounds its serialized size.
+/// Extracts OpenCode's structured payload, accepting the SDK-documented alias, with a size bound.
 fn extract_structured_output(response: &Value) -> Result<String, AgentError> {
     let info = response.pointer("/info").unwrap_or(&Value::Null);
     if let Some(name) = info.pointer("/error/name").and_then(Value::as_str) {
@@ -1016,9 +1021,12 @@ fn extract_structured_output(response: &Value) -> Result<String, AgentError> {
             "OpenCode structured output failed: {name}"
         )));
     }
-    let output = info.pointer("/structured_output").ok_or_else(|| {
-        AgentError::InvalidResponse("OpenCode response omitted structured output".to_owned())
-    })?;
+    let output = info
+        .pointer("/structured")
+        .or_else(|| info.pointer("/structured_output"))
+        .ok_or_else(|| {
+            AgentError::InvalidResponse("OpenCode response omitted structured output".to_owned())
+        })?;
     let text = serde_json::to_string(output).map_err(|error| {
         AgentError::InvalidResponse(format!("could not serialize structured output: {error}"))
     })?;
@@ -1241,7 +1249,21 @@ mod tests {
         assert!(!message.to_string().contains("<response_schema>"));
     }
 
-    /// Extracts only the server's validated structured output from a synchronous response.
+    /// Reads the structured field returned by OpenCode 1.2.20 and 1.18.25.
+    #[test]
+    fn structured_response_reads_info_structured() {
+        let response = serde_json::json!({
+            "info": {"structured": {"answer": "validated"}},
+            "parts": []
+        });
+
+        assert_eq!(
+            extract_structured_output(&response).expect("structured output should be present"),
+            r#"{"answer":"validated"}"#
+        );
+    }
+
+    /// Retains compatibility with the field name documented by the OpenCode SDK.
     #[test]
     fn structured_response_reads_info_structured_output() {
         let response = serde_json::json!({
@@ -1253,6 +1275,71 @@ mod tests {
             extract_structured_output(&response).expect("structured output should be present"),
             r#"{"answer":"validated"}"#
         );
+    }
+
+    /// Prefers the server's primary field when both response spellings are present.
+    #[test]
+    fn structured_response_prefers_primary_field() {
+        let response = serde_json::json!({
+            "info": {
+                "structured": {"answer": "primary"},
+                "structured_output": {"answer": "alias"}
+            },
+            "parts": []
+        });
+
+        assert_eq!(
+            extract_structured_output(&response).expect("the primary output should be used"),
+            r#"{"answer":"primary"}"#
+        );
+    }
+
+    /// Leaves a present null primary value for domain validation instead of using the alias.
+    #[test]
+    fn structured_response_does_not_hide_null_primary_with_alias() {
+        let response = serde_json::json!({
+            "info": {"structured": null, "structured_output": {"answer": "alias"}},
+            "parts": []
+        });
+
+        assert_eq!(
+            extract_structured_output(&response).expect("payload validation belongs to the caller"),
+            "null"
+        );
+    }
+
+    /// Applies the same serialized byte limit to both supported field names.
+    #[test]
+    fn structured_response_enforces_size_boundary_for_both_fields() {
+        for field in ["structured", "structured_output"] {
+            for excess in [0, 1] {
+                // JSON quotes count toward the byte limit, including for the alias.
+                let payload = "a".repeat(super::MAX_FINAL_RESPONSE_BYTES - 2 + excess);
+                let response = serde_json::json!({"info": {field: payload}, "parts": []});
+                let result = extract_structured_output(&response);
+                if excess == 0 {
+                    assert_eq!(result.unwrap().len(), super::MAX_FINAL_RESPONSE_BYTES);
+                } else {
+                    assert!(matches!(
+                        result,
+                        Err(super::AgentError::InvalidResponse(message))
+                            if message.contains("exceeded the supported size")
+                    ));
+                }
+            }
+        }
+    }
+
+    /// Rejects JSON embedded in a text part rather than bypassing server structured output.
+    #[test]
+    fn structured_response_rejects_text_only_json() {
+        let response = serde_json::json!({
+            "info": {},
+            "parts": [{"type": "text", "text": r#"{"answer":"unvalidated"}"#}]
+        });
+
+        let error = extract_structured_output(&response).expect_err("text must not be a fallback");
+        assert!(error.to_string().contains("omitted structured output"));
     }
 
     /// Rejects a server response that completed without a structured-output payload.
@@ -1273,6 +1360,22 @@ mod tests {
         });
 
         let error = extract_structured_output(&response).expect_err("server validation must fail");
+        assert!(error.to_string().contains("StructuredOutputError"));
+    }
+
+    /// Preserves server errors even when both structured payload spellings are also present.
+    #[test]
+    fn structured_response_prioritizes_server_error_over_payloads() {
+        let response = serde_json::json!({
+            "info": {
+                "error": {"name": "StructuredOutputError"},
+                "structured": {"answer": "primary"},
+                "structured_output": {"answer": "alias"}
+            },
+            "parts": []
+        });
+
+        let error = extract_structured_output(&response).expect_err("server failure must win");
         assert!(error.to_string().contains("StructuredOutputError"));
     }
 

@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Select a sole eligible auto-answer question directly instead of asking the provider to choose, and constrain multi-question coordinator schemas to current eligible IDs and available batch size; retain cited research, judgment, and strict plan validation.
+- Resolve OpenCode request directories from the caller before routing sessions, preventing auto-answer HTTP 500 failures with the default relative data directory and keeping relative documentation staging paths correctly scoped.
+- Accept OpenCode's `structured` response field while retaining `structured_output` compatibility, preventing valid provider results from being rejected as missing structured output.
+- Allow document generation to resume from awaiting clarification when only questions below the configured threshold remain, while preserving unanswered questions and required approvals.
 - Prevent analysis output from treating `agent_inference` as a finding `kind`; the prompt now explicitly assigns it to `source_type`, while local validation remains authoritative.
 - Continue project analysis when a provider repeats a finding by retaining the first matching kind and statement.
 

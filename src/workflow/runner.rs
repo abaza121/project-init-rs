@@ -796,7 +796,7 @@ impl<'client> WorkflowRunner<'client> {
     }
 }
 
-/// Runs one coordinator call while forwarding its sanitized provider activity to one lane.
+/// Selects a sole blocker locally or asks the coordinator to choose an independent batch.
 async fn execute_plan_call(
     client: Arc<dyn AutoAnswerClient>,
     request: ResearchPlanRequest,
@@ -804,6 +804,13 @@ async fn execute_plan_call(
     batch: u32,
     cancellation: CancellationToken,
 ) -> Result<ResearchBatchPlan, AgentError> {
+    if cancellation.is_cancelled() {
+        return Err(AgentError::Cancelled);
+    }
+    // The validated request contains its blocker, so a singleton has exactly one legal plan.
+    if request.questions().len() == 1 {
+        return ResearchBatchPlan::new(vec![request.blocking_question_id().to_owned()]);
+    }
     let (activity_sender, activity_receiver) = mpsc::channel(32);
     let forwarding = tokio::spawn(forward_actor_activity(
         activity_receiver,

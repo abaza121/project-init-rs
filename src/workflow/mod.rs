@@ -849,13 +849,18 @@ fn hash_file(path: &Path) -> Result<String, WorkflowError> {
     Ok(format!("{:x}", Sha256::digest(bytes)))
 }
 
-/// Applies only the lifecycle edge needed before a generation retry.
+/// Advances a project into generation after the caller has checked workflow boundaries.
 fn transition_to_generation(
     store: &mut SqliteStore,
     project_id: &ProjectId,
     status: ProjectStatus,
 ) -> Result<(), WorkflowError> {
     match status {
+        ProjectStatus::AwaitingClarification => {
+            // Below-threshold questions remain open but no longer prevent planning.
+            store.transition_project(project_id, ProjectStatus::Planning)?;
+            store.transition_project(project_id, ProjectStatus::Generating)?;
+        }
         ProjectStatus::Planning | ProjectStatus::Validating | ProjectStatus::Complete => {
             store.transition_project(project_id, ProjectStatus::Generating)?;
         }
