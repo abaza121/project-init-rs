@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-08-31T12:15:57+01:00
+
 ### Changed
 
 - Standardize Codex, OpenCode, and local provider operation timeout defaults at twenty minutes, including startup, analysis, and inactivity windows; retain explicit local inactivity overrides with an expanded 1–1200 second range.
 - Migrate the OpenCode provider from one-shot `run --format json` subprocess calls to a managed loopback `opencode serve` session API, including native JSON Schema requests, scoped directory routing, bounded SSE activity, and shared server reuse across cloned clients.
+- **Breaking (Rust API):** Remove `const` support from `OpenCodeCliClient::new` and `OpenCodeCliClient::config` as the client initializes shared HTTP and server state; move calls from constant contexts to runtime initialization.
 
 ### Fixed
 
