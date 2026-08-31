@@ -34,6 +34,15 @@ pub use runtime::{LocalDevice, LocalModelFormat, LocalRuntimeConfig};
 
 const MAX_ACTIVITY_MESSAGE_CHARS: usize = 512;
 
+/// Selects whether provider activity can extend an operation's configured timeout window.
+#[derive(Debug, Clone, Copy)]
+enum TimeoutPolicy {
+    /// Bounds initial brief analysis by total elapsed time.
+    Hard,
+    /// Allows work to continue on valid local stream events or CLI stdout/stderr activity.
+    Inactivity,
+}
+
 /// Classifies safe operational progress independently of a model provider's event vocabulary.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

@@ -66,6 +66,9 @@ struct Cli {
     /// Overrides the Docker executable used to launch the managed runtime.
     #[arg(long, global = true)]
     local_docker_bin: Option<OsString>,
+    /// Seconds allowed without local inference activity (1-600; defaults to 60).
+    #[arg(long, global = true, value_parser = clap::value_parser!(u64).range(1..=600))]
+    local_inactivity_timeout_secs: Option<u64>,
     /// Enable configured Codex skills for this invocation.
     #[arg(long, global = true, conflicts_with = "no_skills")]
     skills: bool,
@@ -104,7 +107,8 @@ impl Cli {
         }
         match self.provider_kind() {
             ProviderKind::Codex => {
-                if self.local_endpoint.is_some()
+                if self.local_inactivity_timeout_secs.is_some()
+                    || self.local_endpoint.is_some()
                     || self.local_model_dir.is_some()
                     || self.local_model_file.is_some()
                     || self.local_format != LocalModelFormat::Gguf
@@ -120,7 +124,8 @@ impl Cli {
                 })
             }
             ProviderKind::Opencode => {
-                if self.local_endpoint.is_some()
+                if self.local_inactivity_timeout_secs.is_some()
+                    || self.local_endpoint.is_some()
                     || self.local_model_dir.is_some()
                     || self.local_model_file.is_some()
                     || self.local_format != LocalModelFormat::Gguf
@@ -152,7 +157,9 @@ impl Cli {
                 let http = LocalHttpConfig::new(
                     &endpoint,
                     "default",
-                    LOCAL_INACTIVITY_TIMEOUT,
+                    self.local_inactivity_timeout_secs
+                        .map(Duration::from_secs)
+                        .unwrap_or(LOCAL_INACTIVITY_TIMEOUT),
                     LOCAL_HARD_TIMEOUT,
                     ACTIVITY_HISTORY_CAPACITY,
                 )?;
@@ -1098,6 +1105,71 @@ mod tests {
         .expect("the explicit local provider should parse");
 
         assert_eq!(cli.provider_kind(), ProviderKind::Local);
+    }
+
+    /// Propagates default and custom inactivity windows to the reusable local provider settings.
+    #[test]
+    fn local_inactivity_timeout_reaches_provider_configuration() {
+        for seconds in [None, Some("300"), Some("600")] {
+            let mut arguments = vec![
+                "project-init",
+                "--provider",
+                "local",
+                "--local-model-dir",
+                r"C:\Models\project-init\gemma-4-12b",
+                "--local-image",
+                "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+                "--local-device",
+                "cpu",
+                "list",
+            ];
+            if let Some(seconds) = seconds {
+                arguments.extend(["--local-inactivity-timeout-secs", seconds]);
+            }
+            let cli = Cli::try_parse_from(arguments).unwrap();
+            let super::ProviderSelection::Local(settings) = cli.provider_selection().unwrap()
+            else {
+                panic!("the local provider should remain selected");
+            };
+            assert_eq!(
+                settings.http.inactivity_timeout().as_secs(),
+                seconds.unwrap_or("60").parse::<u64>().unwrap()
+            );
+            assert_eq!(settings.http.hard_timeout(), super::LOCAL_HARD_TIMEOUT);
+        }
+    }
+
+    /// Rejects zero, excessive, and non-local timeout overrides before starting provider work.
+    #[test]
+    fn local_inactivity_timeout_rejects_invalid_or_non_local_options() {
+        for seconds in ["0", "601", "-1"] {
+            assert!(
+                Cli::try_parse_from([
+                    "project-init",
+                    "--local-inactivity-timeout-secs",
+                    seconds,
+                    "list",
+                ])
+                .is_err()
+            );
+        }
+        for provider in ["codex", "opencode"] {
+            let cli = Cli::try_parse_from([
+                "project-init",
+                "--provider",
+                provider,
+                "--local-inactivity-timeout-secs",
+                "300",
+                "list",
+            ])
+            .unwrap();
+            assert!(
+                cli.provider_selection()
+                    .unwrap_err()
+                    .to_string()
+                    .contains("require --provider local")
+            );
+        }
     }
 
     /// Accepts OpenCode as a global peer provider without local runtime settings.

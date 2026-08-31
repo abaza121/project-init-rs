@@ -141,7 +141,8 @@ The `tensor` value is accepted as an alias for `plain`. The selected mistral.rs 
 - Research and automatic-answer workers use mistral.rs built-in web search, which uses DuckDuckGo. Direct HTTPS evidence must still pass Project Init's validators.
 - Documentation uses only `list_expected_documents`, `read_document`, and `write_document`. Tool path arguments are exact enums derived from the expected package.
 - Web research requires network access. Local analysis can remain useful without it, but research must fail closed rather than fabricate citations.
-- Valid streaming model events reset a 60-second inactivity timer. Runtime verification, model work, and tool rounds share an unresettable ten-minute hard limit per provider operation.
+- Valid streaming model events reset an inactivity timer that defaults to 60 seconds. Use the global `--local-inactivity-timeout-secs 300` option for slower models; accepted values are 1–600 seconds. This also controls waiting for response headers and gaps between network reads; heartbeat-only traffic does not reset the valid-event timer.
+- Research and automatic-answer planning, workers, and judgment have no total inference deadline while valid activity continues. Runtime verification and startup still have a ten-minute hard limit. Initial analysis and documentation retain their ten-minute total limit, including startup and tool rounds. Cancellation, response-size limits, and tool-round bounds remain enforced.
 - There is no automatic Codex/local/offline fallback. Select the intended authority explicitly.
 
 ## Container security boundary

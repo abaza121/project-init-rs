@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add `--local-inactivity-timeout-secs` (1–600, default 60) to accommodate slower local models without disabling silence detection.
 - Add `--provider opencode` for authenticated OpenCode CLI analysis, research, generation, repair, automatic answers, and workbench resume while retaining Codex as the default provider.
 - Add an explicit `--provider local` option for authoritative loopback HTTP analysis, DuckDuckGo-backed cited research, automatic clarification, and allowlisted staged documentation through a managed CPU or NVIDIA CUDA mistral.rs container.
 - Add `--local-format plain` (also accepted as `tensor`) for managed local safetensors model directories while retaining pinned GGUF as the default.
@@ -19,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Make Overview, Findings, Requirements, and Activity scrollable with Up/Down, Page Up/Page Down, and Home/End, preserving independent positions through section changes and supporting wrapped text and viewport changes; expose the complete Overview timeline instead of only its latest twelve entries.
+- Allow local research and auto-answer planning, workers, and judgment to continue beyond ten minutes while valid model activity arrives, preserving cancellation, bounded startup, and existing analysis/documentation limits.
+- Keep Codex and OpenCode research and auto-answer planning, workers, and judgment running while provider output remains active, retaining cancellation and five-minute inactivity limits instead of cutting off productive work after five minutes.
 - Keep the selected clarification question visible while navigating a queue that exceeds the workbench viewport.
 - Prevent auto-answer from persisting `FAIL` responses by requiring evidence-informed provisional decisions and using validation feedback to correct worker and judge retries.
 - Use the current mistral.rs `--max-seq-len` runtime option so managed local CUDA and CPU containers reach readiness with supported images.

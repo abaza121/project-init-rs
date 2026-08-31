@@ -23,7 +23,7 @@ use super::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentClient, AgentError, AgentExecution,
     AnalysisRequest, AutoAnswerClient, CancellationToken, DocumentationClient, DocumentationKind,
     DocumentationRequest, JudgedResearchBatch, ResearchBatchPlan, ResearchClient,
-    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer,
+    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer, TimeoutPolicy,
 };
 
 const MAX_JSONL_LINE_BYTES: usize = 64 * 1024;
@@ -216,7 +216,7 @@ fn disabled_skills_override(skill_paths: &[PathBuf]) -> Result<String, AgentErro
     Ok(format!("skills.config=[{}]", entries.join(",")))
 }
 
-/// Holds process settings used as a hard analysis limit and documentation inactivity limit.
+/// Holds a hard analysis limit and an inactivity limit for research and documentation.
 #[derive(Debug, Clone)]
 pub struct CodexCliConfig {
     pub executable: PathBuf,
@@ -230,6 +230,15 @@ pub struct CodexCliConfig {
 pub struct CodexCliClient {
     config: CodexCliConfig,
     disable_skills: bool,
+}
+
+/// Groups one structured task's response contract, prompt, and operation-specific deadline.
+struct StructuredTask<'a> {
+    schema: &'a str,
+    file_stem: &'a str,
+    prompt: &'a str,
+    validation_message: &'a str,
+    timeout_policy: TimeoutPolicy,
 }
 
 impl CodexCliClient {
@@ -322,13 +331,17 @@ impl CodexCliClient {
     /// Executes one schema-constrained read-only Codex task and captures its bounded transcript.
     async fn execute_structured_prompt(
         &self,
-        schema: &str,
-        file_stem: &str,
-        prompt: &str,
+        task: StructuredTask<'_>,
         activity: mpsc::Sender<ActivityEvent>,
         cancellation: CancellationToken,
-        validation_message: &str,
     ) -> Result<AgentExecution, AgentError> {
+        let StructuredTask {
+            schema,
+            file_stem,
+            prompt,
+            validation_message,
+            timeout_policy,
+        } = task;
         ActivityHistory::new(self.config.history_capacity)?;
         let skill_override = self.skill_config_override(&self.config.working_directory)?;
         let started_at = Utc::now();
@@ -368,18 +381,34 @@ impl CodexCliClient {
             .stderr
             .take()
             .ok_or_else(|| AgentError::Execution("Codex stderr was unavailable".to_owned()))?;
+        let (progress_sender, progress_receiver) = mpsc::channel(1);
+        // Separate liveness from UI delivery so a full activity history cannot cut work short.
         let activity_task = tokio::spawn(read_activity(
             stdout,
             activity.clone(),
             self.config.history_capacity,
             initial,
-            None,
+            Some(progress_sender.clone()),
         ));
-        let stderr_task = tokio::spawn(drain_reader(stderr, None));
-        let wait = tokio::select! {
-            status = child.wait() => ProcessOutcome::Exited(status),
-            () = cancellation.cancelled() => ProcessOutcome::Cancelled,
-            () = tokio::time::sleep(self.config.timeout) => ProcessOutcome::TimedOut,
+        let stderr_task = tokio::spawn(drain_reader(stderr, Some(progress_sender)));
+        let wait = match timeout_policy {
+            TimeoutPolicy::Hard => tokio::select! {
+                status = child.wait() => ProcessOutcome::Exited(status),
+                () = cancellation.cancelled() => ProcessOutcome::Cancelled,
+                () = tokio::time::sleep(self.config.timeout) => ProcessOutcome::TimedOut,
+            },
+            TimeoutPolicy::Inactivity => match wait_with_inactivity(
+                child.wait(),
+                progress_receiver,
+                cancellation,
+                self.config.timeout,
+            )
+            .await
+            {
+                InactivityOutcome::Completed(status) => ProcessOutcome::Exited(status),
+                InactivityOutcome::Cancelled => ProcessOutcome::Cancelled,
+                InactivityOutcome::Inactive => ProcessOutcome::Inactive,
+            },
         };
         let status = match wait {
             ProcessOutcome::Exited(Ok(status)) => status,
@@ -395,10 +424,14 @@ impl CodexCliClient {
                 stop_reader_tasks(activity_task, stderr_task).await;
                 return Err(AgentError::Cancelled);
             }
-            ProcessOutcome::TimedOut => {
+            ProcessOutcome::TimedOut | ProcessOutcome::Inactive => {
                 let _ = child.kill().await;
                 stop_reader_tasks(activity_task, stderr_task).await;
-                return Err(AgentError::TimedOut);
+                return Err(if matches!(wait, ProcessOutcome::Inactive) {
+                    AgentError::Inactive
+                } else {
+                    AgentError::TimedOut
+                });
             }
         };
         let mut read = activity_task.await.map_err(|error| {
@@ -540,7 +573,7 @@ impl CodexCliClient {
         let outcome = match outcome {
             InactivityOutcome::Completed(status) => ProcessOutcome::Exited(status),
             InactivityOutcome::Cancelled => ProcessOutcome::Cancelled,
-            InactivityOutcome::Inactive => ProcessOutcome::TimedOut,
+            InactivityOutcome::Inactive => ProcessOutcome::Inactive,
         };
         match outcome {
             ProcessOutcome::Exited(Ok(status)) => {
@@ -570,7 +603,7 @@ impl CodexCliClient {
                 stop_reader_tasks(activity_task, stderr_task).await;
                 Err(AgentError::Cancelled)
             }
-            ProcessOutcome::TimedOut => {
+            ProcessOutcome::TimedOut | ProcessOutcome::Inactive => {
                 let _ = child.kill().await;
                 stop_reader_tasks(activity_task, stderr_task).await;
                 Err(AgentError::Inactive)
@@ -629,12 +662,15 @@ impl AgentClient for CodexCliClient {
         cancellation: CancellationToken,
     ) -> Result<AgentExecution, AgentError> {
         self.execute_structured_prompt(
-            ANALYSIS_SCHEMA,
-            "analysis",
-            &analysis_prompt(&request.project_name, &request.brief),
+            StructuredTask {
+                schema: ANALYSIS_SCHEMA,
+                file_stem: "analysis",
+                prompt: &analysis_prompt(&request.project_name, &request.brief),
+                validation_message: "Validating structured analysis",
+                timeout_policy: TimeoutPolicy::Hard,
+            },
             activity,
             cancellation,
-            "Validating structured analysis",
         )
         .await
     }
@@ -656,12 +692,15 @@ impl ResearchClient for CodexCliClient {
     ) -> Result<ResearchedAnswer, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                RESEARCH_ANSWER_SCHEMA,
-                "research-answer",
-                &research_prompt(&request),
+                StructuredTask {
+                    schema: RESEARCH_ANSWER_SCHEMA,
+                    file_stem: "research-answer",
+                    prompt: &research_prompt(&request),
+                    validation_message: "Validating cited research answer",
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
-                "Validating cited research answer",
             )
             .await?;
         ResearchedAnswer::from_json(&execution.response)
@@ -679,12 +718,15 @@ impl AutoAnswerClient for CodexCliClient {
     ) -> Result<ResearchBatchPlan, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                RESEARCH_PLAN_SCHEMA,
-                "research-plan",
-                &research_plan_prompt(&request),
+                StructuredTask {
+                    schema: RESEARCH_PLAN_SCHEMA,
+                    file_stem: "research-plan",
+                    prompt: &research_plan_prompt(&request),
+                    validation_message: "Validating automatic-answer plan",
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
-                "Validating automatic-answer plan",
             )
             .await?;
         let eligible = request
@@ -718,12 +760,15 @@ impl AutoAnswerClient for CodexCliClient {
     ) -> Result<JudgedResearchBatch, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                RESEARCH_JUDGMENT_SCHEMA,
-                "research-judgment",
-                &research_judgment_prompt(&request),
+                StructuredTask {
+                    schema: RESEARCH_JUDGMENT_SCHEMA,
+                    file_stem: "research-judgment",
+                    prompt: &research_judgment_prompt(&request),
+                    validation_message: "Validating judged research batch",
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
-                "Validating judged research batch",
             )
             .await?;
         let candidate_ids = request
@@ -752,8 +797,10 @@ enum ProcessOutcome {
     Exited(std::io::Result<std::process::ExitStatus>),
     /// The terminal user requested immediate cancellation.
     Cancelled,
-    /// The configured hard or inactivity deadline elapsed.
+    /// The configured hard deadline elapsed.
     TimedOut,
+    /// The process stopped producing output for the full inactivity window.
+    Inactive,
 }
 
 /// Classifies completion, cancellation, or elapsed inactivity for one async operation.

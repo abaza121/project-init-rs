@@ -10,6 +10,7 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, Paragraph, Wrap};
 use thiserror::Error;
 
+use super::scroll::PanelScroll;
 use crate::agents::{ActivityEvent, ActivityKind};
 use crate::domain::{
     ApprovalPolicy, CostOfBeingWrong, DecisionStatus, Impact, ProjectSnapshot, Question,
@@ -36,6 +37,17 @@ pub enum WorkspaceSection {
 }
 
 impl WorkspaceSection {
+    /// Maps read-only sections to independent viewports, leaving question selection separate.
+    const fn scroll_index(self) -> Option<usize> {
+        match self {
+            Self::Overview => Some(0),
+            Self::Findings => Some(1),
+            Self::Requirements => Some(2),
+            Self::Activity => Some(3),
+            Self::Questions => None,
+        }
+    }
+
     /// Returns every navigation section in stable display order.
     const fn all() -> [Self; 5] {
         [
@@ -459,6 +471,8 @@ pub struct WorkspaceState {
     section: WorkspaceSection,
     focus: WorkspaceFocus,
     selected_question: Option<usize>,
+    /// Preserves independent, view-only positions for all four read-only sections.
+    panel_scroll: [PanelScroll; 4],
     composer: String,
     question_draft: Option<QuestionDraft>,
     policy_selection: Option<PolicySelection>,
@@ -485,6 +499,7 @@ impl WorkspaceState {
             section,
             focus: WorkspaceFocus::Content,
             selected_question,
+            panel_scroll: std::array::from_fn(|_| PanelScroll::default()),
             composer: String::new(),
             question_draft: None,
             policy_selection: None,
@@ -909,11 +924,24 @@ impl WorkspaceState {
         }
     }
 
+    /// Returns the active read-only viewport, excluding the question-selection surface.
+    fn active_panel_scroll(&self) -> Option<&PanelScroll> {
+        self.section
+            .scroll_index()
+            .map(|index| &self.panel_scroll[index])
+    }
+
     /// Handles section, entity, and focus navigation outside text entry.
     fn handle_navigation_key(
         &mut self,
         key: KeyEvent,
     ) -> Result<Option<WorkspaceCommand>, WorkspaceInputError> {
+        if self
+            .active_panel_scroll()
+            .is_some_and(|scroll| scroll.handle_key(key.code))
+        {
+            return Ok(None);
+        }
         match key.code {
             KeyCode::Char('q') | KeyCode::Esc => Ok(Some(WorkspaceCommand::Quit)),
             KeyCode::Tab => {
@@ -1169,7 +1197,7 @@ pub fn render_workspace(frame: &mut Frame<'_>, state: &WorkspaceState) {
     render_navigation(frame, state, columns[0]);
     render_content(frame, state, columns[1]);
     render_composer(frame, state, rows[2]);
-    render_help(frame, rows[3]);
+    render_help(frame, state, rows[3]);
     if state.question_draft.is_some() {
         render_question_draft(frame, state);
     }
@@ -1276,17 +1304,19 @@ fn render_content(frame: &mut Frame<'_>, state: &WorkspaceState, area: Rect) {
             .collect(),
     });
     let border = focus_style(state.focus == WorkspaceFocus::Content);
-    let scroll = question_scroll_offset(state, area, guidance_line_count);
+    let paragraph = Paragraph::new(lines).wrap(Wrap { trim: false });
+    let scroll = if let Some(scroll) = state.active_panel_scroll() {
+        scroll.update(area, &paragraph)
+    } else {
+        question_scroll_offset(state, area, guidance_line_count)
+    };
     frame.render_widget(
-        Paragraph::new(lines)
-            .scroll((scroll, 0))
-            .wrap(Wrap { trim: false })
-            .block(
-                Block::default()
-                    .title(format!(" {} ", state.section.title()))
-                    .borders(Borders::ALL)
-                    .border_style(border),
-            ),
+        paragraph.scroll((scroll, 0)).block(
+            Block::default()
+                .title(format!(" {} ", state.section.title()))
+                .borders(Borders::ALL)
+                .border_style(border),
+        ),
         area,
     );
 }
@@ -1362,7 +1392,7 @@ fn workflow_guidance_lines(state: &WorkspaceState) -> Vec<Line<'static>> {
     }
 }
 
-/// Builds the overview summary and the newest projected authoritative timeline rows.
+/// Builds the overview summary and the complete scrollable authoritative timeline.
 fn overview_lines(state: &WorkspaceState) -> Vec<Line<'static>> {
     let mut lines = vec![Line::from(format!(
         "{} findings · {} questions · {} answers · {} requirements",
@@ -1377,9 +1407,6 @@ fn overview_lines(state: &WorkspaceState) -> Vec<Line<'static>> {
         state
             .timeline
             .iter()
-            .rev()
-            .take(12)
-            .rev()
             .map(|entry| Line::from(format!("{}  {}", entry.category, entry.message))),
     );
     lines
@@ -1429,7 +1456,17 @@ fn render_composer(frame: &mut Frame<'_>, state: &WorkspaceState, area: Rect) {
 }
 
 /// Renders concise deterministic controls without suggesting unsupported chat behavior.
-fn render_help(frame: &mut Frame<'_>, area: Rect) {
+fn render_help(frame: &mut Frame<'_>, state: &WorkspaceState, area: Rect) {
+    if state.active_panel_scroll().is_some() {
+        frame.render_widget(
+            Paragraph::new(vec![
+                Line::from("↑↓ scroll · PgUp/PgDn page · Home/End top/bottom"),
+                Line::from("Tab focus · ←→ sections · Enter submit · Q/Esc quit"),
+            ]),
+            area,
+        );
+        return;
+    }
     frame.render_widget(
         Paragraph::new(vec![
             Line::from("Tab focus · ←→ sections · Enter submit · /ask · /resume · /auto-answer"),

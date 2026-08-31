@@ -27,7 +27,7 @@ use super::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentClient, AgentError, AgentExecution,
     AnalysisRequest, AutoAnswerClient, CancellationToken, DocumentationClient, DocumentationKind,
     DocumentationRequest, JudgedResearchBatch, ResearchBatchPlan, ResearchClient,
-    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer,
+    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer, TimeoutPolicy,
 };
 
 const MAX_DOCUMENT_BYTES: usize = 1024 * 1024;
@@ -49,6 +49,15 @@ pub struct LocalHttpProvider {
     config: LocalHttpConfig,
     client: reqwest::Client,
     runtime: Option<LocalRuntimeConfig>,
+}
+
+/// Groups a structured local operation's schema, tool permission, and timeout policy.
+struct StructuredTask<'a> {
+    schema_name: &'a str,
+    schema: &'a str,
+    prompt: &'a str,
+    web_search: bool,
+    timeout_policy: TimeoutPolicy,
 }
 
 impl LocalHttpProvider {
@@ -90,16 +99,20 @@ impl LocalHttpProvider {
         Ok(self)
     }
 
-    /// Executes one JSON-schema response while streaming bounded progress and enforcing two clocks.
+    /// Executes a structured response with bounded startup and operation-specific stream deadlines.
     async fn execute_structured_prompt(
         &self,
-        schema_name: &str,
-        schema: &str,
-        prompt: &str,
-        web_search: bool,
+        task: StructuredTask<'_>,
         activity: mpsc::Sender<ActivityEvent>,
         cancellation: CancellationToken,
     ) -> Result<AgentExecution, AgentError> {
+        let StructuredTask {
+            schema_name,
+            schema,
+            prompt,
+            web_search,
+            timeout_policy,
+        } = task;
         let schema: Value = serde_json::from_str(schema).map_err(|error| {
             AgentError::Execution(format!("local response schema is invalid: {error}"))
         })?;
@@ -138,12 +151,17 @@ impl LocalHttpProvider {
             &mut sequence,
         )
         .await?;
+        // Startup always stays bounded; productive research may outlive that startup deadline.
+        let inference_deadline = match timeout_policy {
+            TimeoutPolicy::Hard => Some(deadline),
+            TimeoutPolicy::Inactivity => None,
+        };
         let completion = self
             .execute_chat_request(
                 &request,
                 &activity,
                 &cancellation,
-                deadline,
+                inference_deadline,
                 &mut history,
                 &mut sequence,
             )
@@ -173,13 +191,13 @@ impl LocalHttpProvider {
         })
     }
 
-    /// Sends one streaming chat request under a caller-owned absolute deadline and history.
+    /// Bounds silence on every stream and optionally enforces a caller-owned total deadline.
     async fn execute_chat_request(
         &self,
         request: &Value,
         activity: &mpsc::Sender<ActivityEvent>,
         cancellation: &CancellationToken,
-        deadline: Instant,
+        deadline: Option<Instant>,
         history: &mut ActivityHistory,
         sequence: &mut u32,
     ) -> Result<ChatCompletion, AgentError> {
@@ -193,7 +211,7 @@ impl LocalHttpProvider {
         let response = tokio::select! {
             response = send => response.map_err(|error| map_http_error("request", &error))?,
             () = cancellation.cancelled() => return Err(AgentError::Cancelled),
-            () = tokio::time::sleep_until(deadline) => return Err(AgentError::TimedOut),
+            () = wait_for_deadline(deadline) => return Err(AgentError::TimedOut),
             () = tokio::time::sleep_until(response_inactivity) => return Err(AgentError::Inactive),
         };
         if !response.status().is_success() {
@@ -211,7 +229,7 @@ impl LocalHttpProvider {
             let chunk = tokio::select! {
                 chunk = stream.next() => chunk,
                 () = cancellation.cancelled() => return Err(AgentError::Cancelled),
-                () = tokio::time::sleep_until(deadline) => return Err(AgentError::TimedOut),
+                () = wait_for_deadline(deadline) => return Err(AgentError::TimedOut),
                 () = tokio::time::sleep_until(inactivity) => return Err(AgentError::Inactive),
             };
             let Some(chunk) = chunk else {
@@ -347,10 +365,13 @@ impl AgentClient for LocalHttpProvider {
         cancellation: CancellationToken,
     ) -> Result<AgentExecution, AgentError> {
         self.execute_structured_prompt(
-            "analysis",
-            ANALYSIS_SCHEMA,
-            &analysis_prompt(&request.project_name, &request.brief),
-            false,
+            StructuredTask {
+                schema_name: "analysis",
+                schema: ANALYSIS_SCHEMA,
+                prompt: &analysis_prompt(&request.project_name, &request.brief),
+                web_search: false,
+                timeout_policy: TimeoutPolicy::Hard,
+            },
             activity,
             cancellation,
         )
@@ -378,10 +399,13 @@ impl ResearchClient for LocalHttpProvider {
         );
         let execution = self
             .execute_structured_prompt(
-                "research_answer",
-                RESEARCH_ANSWER_SCHEMA,
-                &prompt,
-                true,
+                StructuredTask {
+                    schema_name: "research_answer",
+                    schema: RESEARCH_ANSWER_SCHEMA,
+                    prompt: &prompt,
+                    web_search: true,
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
             )
@@ -401,10 +425,13 @@ impl AutoAnswerClient for LocalHttpProvider {
     ) -> Result<ResearchBatchPlan, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                "research_plan",
-                RESEARCH_PLAN_SCHEMA,
-                &research_plan_prompt(&request),
-                false,
+                StructuredTask {
+                    schema_name: "research_plan",
+                    schema: RESEARCH_PLAN_SCHEMA,
+                    prompt: &research_plan_prompt(&request),
+                    web_search: false,
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
             )
@@ -440,10 +467,13 @@ impl AutoAnswerClient for LocalHttpProvider {
     ) -> Result<JudgedResearchBatch, AgentError> {
         let execution = self
             .execute_structured_prompt(
-                "research_judgment",
-                RESEARCH_JUDGMENT_SCHEMA,
-                &research_judgment_prompt(&request),
-                false,
+                StructuredTask {
+                    schema_name: "research_judgment",
+                    schema: RESEARCH_JUDGMENT_SCHEMA,
+                    prompt: &research_judgment_prompt(&request),
+                    web_search: false,
+                    timeout_policy: TimeoutPolicy::Inactivity,
+                },
                 activity,
                 cancellation,
             )
@@ -535,7 +565,7 @@ impl LocalHttpProvider {
                     &request_body,
                     &activity,
                     &cancellation,
-                    deadline,
+                    Some(deadline),
                     &mut history,
                     &mut sequence,
                 )
@@ -732,7 +762,7 @@ impl LocalHttpConfig {
         self.inactivity_timeout
     }
 
-    /// Returns the absolute duration no operation may exceed.
+    /// Returns the startup bound and total limit for initial analysis and documentation.
     pub const fn hard_timeout(&self) -> Duration {
         self.hard_timeout
     }
@@ -740,6 +770,14 @@ impl LocalHttpConfig {
     /// Returns the maximum number of provider activity entries retained per operation.
     pub const fn history_capacity(&self) -> usize {
         self.history_capacity
+    }
+}
+
+/// Disables only the total deadline when absent, leaving the caller's inactivity timer active.
+async fn wait_for_deadline(deadline: Option<Instant>) {
+    match deadline {
+        Some(deadline) => tokio::time::sleep_until(deadline).await,
+        None => std::future::pending::<()>().await,
     }
 }
 
@@ -1253,9 +1291,207 @@ mod tests {
         CompletionAccumulator, DocumentWorkspace, LocalHttpConfig, LocalHttpProvider, SseDecoder,
     };
     use crate::agents::{
-        AgentClient, AgentError, AnalysisRequest, CancellationToken, DocumentationClient,
-        DocumentationRequest, LocalDevice, LocalRuntimeConfig, ResearchClient, ResearchRequest,
+        AgentClient, AgentError, AnalysisRequest, AutoAnswerClient, CancellationToken,
+        DocumentationClient, DocumentationRequest, LocalDevice, LocalRuntimeConfig,
+        ResearchCandidate, ResearchClient, ResearchJudgmentRequest, ResearchPlanRequest,
+        ResearchQuestionContext, ResearchRequest, ResearchedAnswer,
     };
+
+    /// Supplies a single eligible blocker for local coordinator timeout tests.
+    fn timeout_plan_request() -> ResearchPlanRequest {
+        ResearchPlanRequest::new(
+            "{}".to_owned(),
+            "q1",
+            vec![
+                ResearchQuestionContext::new("q1", "Q-001", "Which platform?", "Architecture.")
+                    .unwrap(),
+            ],
+        )
+        .unwrap()
+    }
+
+    /// Builds a local fixture client whose short deadlines expose total-time regressions.
+    fn timeout_client(endpoint: &str) -> LocalHttpProvider {
+        LocalHttpProvider::new(
+            LocalHttpConfig::new(
+                &format!("{endpoint}/v1"),
+                "default",
+                Duration::from_millis(200),
+                Duration::from_millis(400),
+                4,
+            )
+            .unwrap(),
+        )
+        .unwrap()
+    }
+
+    /// Keeps all three auto-answer stages alive beyond the analysis limit on valid SSE activity.
+    #[tokio::test]
+    async fn local_auto_answer_stages_outlive_hard_deadline() {
+        let answer = r#"{"answer_text":"Use the supported platform.","notes":null,"evidence":[{"claim":"The platform is supported.","source":"https://example.com/source","source_title":"Primary source","reliability":"high","notes":null}]}"#;
+        let judgment = format!(
+            r#"{{"answers":[{{"question_id":"q1",{}}}]}}"#,
+            &answer[1..answer.len() - 1]
+        );
+        for (stage, response) in [
+            ("plan", r#"{"question_ids":["q1"]}"#),
+            ("worker", answer),
+            ("judge", judgment.as_str()),
+        ] {
+            let mut frames =
+                vec!["data: {\"choices\":[{\"delta\":{\"content\":\" \"}}]}\n\n".to_owned(); 8];
+            let event = json!({"choices":[{"delta":{"content":response}}]});
+            frames.push(format!("data: {event}\n\ndata: [DONE]\n\n"));
+            let (endpoint, server) = spawn_timed_sse_fixture(frames);
+            let client = timeout_client(&endpoint);
+            // A full display channel must not prevent stream activity from resetting the timer.
+            let (activity, _receiver) = mpsc::channel(1);
+            let cancellation = CancellationToken::new();
+            let result = match stage {
+                "plan" => client
+                    .plan(timeout_plan_request(), activity, cancellation)
+                    .await
+                    .map(|_| ()),
+                "worker" => AutoAnswerClient::research(
+                    &client,
+                    ResearchRequest::new("{}".to_owned(), "q1", "Which platform?", "Architecture.")
+                        .unwrap()
+                        .for_delegated_auto_answer(),
+                    activity,
+                    cancellation,
+                )
+                .await
+                .map(|_| ()),
+                _ => client
+                    .judge(
+                        ResearchJudgmentRequest::new(
+                            "{}".to_owned(),
+                            vec![
+                                ResearchCandidate::new(
+                                    "q1",
+                                    ResearchedAnswer::from_json(answer).unwrap(),
+                                )
+                                .unwrap(),
+                            ],
+                        )
+                        .unwrap(),
+                        activity,
+                        cancellation,
+                    )
+                    .await
+                    .map(|_| ()),
+            };
+            server.join().unwrap();
+            assert!(result.is_ok(), "{stage}: {result:?}");
+        }
+    }
+
+    /// Ignores heartbeat bytes for liveness after a valid event, and bounds complete silence too.
+    #[tokio::test]
+    async fn local_auto_answer_still_times_out_without_valid_activity() {
+        for heartbeat in ["", ": heartbeat\n\n"] {
+            let mut frames =
+                vec!["data: {\"choices\":[{\"delta\":{\"content\":\" \"}}]}\n\n".to_owned()];
+            frames.extend(vec![heartbeat.to_owned(); 8]);
+            let (endpoint, server) = spawn_timed_sse_fixture(frames);
+            let client = timeout_client(&endpoint);
+            let (activity, _receiver) = mpsc::channel(1);
+            let result = client
+                .plan(timeout_plan_request(), activity, CancellationToken::new())
+                .await;
+            server.join().unwrap();
+            assert!(matches!(result, Err(AgentError::Inactive)), "{result:?}");
+        }
+    }
+
+    /// Cancels a local coordinator after receiving real stream activity.
+    #[tokio::test]
+    async fn local_auto_answer_remains_cancellable() {
+        let frames =
+            vec!["data: {\"choices\":[{\"delta\":{\"content\":\" \"}}]}\n\n".to_owned(); 8];
+        let (endpoint, server) = spawn_timed_sse_fixture(frames);
+        let client = timeout_client(&endpoint);
+        let (activity, mut receiver) = mpsc::channel(4);
+        let cancellation = CancellationToken::new();
+        let cancel = cancellation.clone();
+        let task = tokio::spawn(async move {
+            client
+                .plan(timeout_plan_request(), activity, cancellation)
+                .await
+        });
+        receiver.recv().await.unwrap();
+        receiver.recv().await.unwrap();
+        cancel.cancel();
+        let result = tokio::time::timeout(Duration::from_millis(200), task)
+            .await
+            .unwrap()
+            .unwrap();
+        server.join().unwrap();
+        assert!(matches!(result, Err(AgentError::Cancelled)), "{result:?}");
+    }
+
+    /// Keeps startup bounded even when an unready service sends bytes throughout the deadline.
+    #[tokio::test]
+    async fn local_auto_answer_runtime_startup_retains_hard_deadline() {
+        let (endpoint, server) = spawn_timed_responses_fixture(vec![
+            (
+                "HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
+                vec![],
+            ),
+            (
+                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n",
+                vec![" ".to_owned(); 8],
+            ),
+        ]);
+        let model_directory = tempfile::tempdir().unwrap();
+        let runtime = LocalRuntimeConfig::new(
+            model_directory.path().to_owned(),
+            "gemma-4-12b-it-qat-q4_0.gguf",
+            "ghcr.io/ericlbuehler/mistral.rs:cpu-0.9.0",
+            LocalDevice::Cpu,
+            url::Url::parse(&endpoint).unwrap().port().unwrap(),
+        )
+        .unwrap()
+        .with_docker_executable("nonexistent-timeout-test-docker".into())
+        .unwrap();
+        let client = timeout_client(&endpoint).with_runtime(runtime).unwrap();
+        let (activity, _receiver) = mpsc::channel(1);
+        let result = client
+            .plan(timeout_plan_request(), activity, CancellationToken::new())
+            .await;
+        server.join().unwrap();
+        assert!(matches!(result, Err(AgentError::TimedOut)), "{result:?}");
+    }
+
+    /// Supplies complete HTTP headers before sending a timed sequence of SSE fragments.
+    fn spawn_timed_sse_fixture(frames: Vec<String>) -> (String, thread::JoinHandle<()>) {
+        spawn_timed_responses_fixture(vec![(
+            "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nConnection: close\r\n\r\n",
+            frames,
+        )])
+    }
+
+    /// Sends a finite sequence of timed HTTP responses and tolerates client cancellation.
+    fn spawn_timed_responses_fixture(
+        responses: Vec<(&'static str, Vec<String>)>,
+    ) -> (String, thread::JoinHandle<()>) {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            for (headers, frames) in responses {
+                let (mut stream, _) = listener.accept().unwrap();
+                let _request = read_http_request(&mut stream);
+                stream.write_all(headers.as_bytes()).unwrap();
+                for frame in frames {
+                    if stream.write_all(frame.as_bytes()).is_err() || stream.flush().is_err() {
+                        return;
+                    }
+                    thread::sleep(Duration::from_millis(80));
+                }
+            }
+        });
+        (format!("http://{address}"), server)
+    }
 
     /// Reassembles split SSE frames without accepting an unterminated or oversized event.
     #[test]

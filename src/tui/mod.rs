@@ -1,5 +1,6 @@
 //! Ratatui project inspection with safe terminal setup and restoration.
 
+mod scroll;
 mod workspace;
 
 pub use workspace::{

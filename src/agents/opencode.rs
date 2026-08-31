@@ -21,7 +21,7 @@ use super::{
     ActivityEvent, ActivityHistory, ActivityKind, AgentClient, AgentError, AgentExecution,
     AnalysisRequest, AutoAnswerClient, CancellationToken, DocumentationClient, DocumentationKind,
     DocumentationRequest, JudgedResearchBatch, ResearchBatchPlan, ResearchClient,
-    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer,
+    ResearchJudgmentRequest, ResearchPlanRequest, ResearchRequest, ResearchedAnswer, TimeoutPolicy,
 };
 
 const MAX_JSONL_LINE_BYTES: usize = 64 * 1024;
@@ -129,7 +129,7 @@ fn opencode_tool_message(event: &Value) -> Option<(ActivityKind, String)> {
         })
 }
 
-/// Holds the process limits and working-directory policy for OpenCode invocations.
+/// Holds a hard analysis limit and an inactivity limit for research and documentation.
 #[derive(Debug, Clone)]
 pub struct OpenCodeCliConfig {
     pub executable: PathBuf,
@@ -182,6 +182,7 @@ impl OpenCodeCliClient {
         prompt: &str,
         activity: mpsc::Sender<ActivityEvent>,
         cancellation: CancellationToken,
+        timeout_policy: TimeoutPolicy,
     ) -> Result<AgentExecution, AgentError> {
         let started_at = Utc::now();
         let run = self
@@ -191,7 +192,7 @@ impl OpenCodeCliClient {
                 activity,
                 cancellation,
                 "Starting isolated OpenCode",
-                TimeoutPolicy::Hard,
+                timeout_policy,
             )
             .await?;
         let response = run.response.ok_or_else(|| {
@@ -355,11 +356,12 @@ impl AgentClient for OpenCodeCliClient {
             &analysis_prompt(&request.project_name, &request.brief),
             activity,
             cancellation,
+            TimeoutPolicy::Hard,
         )
         .await
     }
 
-    /// Returns the configured hard deadline for one OpenCode operation.
+    /// Returns the configured hard deadline for one initial analysis.
     fn timeout(&self) -> Duration {
         self.config.timeout
     }
@@ -380,6 +382,7 @@ impl ResearchClient for OpenCodeCliClient {
                 &research_prompt(&request),
                 activity,
                 cancellation,
+                TimeoutPolicy::Inactivity,
             )
             .await?;
         ResearchedAnswer::from_json(&execution.response)
@@ -401,6 +404,7 @@ impl AutoAnswerClient for OpenCodeCliClient {
                 &research_plan_prompt(&request),
                 activity,
                 cancellation,
+                TimeoutPolicy::Inactivity,
             )
             .await?;
         let eligible = request
@@ -438,6 +442,7 @@ impl AutoAnswerClient for OpenCodeCliClient {
                 &research_judgment_prompt(&request),
                 activity,
                 cancellation,
+                TimeoutPolicy::Inactivity,
             )
             .await?;
         let candidate_ids = request
@@ -489,15 +494,6 @@ struct OpenCodeActivityRead {
     reported_error: bool,
 }
 
-/// Selects the deadline semantics that match the existing Project Init operation type.
-#[derive(Debug, Clone, Copy)]
-enum TimeoutPolicy {
-    /// Enforces an absolute execution limit for structured analysis and research operations.
-    Hard,
-    /// Extends documentation execution while OpenCode continues to emit bounded activity.
-    Inactivity,
-}
-
 /// Carries the complete child-process outcome used to map deadline failures precisely.
 enum OpenCodeWait {
     /// Carries the operating-system exit status of the child process.
@@ -506,7 +502,7 @@ enum OpenCodeWait {
     Cancelled,
     /// Reports exhaustion of an absolute operation deadline.
     TimedOut,
-    /// Reports no progress during an inactivity-bounded documentation operation.
+    /// Reports no progress during an inactivity-bounded research or documentation operation.
     Inactive,
 }
 
